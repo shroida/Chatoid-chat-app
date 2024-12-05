@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "691182546838",
+    "project_id": "chatoid-8e188",
+    "storage_bucket": "chatoid-8e188.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691182546838:android:90842747eb01c57a38b7b7",
+        "android_client_info": {
+          "package_name": "com.example.chatoid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMSvMO7fZHPQQ1y27Fukg3Ipk7ipzvbuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

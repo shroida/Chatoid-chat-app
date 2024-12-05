@@ -1,0 +1,8 @@
+with filter=lfs diff=lfs merge=lfs -text
+the filter=lfs diff=lfs merge=lfs -text
+appropriate filter=lfs diff=lfs merge=lfs -text
+extension filter=lfs diff=lfs merge=lfs -text
+*.filetype filter=lfs diff=lfs merge=lfs -text
+\# filter=lfs diff=lfs merge=lfs -text
+Replace filter=lfs diff=lfs merge=lfs -text
+filetype filter=lfs diff=lfs merge=lfs -text
