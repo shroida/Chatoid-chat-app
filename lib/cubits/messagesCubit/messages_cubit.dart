@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:chatoid/cubits/chatCubit/chat_cubit.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/cubits/messagesCubit/messages_state.dart';
 import 'package:chatoid/cubits/notificationsCubit/notification_cubit.dart';
@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MessagesCubit extends Cubit<MessagesState> {
-  final ChatCubit chatCubit;
+  final ChatsCubit chatCubit;
   final LoginCubit loginCubit;
   final NotificationCubit notificationCubit; // Inject notificationCubit
 

@@ -1,9 +1,11 @@
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/home_view.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:chatoid/presntation/screens/menu.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ZoomDrawerController _drawerController = ZoomDrawerController();
-  late ChatProvider chatProvider;
+  // late chatsCubit chatsCubit;
+  late ChatsCubit chatsCubit;
+
   late StoryProvider storyProvider;
   @override
   void initState() {
@@ -28,8 +32,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    chatProvider =
-        Provider.of<ChatProvider>(context); // G// Get provider reference here
+    chatsCubit = context.read<ChatsCubit>();
+
+    // chatsCubit =
+    //     Provider.of<chatsCubit>(context); // G// Get provider reference here
     storyProvider =
         Provider.of<StoryProvider>(context); // G// Get provider reference here
   }
@@ -41,19 +47,19 @@ class _HomePageState extends State<HomePage> {
     final currentUser = loginCubit.currentUser;
 
     // Fetch friends and messages from Supabase on every navigation to HomePage
-    await chatProvider.fetchFriends(currentUser.user_id);
-    await chatProvider.fetchAllMessages(currentUser);
+    await chatsCubit.fetchFriends(currentUser.user_id);
+    await chatsCubit.fetchAllMessages(currentUser);
 
     // Subscribe to real-time updates for messages and friends
-    await chatProvider.subscribe(
+    await chatsCubit.subscribe(
       'messages',
       () async {
         if (mounted) {
-          await chatProvider.fetchAllMessages(currentUser);
+          await chatsCubit.fetchAllMessages(currentUser);
         }
       },
     );
-    await chatProvider.subscribe(
+    await chatsCubit.subscribe(
       'stories',
       () async {
         if (mounted) {
@@ -61,11 +67,11 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
-    await chatProvider.subscribe(
+    await chatsCubit.subscribe(
       'friendships',
       () async {
         if (mounted) {
-          await chatProvider.fetchFriends(currentUser.user_id);
+          await chatsCubit.fetchFriends(currentUser.user_id);
         }
       },
     );
@@ -77,22 +83,28 @@ class _HomePageState extends State<HomePage> {
     final themeCubit = context.watch<ThemeCubit>();
 
     final currentUser = loginCubit.currentUser;
-    return ZoomDrawer(
-      controller: _drawerController,
-      menuScreen: MenuScreen(profileData: currentUser),
-      mainScreen: HomeView(drawerController: _drawerController),
-      angle: -15,
-      duration: const Duration(milliseconds: 600), // Smooth transition duration
-      slideWidth: MediaQuery.of(context).size.width * 0.65,
-      borderRadius: 30.0, // Round edges of drawer
-      menuBackgroundColor: themeCubit
-          .colorOfApp, // Background between drawer and content is blue
-      mainScreenOverlayColor: themeCubit.colorOfApp
-          .withOpacity(0.2), // Blue overlay when the drawer is open
-      showShadow: true, // Show shadow for a 3D effect
-      shadowLayer2Color:
-          Colors.black.withOpacity(0.3), // Layer shadow customization
-      shadowLayer1Color: Colors.black.withOpacity(0.1), // More subtle shadows
+    return BlocBuilder<ChatsCubit, ChatsState>(
+      builder: (context, state) {
+        return ZoomDrawer(
+          controller: _drawerController,
+          menuScreen: MenuScreen(profileData: currentUser),
+          mainScreen: HomeView(drawerController: _drawerController),
+          angle: -15,
+          duration:
+              const Duration(milliseconds: 600), // Smooth transition duration
+          slideWidth: MediaQuery.of(context).size.width * 0.65,
+          borderRadius: 30.0, // Round edges of drawer
+          menuBackgroundColor: themeCubit
+              .colorOfApp, // Background between drawer and content is blue
+          mainScreenOverlayColor: themeCubit.colorOfApp
+              .withOpacity(0.2), // Blue overlay when the drawer is open
+          showShadow: true, // Show shadow for a 3D effect
+          shadowLayer2Color:
+              Colors.black.withOpacity(0.3), // Layer shadow customization
+          shadowLayer1Color:
+              Colors.black.withOpacity(0.1), // More subtle shadows
+        );
+      },
     );
   }
 }

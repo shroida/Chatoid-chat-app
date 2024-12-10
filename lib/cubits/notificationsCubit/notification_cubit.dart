@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
-import 'package:chatoid/cubits/chatCubit/chat_cubit.dart';
 import 'package:chatoid/cubits/notificationsCubit/notification_state.dart';
 import 'package:chatoid/data/models/tables/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,7 +12,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       FlutterLocalNotificationsPlugin();
   final SupabaseClient supabase = Supabase.instance.client;
 
-  final ChatCubit chatCubit; // Use dependency injection for ChatCubit
+  final ChatsCubit chatCubit; // Use dependency injection for ChatCubit
 
   NotificationCubit(this.chatCubit) : super(NotificationInitial()) {
     _initializeNotifications();
@@ -61,7 +61,7 @@ class NotificationCubit extends Cubit<NotificationState> {
         'is_read': false,
       });
 
-      await chatCubit.saveMessages(chatCubit.friendMessages);
+      // await chatCubit.saveMessages(chatCubit.friendMessages);
       emit(NotificationSuccess(chatCubit.friendMessages));
     } catch (e) {
       emit(NotificationFailure('Failed to insert message into database'));

@@ -87,13 +87,10 @@ class LoginCubit extends Cubit<LoginState> {
     } else {}
   }
 
-  
-
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('isLoggedIn') ?? false;
   }
-
 
   Future<UserData?> getUserByUsername(String username) async {
     try {
@@ -104,13 +101,11 @@ class LoginCubit extends Cubit<LoginState> {
           .eq('username', username)
           .single(); // Return a single record
 
-    
-        return UserData(
-            user_id: response['user_id'] as int,
-            username: response['username'] as String,
-            email: response['email'] as String,
-            friendId: 0);
-      
+      return UserData(
+          user_id: response['user_id'] as int,
+          username: response['username'] as String,
+          email: response['email'] as String,
+          friendId: 0);
     } catch (e) {
       return null;
     }

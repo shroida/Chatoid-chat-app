@@ -1,4 +1,3 @@
-import 'package:chatoid/cubits/chatCubit/chat_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';

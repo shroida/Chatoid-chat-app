@@ -1,4 +1,4 @@
-import 'package:chatoid/cubits/chatCubit/chat_cubit.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
@@ -43,12 +43,10 @@ void main() async {
         BlocProvider<ThemeCubit>(
           create: (context) => ThemeCubit(),
         ),
-        BlocProvider<ChatCubit>(
-          create: (context) => ChatCubit(),
+        BlocProvider<ChatsCubit>(
+          create: (context) => ChatsCubit(),
         ),
-        BlocProvider<ChatCubit>(
-          create: (context) => ChatCubit(), // Provide ChatCubit at a high level
-        ),
+       
       ],
       child: MultiProvider(
         providers: [

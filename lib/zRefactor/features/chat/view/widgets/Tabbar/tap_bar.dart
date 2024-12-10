@@ -1,4 +1,4 @@
-import 'package:chatoid/zRefactor/features/chat/view/widgets/tap_bar_item.dart';
+import 'package:chatoid/zRefactor/features/chat/view/widgets/Tabbar/tap_bar_item.dart';
 import 'package:flutter/material.dart';
 
 class TapBar extends StatelessWidget {

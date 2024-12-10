@@ -1,25 +1,26 @@
 import 'package:chatoid/data/models/tables/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 
-abstract class ChatState {}
+abstract class ChatsState {}
 
-class ChatInitial extends ChatState {}
+class ChatInitial extends ChatsState {}
 
-class ChatLoading extends ChatState {}
+class ChatLoading extends ChatsState {}
+class ChatEmpty extends ChatsState {}
 
-class ChatFriendsFetched extends ChatState {
+class ChatFriendsFetched extends ChatsState {
   final List<UserData> friendsList;
 
   ChatFriendsFetched({required this.friendsList});
 }
 
-class ChatMessagesFetched extends ChatState {
+class ChatMessagesFetched extends ChatsState {
   final List<clsMessage> friendMessages;
 
   ChatMessagesFetched({required this.friendMessages});
 }
 
-class ChatError extends ChatState {
+class ChatError extends ChatsState {
   final String message;
 
   ChatError(this.message);
