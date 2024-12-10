@@ -2,7 +2,7 @@ import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
-import 'package:chatoid/presntation/screens/HomePageScreens/homePageChats.dart';
+import 'package:chatoid/zRefactor/features/chat/view/home_page_chats.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Home%20screen/home_screen_story_posts.dart';
 import 'package:chatoid/presntation/screens/profile.dart';
 import 'package:chatoid/presntation/screens/search_screen.dart';

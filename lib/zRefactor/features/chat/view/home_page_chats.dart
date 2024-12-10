@@ -4,6 +4,7 @@ import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/models/tables/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
+import 'package:chatoid/zRefactor/features/chat/view/widgets/tap_bar.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/home_page.dart';
 import 'package:chatoid/presntation/screens/chat_screen.dart';
 import 'package:chatoid/presntation/widgets/chatCard.dart';
@@ -21,6 +22,11 @@ class HomePageChats extends StatefulWidget {
 
 class HomePageChatsState extends State<HomePageChats> {
   int _currentIndexHomePage = 0;
+  void _onTapBarItemTapped(int index) {
+    setState(() {
+      _currentIndexHomePage = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,10 @@ class HomePageChatsState extends State<HomePageChats> {
     return Scaffold(
       body: Column(
         children: [
-          _buildTabBar(themeProvider),
+          TapBar(
+            currentIndex: _currentIndexHomePage,
+            onItemTapped: _onTapBarItemTapped,
+          ),
           Expanded(
             child: _currentIndexHomePage == 0
                 ? _buildMessagesSection(chatProvider) // Pass chatProvider here
@@ -39,66 +48,6 @@ class HomePageChatsState extends State<HomePageChats> {
                     : _buildSettingsSection(context, themeProvider),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTabBar(ThemeCubit themeProvider) {
-    return Container(
-      margin: const EdgeInsets.all(29.0),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3),
-          ),
-        ],
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildTabItem(context, "Messages", 0, themeProvider),
-          _buildTabItem(context, "Groups", 1, themeProvider),
-          _buildTabItem(context, "Themes", 2, themeProvider),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabItem(
-      BuildContext context, String label, int index, ThemeCubit themeProvider) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final horizontalPadding = screenWidth * 0.07;
-
-    return GestureDetector(
-      onTap: () => setState(() {
-        _currentIndexHomePage = index;
-      }),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 8,
-          horizontal: horizontalPadding,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: _currentIndexHomePage == index
-              ? themeProvider.colorOfApp
-              : Colors.transparent,
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color:
-                  _currentIndexHomePage == index ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -228,7 +177,7 @@ class HomePageChatsState extends State<HomePageChats> {
   }
 
   Widget _buildGroupsSection() {
-    return Text('We will add this feature soon!');
+    return const Text('We will add this feature soon!');
   }
 
   Widget _buildSettingsSection(BuildContext context, ThemeCubit themeProvider) {
