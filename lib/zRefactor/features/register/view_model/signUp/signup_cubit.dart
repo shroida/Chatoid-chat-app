@@ -1,4 +1,4 @@
-import 'package:chatoid/cubits/signUp/signup_state.dart';
+import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_state.dart';
 import 'package:chatoid/zRefactor/features/register/model/signup_data.dart';
 import 'package:chatoid/zRefactor/features/register/repository/register_repo_impl.dart';
 import 'package:flutter/material.dart';

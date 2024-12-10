@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:chatoid/cubits/signUp/signup_cubit.dart';
+import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/model/signup_data.dart';
 import 'package:chatoid/zRefactor/features/login/view/widgets/rive_animation_manager.dart';
 

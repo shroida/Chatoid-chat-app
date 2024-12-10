@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:chatoid/data/models/story/story.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
-import 'package:chatoid/zRefactor/features/home_page/view/Home_Page.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/home_page.dart';
 import 'package:chatoid/presntation/screens/chat_screen.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
