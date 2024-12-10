@@ -4,7 +4,7 @@ import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/models/tables/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
-import 'package:chatoid/presntation/screens/HomePageScreens/Home_Page.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/Home_Page.dart';
 import 'package:chatoid/presntation/screens/chat_screen.dart';
 import 'package:chatoid/presntation/widgets/chatCard.dart';
 import 'package:chatoid/presntation/screens/stories/story_element.dart';

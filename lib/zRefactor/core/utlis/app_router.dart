@@ -1,4 +1,4 @@
-import 'package:chatoid/presntation/screens/HomePageScreens/Home_Page.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/Home_Page.dart';
 import 'package:chatoid/zRefactor/features/register/view/register.dart';
 import 'package:chatoid/zRefactor/features/login/view/login.dart';
 import 'package:chatoid/zRefactor/features/splash/splash_screen.dart';
