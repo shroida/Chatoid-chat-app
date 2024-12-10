@@ -17,8 +17,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ZoomDrawerController _drawerController = ZoomDrawerController();
-  late ChatProvider chatProvider; 
-  late StoryProvider storyProvider; 
+  late ChatProvider chatProvider;
+  late StoryProvider storyProvider;
   @override
   void initState() {
     super.initState();
@@ -76,7 +76,6 @@ class _HomePageState extends State<HomePage> {
     final loginCubit = context.watch<LoginCubit>();
     final themeCubit = context.watch<ThemeCubit>();
 
-    // Check if currentUser is null before using it
     final currentUser = loginCubit.currentUser;
     return ZoomDrawer(
       controller: _drawerController,

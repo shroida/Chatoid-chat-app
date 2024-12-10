@@ -7,8 +7,8 @@ import 'package:chatoid/presntation/screens/HomePageScreens/homePageStoryPosts.d
 import 'package:chatoid/presntation/screens/profile.dart';
 import 'package:chatoid/presntation/screens/search_screen.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/app_bar_home_view.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/widgets/bottom_curved_navigation.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -24,6 +24,12 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   late UserData currentUser;
   List<Widget>? screens;
   bool isDarkMode = false;
@@ -66,56 +72,25 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final themeCubit = context.watch<ThemeCubit>();
-
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBarHomeView(
-            drawerController: widget.drawerController,
-          ),
-          body: screens != null
-              ? RefreshIndicator(
-                  onRefresh: _refreshData,
-                  child: IndexedStack(
-                    index: _currentIndex,
-                    children: screens!,
-                  ),
-                )
-              : const Center(child: CircularProgressIndicator()),
-          bottomNavigationBar: CurvedNavigationBar(
-            index: _currentIndex,
-            color: themeCubit.colorOfApp,
-            backgroundColor: Colors.transparent,
-            items: [
-              Icon(
-                Icons.home,
-                size: 30,
-                color: _currentIndex == 0 ? Colors.white : Colors.black,
-              ),
-              Icon(
-                Icons.search,
-                size: 30,
-                color: _currentIndex == 1 ? Colors.white : Colors.black,
-              ),
-              Icon(
-                Icons.message_rounded,
-                size: 30,
-                color: _currentIndex == 2 ? Colors.white : Colors.black,
-              ),
-              Icon(
-                Icons.person,
-                size: 30,
-                color: _currentIndex == 3 ? Colors.white : Colors.black,
-              ),
-            ],
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
-        );
+            appBar: AppBarHomeView(
+              drawerController: widget.drawerController,
+            ),
+            body: screens != null
+                ? RefreshIndicator(
+                    onRefresh: _refreshData,
+                    child: IndexedStack(
+                      index: _currentIndex,
+                      children: screens!,
+                    ),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+            bottomNavigationBar: BottomCurvedNavigation(
+              currentIndex: _currentIndex,
+              onItemTapped: _onItemTapped,
+            ));
       },
     );
   }
