@@ -3,11 +3,11 @@ import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/presntation/screens/HomePageScreens/homePageChats.dart';
-import 'package:chatoid/presntation/screens/HomePageScreens/homePageStoryPosts.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/widgets/Home%20screen/home_screen_story_posts.dart';
 import 'package:chatoid/presntation/screens/profile.dart';
 import 'package:chatoid/presntation/screens/search_screen.dart';
-import 'package:chatoid/zRefactor/features/home_page/view/widgets/app_bar_home_view.dart';
-import 'package:chatoid/zRefactor/features/home_page/view/widgets/bottom_curved_navigation.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/widgets/Appbar/app_bar_home_view.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/widgets/Bottom%20Navigation/bottom_curved_navigation.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +44,7 @@ class _HomeViewState extends State<HomeView> {
     context.read<ThemeCubit>().loadThemeMode();
 
     screens = [
-      const HomePageStoryPosts(),
+      const HomeScreenStoryPosts(),
       SearchScreen(parentContext: context),
       const HomePageChats(),
       Profile(userProfile: currentUser),
