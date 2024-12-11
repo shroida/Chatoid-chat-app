@@ -8,10 +8,10 @@ typedef OnButtonPressedCallback = void Function(String newReaction);
 
 class ReactionButton extends StatefulWidget {
   const ReactionButton({
-    Key? key,
+    super.key,
     this.reactFromDatabase,
     this.onReactionChanged,
-  }) : super(key: key);
+  });
 
   final String? reactFromDatabase;
   final OnButtonPressedCallback? onReactionChanged;
@@ -32,7 +32,6 @@ class _ReactionButtonState extends State<ReactionButton> {
 
   void _showReactionPopUp(BuildContext context, Offset tapPosition) {
     final overlay = Overlay.of(context);
-    if (overlay == null) return;
 
     final screenWidth = MediaQuery.of(context).size.width;
     double left = tapPosition.dx;

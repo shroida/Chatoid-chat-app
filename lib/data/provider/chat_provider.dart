@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:chatoid/data/models/tables/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,12 +13,12 @@ final supabase = Supabase.instance;
 
 class ChatProvider extends ChangeNotifier {
   final LoginCubit loginCubit;
-
-  ChatProvider({required this.loginCubit});
+  final ChatsCubit chatsCubit;
+  ChatProvider({required this.chatsCubit, required this.loginCubit});
 
   List<UserData> friendsList = [];
   bool isLoading = true; // Initially loading
-  List<clsMessage> friendMessages = []; // Store messages for each friend
+  // List<clsMessage> chatsCubit.friendMessages = []; // Store messages for each friend
 
   Future<void> saveFriendData(UserData friend) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,8 +42,7 @@ class ChatProvider extends ChangeNotifier {
       friendsList = friendsJsonList
           .map((friendJson) => UserData.fromJson(jsonDecode(friendJson)))
           .toList();
-    } else {
-    }
+    } else {}
     notifyListeners(); // Notify listeners that friends list has been updated
   }
 
@@ -86,8 +86,7 @@ class ChatProvider extends ChangeNotifier {
       } else {
         friendsList = [];
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> loadMessages() async {
@@ -95,16 +94,14 @@ class ChatProvider extends ChangeNotifier {
     List<String>? messagesJsonList = prefs.getStringList('messages_list');
 
     if (messagesJsonList != null) {
-      friendMessages = messagesJsonList
+      chatsCubit.friendMessages = messagesJsonList
           .map((messageJson) => clsMessage.fromJson(jsonDecode(messageJson)))
           .toList();
-    } else {
-    }
+    } else {}
     notifyListeners(); // Notify listeners that messages have been updated
   }
 
   Future<void> fetchAllMessages(UserData currentUser) async {
-
     await Future.delayed(const Duration(milliseconds: 500));
 
     try {
@@ -114,9 +111,9 @@ class ChatProvider extends ChangeNotifier {
               'id, message_text, sender_id, receiver_id, created_at, is_read, message_reply,reaction') // Include message_reply here
           .or('sender_id.eq.${currentUser.user_id},receiver_id.eq.${currentUser.user_id}');
       if (response.isNotEmpty) {
-        friendMessages.clear();
+        chatsCubit.friendMessages.clear();
         for (var message in response) {
-          friendMessages.add(clsMessage(
+          chatsCubit.friendMessages.add(clsMessage(
             senderId: message['sender_id'] as int,
             friendId: message['receiver_id'] as int,
             messageText: message['message_text'] as String,
@@ -126,12 +123,11 @@ class ChatProvider extends ChangeNotifier {
             react: message['reaction'] as String?, // New field for reaction
           ));
         }
-        await saveMessages(friendMessages); // Save messages after fetching
+        await saveMessages(
+            chatsCubit.friendMessages); // Save messages after fetching
         notifyListeners();
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   Future<void> saveMessages(List<clsMessage> messagesToSave) async {
@@ -159,8 +155,7 @@ class ChatProvider extends ChangeNotifier {
             },
           )
           .subscribe(); // Subscribe to the channel
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   List<Function> subscriptions = []; // Store your subscription functions
@@ -174,8 +169,9 @@ class ChatProvider extends ChangeNotifier {
 
   clsMessage? getLatestMessage(int userId) {
     // Filter messages for the given userId
-    final userMessages =
-        friendMessages.where((msg) => msg.friendId == userId).toList();
+    final userMessages = chatsCubit.friendMessages
+        .where((msg) => msg.friendId == userId)
+        .toList();
 
     userMessages.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
@@ -190,8 +186,7 @@ class ChatProvider extends ChangeNotifier {
             event: PostgresChangeEvent.all,
             schema: 'public',
             table: 'friendships',
-            callback: (payload) {
-            })
+            callback: (payload) {})
         .subscribe();
     notifyListeners();
   }
@@ -209,7 +204,7 @@ class ChatProvider extends ChangeNotifier {
       messsagReply: willReply ? messageTextWillReply : null,
     );
 
-    friendMessages.add(newMessage);
+    chatsCubit.friendMessages.add(newMessage);
     notifyListeners();
 
     try {
@@ -233,7 +228,7 @@ class ChatProvider extends ChangeNotifier {
       );
     }
 
-    await saveMessages(friendMessages);
+    await saveMessages(chatsCubit.friendMessages);
 
     String playerId;
     try {
@@ -397,8 +392,7 @@ class ChatProvider extends ChangeNotifier {
       await supabase.client.from('user_profiles').update(
           {'in_chat': friendId}).eq('user_id', loginCubit.currentUser.user_id);
       notifyListeners(); // Update UI
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> leaveChat() async {
@@ -446,8 +440,7 @@ class ChatProvider extends ChangeNotifier {
         if (currentUserChat != null && friendChat != null) {
           // Return true if both users are in each other's in_chat
           return currentUserChat == friendId && friendChat == currentUserId;
-        } else {
-        }
+        } else {}
       }
     } catch (e) {
       final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -499,8 +492,7 @@ class ChatProvider extends ChangeNotifier {
         .eq('receiver_id', receiverId);
 
     if (response != null) {
-    } else {
-    }
+    } else {}
   }
 
   Future<void> deleteMessage(clsMessage message) async {

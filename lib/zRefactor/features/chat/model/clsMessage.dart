@@ -21,11 +21,11 @@ class clsMessage {
         'user_id': senderId,
         'friend_id': friendId,
         'message_text': messageText,
-        'created_at': createdAt.toIso8601String(), // Convert to ISO string
+        'created_at': createdAt.toIso8601String(), 
         'is_read': isRead,
         'reaction': react,
         'message_reply':
-            messsagReply, // Include message_reply in the JSON representation
+            messsagReply, 
       };
 
   // Create a clsMessage object from a JSON map

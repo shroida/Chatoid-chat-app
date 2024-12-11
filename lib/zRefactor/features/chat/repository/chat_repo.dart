@@ -1,4 +1,4 @@
-import 'package:chatoid/data/models/tables/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 
 mixin ChatRepo {

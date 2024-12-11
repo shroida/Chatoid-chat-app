@@ -1,21 +1,20 @@
-
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/data/models/tables/clsMessage.dart';
-import 'package:chatoid/data/provider/chat_provider.dart';
+import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:flutter/material.dart';
 import 'reaction_button.dart'; // Ensure you import the ReactionButton widget
 
 class MainMessage extends StatelessWidget {
   final clsMessage message;
   final bool isSentByUser;
-  final ChatProvider chatProvider; // Assuming you need to pass ChatProvider
+  final ChatsCubit chatProvider; // Assuming you need to pass ChatProvider
 
   const MainMessage({
-    Key? key,
+    super.key,
     required this.message,
     required this.isSentByUser,
     required this.chatProvider,
-  }) : super(key: key);
+  });
   String _formatMessageDate(DateTime date) {
     String hour = '';
     hour = (date.hour < 10 ? '0' : '') +
@@ -114,12 +113,12 @@ class MainMessage extends StatelessWidget {
           child: ReactionButton(
             reactFromDatabase: message.react ?? 'none',
             onReactionChanged: (reaction) {
-              chatProvider.setReactOnMessage(
-                message.messageText,
-                message.friendId,
-                message.senderId,
-                reaction,
-              );
+              // chatProvider.setReactOnMessage(
+              //   message.messageText,
+              //   message.friendId,
+              //   message.senderId,
+              //   reaction,
+              // );
             },
           ),
         ),

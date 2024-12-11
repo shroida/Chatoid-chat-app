@@ -89,7 +89,7 @@ class ChatCard extends StatelessWidget {
                           maxLines: 1, // Limit to a single line
                           overflow: TextOverflow
                               .ellipsis, // Add "..." if the text is too long
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16.0, // You can adjust the font size
                           ),
                         ),

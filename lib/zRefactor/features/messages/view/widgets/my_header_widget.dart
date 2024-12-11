@@ -17,14 +17,14 @@ class MyHeaderWidget extends StatefulWidget {
     this.iconColor,
     required this.userProfile,
     this.backgroundColor =
-        ChatAppColors.appBarColor, // Default background color
+        ChatAppColors.appBarColor, 
   });
 
   @override
-  _MyHeaderWidgetState createState() => _MyHeaderWidgetState();
+  MyHeaderWidgetState createState() => MyHeaderWidgetState();
 }
 
-class _MyHeaderWidgetState extends State<MyHeaderWidget> {
+class MyHeaderWidgetState extends State<MyHeaderWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,7 +56,7 @@ class _MyHeaderWidgetState extends State<MyHeaderWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back), // Use the passed left icon
+                    icon: const Icon(Icons.arrow_back), // Use the passed left icon
                     onPressed: () {
                       Navigator.pop(context);
                     },

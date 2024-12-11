@@ -4,7 +4,7 @@ import 'package:chatoid/data/models/story/story.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/home_page.dart';
-import 'package:chatoid/presntation/widgets/my_header_widget.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/my_header_widget.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

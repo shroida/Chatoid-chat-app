@@ -13,7 +13,8 @@ class MessagesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = BlocProvider.of<LoginCubit>(context);
-    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    final chatsCubit =
+        BlocProvider.of<ChatsCubit>(context); // Accessing context here
     final themeCubit = BlocProvider.of<ThemeCubit>(context);
 
     return BlocBuilder<ChatsCubit, ChatsState>(
@@ -27,8 +28,10 @@ class MessagesSection extends StatelessWidget {
                 Image.asset('assets/loading_earth.gif'),
                 GestureDetector(
                   onTap: () {
-                    chatsCubit.fetchFriends(authProvider.currentUser.user_id); // Trigger fetch friends
-                    chatsCubit.fetchAllMessages(authProvider.currentUser); // Trigger fetch messages
+                    chatsCubit.fetchFriends(authProvider
+                        .currentUser.user_id); // Trigger fetch friends
+                    chatsCubit.fetchAllMessages(
+                        authProvider.currentUser); // Trigger fetch messages
                   },
                   child: Container(
                     padding:

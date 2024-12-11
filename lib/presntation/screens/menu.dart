@@ -1,6 +1,5 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/zRefactor/core/utlis/app_router.dart';
-import 'package:chatoid/zRefactor/features/login/view/login.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/presntation/screens/profile.dart';

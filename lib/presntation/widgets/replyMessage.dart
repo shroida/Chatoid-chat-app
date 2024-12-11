@@ -7,10 +7,10 @@ class MessageReplyDisplay extends StatelessWidget {
   final String replyMessage; // The replied message text
 
   const MessageReplyDisplay({
-    Key? key,
+    super.key,
     required this.username,
     required this.replyMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

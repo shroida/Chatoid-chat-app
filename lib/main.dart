@@ -27,7 +27,7 @@ void main() async {
 
   await Supabase.initialize(
     url: urlSupa,
-    anonKey: my_Supa_key,
+    anonKey: mySupakey,
     debug: true,
   );
 
@@ -46,15 +46,17 @@ void main() async {
         BlocProvider<ChatsCubit>(
           create: (context) => ChatsCubit(),
         ),
-       
       ],
       child: MultiProvider(
         providers: [
-          
           ChangeNotifierProvider<ChatProvider>(
             create: (context) {
               final loginCubit = context.read<LoginCubit>();
-              return ChatProvider(loginCubit: loginCubit);
+              final chatsCubit = context.read<ChatsCubit>();
+              return ChatProvider(
+                chatsCubit: chatsCubit,
+                loginCubit: loginCubit,
+              );
             },
           ),
           ChangeNotifierProvider<NotificationProvider>(
@@ -88,9 +90,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         routerConfig: AppRouter.router,
         debugShowCheckedModeBanner: false,
-       
-       
-       
+
         // theme: ThemeData.dark().copyWith(
         // scaffoldBackgroundColor: kPrimaryColor,
         // textTheme:

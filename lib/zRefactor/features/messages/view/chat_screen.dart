@@ -1,22 +1,18 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/models/tables/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
-import 'package:chatoid/zRefactor/features/home_page/view/home_page.dart';
-import 'package:chatoid/presntation/screens/profile.dart';
-import 'package:chatoid/presntation/widgets/mainMessage.dart';
 import 'package:chatoid/presntation/widgets/messageInputAreal.dart';
-import 'package:chatoid/presntation/widgets/my_header_widget.dart';
-import 'package:chatoid/presntation/widgets/reaction_button.dart';
-import 'package:chatoid/presntation/widgets/replyMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/messages_list.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/my_header_widget.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/text_in_chat.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  final UserData friendUser; // Add friendUser
+  final UserData friendUser;
 
   const ChatScreen({
     super.key,
@@ -37,10 +33,22 @@ class ChatScreenState extends State<ChatScreen> {
   String? messageTextToReply;
   bool _isInChat = false;
 
+  void _updateReplyState(bool willReply) {
+    setState(() {
+      iWillReply = willReply;
+    });
+  }
+
+  void _updateMessageTextToReply(String? textToReply) {
+    setState(() {
+      messageTextToReply = textToReply;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    Future<void> _checkIfUsersInChat() async {
+    Future<void> checkIfUsersInChat() async {
       final loginCubit = context.read<LoginCubit>();
       final currentUserId = loginCubit.currentUser.user_id;
       final chatProvider = Provider.of<ChatProvider>(context, listen: false);
@@ -54,10 +62,11 @@ class ChatScreenState extends State<ChatScreen> {
       });
     }
 
-    _checkIfUsersInChat();
+    checkIfUsersInChat();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+      final chatProvider = Provider.of<ChatsCubit>(context, listen: false);
+      // final chatProvider = Provider.of<ChatProvider>(context, listen: false);
       final loginCubit = context.read<LoginCubit>();
 
       chatProvider.fetchAllMessages(loginCubit.currentUser);
@@ -112,8 +121,9 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
+    // final chatProvider = Provider.of<ChatProvider>(context);
     final authProvider = Provider.of<LoginCubit>(context);
+    final chatProvider = Provider.of<ChatsCubit>(context);
     final themeCubit = context.read<ThemeCubit>();
 
     final currentUserId = authProvider.currentUser.user_id;
@@ -131,7 +141,7 @@ class ChatScreenState extends State<ChatScreen> {
     Future<bool> onWillPop() async {
       final chatProvider = Provider.of<ChatProvider>(context, listen: false);
       chatProvider.onLeaveChat();
-      return true; // Allows the back navigation
+      return true;
     }
 
     return WillPopScope(
@@ -155,112 +165,18 @@ class ChatScreenState extends State<ChatScreen> {
                       iconColor: Colors.black,
                       backgroundColor: themeCubit.colorOfApp,
                     ),
-                    if (_isInChat)
-                      Text(
-                        'Y\'all in the chat',
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 9, 225, 16),
-                            fontWeight: FontWeight.w800),
-                      ),
-                    Expanded(
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) {
-                          final message = messages[index];
-                          final bool isSentByUser =
-                              currentUserId == message.senderId;
-
-                          dragOffsets[index] = dragOffsets[index] ?? 0;
-
-                          return GestureDetector(
-                            onPanUpdate: (details) {
-                              setState(() {
-                                double screenWidth =
-                                    MediaQuery.of(context).size.width;
-                                dragOffsets[index] = (dragOffsets[index]! +
-                                        details.delta.dx)
-                                    .clamp(0,
-                                        MediaQuery.of(context).size.width / 2);
-
-                                // Check if the drag offset reaches half of the screen width
-
-                                if (dragOffsets[index]! > screenWidth / 2 + 2) {
-                                  iWillReply = true;
-                                } else {
-                                  iWillReply = false;
-                                }
-                              });
-                            },
-                            onPanEnd: (details) async {
-                              double screenWidth =
-                                  MediaQuery.of(context).size.width;
-
-                              if (dragOffsets[index]! > screenWidth / 2 - 5) {
-                                setState(() {
-                                  iWillReply = true;
-                                  messageTextToReply = message.messageText;
-                                });
-                              } else {
-                                setState(() {
-                                  iWillReply = false;
-                                  messageTextToReply = null;
-                                });
-                              }
-
-                              // Keep the focus on the input field so the keyboard stays open
-                              FocusScope.of(context).requestFocus(_focusNode);
-
-                              setState(() {
-                                dragOffsets[index] = 0;
-                              });
-                            },
-                            onLongPress: () {
-                              _showMessageOptions(
-                                  chatProvider, context, message);
-                            },
-                            child: Transform.translate(
-                                offset: Offset(dragOffsets[index]!, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Align(
-                                      alignment: isSentByUser
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          if (message.messsagReply != null)
-                                            MessageReplyDisplay(
-                                              username:
-                                                  widget.friendUser.username,
-                                              replyMessage: message
-                                                  .messsagReply!, // Pass the replied message
-                                            ),
-                                          MainMessage(
-                                            message:
-                                                message, // Pass the message object
-                                            isSentByUser:
-                                                isSentByUser, // Pass whether the message is sent by the user
-                                            chatProvider:
-                                                chatProvider, // Pass the ChatProvider instance
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 9,
-                                    )
-                                  ],
-                                )),
-                          );
-                        },
-                      ),
+                    if (_isInChat) const TextInChat(),
+                    MessageListView(
+                      messsagReply: messageTextToReply,
+                      messages: messages, // Provide the actual list of messages
+                      currentUserId:
+                          currentUserId, // Replace with the actual user ID
+                      scrollController: _scrollController,
+                      focusNode: _focusNode,
+                      dragOffsets: dragOffsets,
+                      onReplyChanged: _updateReplyState,
+                      onMessageTextToReplyChanged: _updateMessageTextToReply,
+                      friendUser: widget.friendUser,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -330,8 +246,6 @@ class ChatScreenState extends State<ChatScreen> {
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     final loginCubit = context.read<LoginCubit>();
 
-    // Keep the focus on the existing FocusNode
-    FocusScope.of(context).requestFocus(_focusNode);
 
     if (inChat) {
       if (!iWillReply) {
@@ -366,29 +280,5 @@ class ChatScreenState extends State<ChatScreen> {
     iWillReply = false;
 
     _messageController.clear();
-  }
-
-  void _showMessageOptions(
-      ChatProvider chatProvider, BuildContext context, clsMessage message) {
-    void deleteMessage(clsMessage message) async {
-      await chatProvider.deleteMessage(
-          message); // Ensure this is awaited for proper execution
-    }
-
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Wrap(children: [
-          ListTile(
-            leading: const Icon(Icons.delete),
-            title: const Text('Delete Message'),
-            onTap: () {
-              deleteMessage(message); // Call your delete function
-              Navigator.of(context).pop(); // Close the bottom sheet
-            },
-          ),
-        ]);
-      },
-    );
   }
 }

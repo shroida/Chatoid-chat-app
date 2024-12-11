@@ -1,4 +1,4 @@
-import 'package:chatoid/data/models/tables/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
@@ -66,9 +66,8 @@ class ChatsCubit extends Cubit<ChatsState> {
       final response = await supabase.client
           .from('messages')
           .select(
-              'id, message_text, sender_id, receiver_id, created_at, is_read')
+              'id, message_text, sender_id, receiver_id, created_at, is_read, message_reply,reaction') // Include message_reply here
           .or('sender_id.eq.${currentUser.user_id},receiver_id.eq.${currentUser.user_id}');
-
       if (response.isNotEmpty) {
         friendMessages.clear();
         for (var message in response) {
@@ -78,6 +77,8 @@ class ChatsCubit extends Cubit<ChatsState> {
             messageText: message['message_text'] as String,
             createdAt: DateTime.parse(message['created_at']),
             isRead: message['is_read'] as bool,
+            messsagReply: message['message_reply'] as String?, // Add this line
+            react: message['reaction'] as String?, // New field for reaction
           ));
         }
         await _chatRepoImpl.saveMessages(friendMessages);
@@ -105,10 +106,10 @@ class ChatsCubit extends Cubit<ChatsState> {
             schema: 'public',
             table: table,
             callback: (payload) async {
-              await callbackAction(); 
+              await callbackAction();
             },
           )
-          .subscribe(); 
+          .subscribe();
     } catch (e) {}
   }
 }

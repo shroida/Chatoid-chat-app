@@ -1,10 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
+import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/zRefactor/features/chat/view/widgets/Messages%20Section/messages_section.dart';
 import 'package:chatoid/zRefactor/features/chat/view/widgets/Tabbar/tap_bar.dart';
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class HomePageChats extends StatefulWidget {
   const HomePageChats({super.key});
@@ -34,7 +37,7 @@ class HomePageChatsState extends State<HomePageChats> {
           ),
           Expanded(
             child: _currentIndexHomePage == 0
-                ? const MessagesSection() // Pass chatProvider here
+                ? const MessagesSection()
                 : _currentIndexHomePage == 1
                     ? _buildGroupsSection()
                     : _buildSettingsSection(context, themeProvider),
@@ -44,9 +47,12 @@ class HomePageChatsState extends State<HomePageChats> {
     );
   }
 
- 
   Widget _buildGroupsSection() {
-    return const Text('We will add this feature soon!');
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context, listen: true);
+    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+
+    return Text(
+        'We will add this feature soon! ${chatsCubit.friendMessages.length }');
   }
 
   Widget _buildSettingsSection(BuildContext context, ThemeCubit themeProvider) {
@@ -83,6 +89,4 @@ class HomePageChatsState extends State<HomePageChats> {
       ),
     );
   }
-
-  
 }

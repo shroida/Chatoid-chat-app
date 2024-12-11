@@ -54,7 +54,7 @@ class NotificationProvider with ChangeNotifier {
         'created_at': DateTime.now().toIso8601String(),
         'is_read': false,
       });
-      await chatProvider.saveMessages(chatProvider.friendMessages);
+      // await chatProvider.saveMessages(chatProvider.friendMessages);
       notifyListeners();
       return true;
     } catch (e) {
