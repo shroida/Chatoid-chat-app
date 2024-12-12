@@ -1,7 +1,7 @@
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
-import 'package:chatoid/presntation/screens/profile.dart';
+import 'package:chatoid/zRefactor/features/profile/view/profile.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

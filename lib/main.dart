@@ -1,6 +1,7 @@
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
+import 'package:chatoid/zRefactor/features/profile/view_model/cubit/profile_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
@@ -46,6 +47,9 @@ void main() async {
         ),
         BlocProvider<ChatsCubit>(
           create: (context) => ChatsCubit(),
+        ),
+        BlocProvider<ProfileCubit>(
+          create: (context) => ProfileCubit(),
         ),
         BlocProvider<MessagesCubit>(
           create: (context) {

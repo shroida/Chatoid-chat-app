@@ -1,6 +1,6 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:chatoid/presntation/screens/profile.dart';
+import 'package:chatoid/zRefactor/features/profile/view/profile.dart';
 import 'package:flutter/material.dart';
 
 class MyHeaderWidget extends StatefulWidget {

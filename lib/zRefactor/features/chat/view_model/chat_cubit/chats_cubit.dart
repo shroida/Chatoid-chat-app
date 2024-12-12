@@ -2,6 +2,7 @@ import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -130,4 +131,49 @@ class ChatsCubit extends Cubit<ChatsState> {
     } else {}
   }
 
+  Future<void> addFriend(int currentUserId, UserData friend) async {
+    final supabase = Supabase.instance;
+    if (currentUserId == friend.user_id) return;
+
+    try {
+      // Check if friendship already exists
+      final response = await supabase.client
+          .from('friendships')
+          .select()
+          .eq('user_id', currentUserId)
+          .eq('friend_id', friend.user_id); // Make sure to call execute()
+
+      // Check if there is a friendship record
+      if (response.isNotEmpty) {
+        return; // Friendship already exists
+      }
+
+      // If no friendship exists, proceed to insert a new record
+      final insertResponse = await supabase.client.from('friendships').insert({
+        'user_id': currentUserId,
+        'friend_id': friend.user_id,
+        'status': 'accepted',
+        'created_at': DateTime.now().toIso8601String(),
+      }); // Make sure to call
+
+      if (insertResponse.error != null) {
+        return;
+      }
+
+      // Update local friends list
+      friendsList.add(friend);
+      await _chatRepoImpl
+          .saveFriendList(friendsList); // Save friends list after adding
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('Try to send from home page'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
 }

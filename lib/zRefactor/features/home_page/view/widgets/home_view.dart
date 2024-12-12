@@ -4,7 +4,7 @@ import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/chat/view/home_page_chats.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Home%20screen/home_screen_story_posts.dart';
-import 'package:chatoid/presntation/screens/profile.dart';
+import 'package:chatoid/zRefactor/features/profile/view/profile.dart';
 import 'package:chatoid/presntation/screens/search_screen.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Appbar/app_bar_home_view.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Bottom%20Navigation/bottom_curved_navigation.dart';

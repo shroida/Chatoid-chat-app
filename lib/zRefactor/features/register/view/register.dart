@@ -5,7 +5,7 @@ import 'package:chatoid/zRefactor/features/login/view/widgets/rive_animation_man
 import 'package:chatoid/zRefactor/features/register/view/widgets/navigate_to_login.dart';
 import 'package:chatoid/zRefactor/features/register/view/widgets/register_button.dart';
 import 'package:flutter/material.dart';
-import 'package:chatoid/presntation/widgets/diver.dart';
+import 'package:chatoid/zRefactor/features/login/view/widgets/diver.dart';
 
 class RegisterScreen extends StatefulWidget {
   static String id = 'register_page';

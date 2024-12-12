@@ -9,7 +9,7 @@ import 'package:chatoid/zRefactor/features/login/view/widgets/password_field.dar
 import 'package:chatoid/zRefactor/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:chatoid/presntation/widgets/diver.dart';
+import 'package:chatoid/zRefactor/features/login/view/widgets/diver.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
