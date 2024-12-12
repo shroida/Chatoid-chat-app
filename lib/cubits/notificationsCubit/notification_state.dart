@@ -1,4 +1,4 @@
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 
 // Notification State
 abstract class NotificationState  {

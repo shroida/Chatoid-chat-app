@@ -1,4 +1,3 @@
-import 'package:chatoid/constants.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/messageInputAreal.dart';
@@ -67,6 +66,7 @@ class ChatScreenState extends State<ChatScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final chatProvider = Provider.of<ChatsCubit>(context, listen: false);
+      final messagesCubit = Provider.of<MessagesCubit>(context, listen: false);
       final loginCubit = context.read<LoginCubit>();
 
       chatProvider.fetchAllMessages(loginCubit.currentUser);
@@ -76,6 +76,11 @@ class ChatScreenState extends State<ChatScreen> {
         if (_scrollController.hasClients) {
           _scrollToBottom();
         }
+      });
+      //subscribe to in chat
+      chatProvider.subscribe('user_profiles', () async {
+        await messagesCubit.ifTwoUsersInChat(
+            loginCubit.currentUser.user_id, widget.friendUser.friendId);
       });
     });
 
@@ -121,12 +126,11 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final chatProvider = Provider.of<ChatProvider>(context);
-    final authProvider = Provider.of<LoginCubit>(context);
+    final loginCubit = Provider.of<LoginCubit>(context);
     final chatProvider = Provider.of<ChatsCubit>(context);
     final themeCubit = context.read<ThemeCubit>();
 
-    final currentUserId = authProvider.currentUser.user_id;
+    final currentUserId = loginCubit.currentUser.user_id;
     final messages = chatProvider.friendMessages
         .where((message) =>
             (message.senderId == currentUserId &&
@@ -135,7 +139,6 @@ class ChatScreenState extends State<ChatScreen> {
                 message.friendId == currentUserId))
         .toList();
 
-    // Sort messages by the time they were created (oldest at the top, newest at the bottom)
     messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     Future<bool> onWillPop() async {
@@ -144,8 +147,11 @@ class ChatScreenState extends State<ChatScreen> {
       return true;
     }
 
-    return WillPopScope(
-      onWillPop: onWillPop,
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        onWillPop();
+      },
       child: Scaffold(
         body: GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -242,16 +248,12 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (inChat) {
       if (!iWillReply) {
-        await chatProvider.sendMessage(
-          loginCubit.currentUser.user_id,
-            widget.friendUser.friendId,
-           _messageController.text,
+        await chatProvider.sendMessage(loginCubit.currentUser.user_id,
+            widget.friendUser.friendId, _messageController.text,
             makeItReadWeAreInChat: true);
       } else {
-        await chatProvider.sendMessage(
-          loginCubit.currentUser.user_id,
-            widget.friendUser.friendId,
-            _messageController.text,
+        await chatProvider.sendMessage(loginCubit.currentUser.user_id,
+            widget.friendUser.friendId, _messageController.text,
             willReply: iWillReply,
             messageTextWillReply: messageTextToReply,
             makeItReadWeAreInChat: true);

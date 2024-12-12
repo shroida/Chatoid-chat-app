@@ -2,7 +2,7 @@ import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubi
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/messages/repository/msg_repo_impl.dart';
 import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_state.dart';
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,7 +14,6 @@ class MessagesCubit extends Cubit<MessagesState> {
     required this.chatsCubit,
     required this.authProvider,
   }) : super(MessagesInitial());
-
 
   final supabase = Supabase.instance;
   final MsgRepoImpl _msgRepoImpl = MsgRepoImpl();
@@ -146,15 +145,6 @@ class MessagesCubit extends Cubit<MessagesState> {
     _msgRepoImpl.leaveChat(authProvider);
   }
 
-  // void onEnterChat(int friendId) async {
-  //   print('Entering chat with friendId: $friendId');
-  //   print('LoginCubit User ID: ${loginCubit.currentUser.user_id}');
-  //   print('LoginCubit User name: ${loginCubit.currentUser.username}');
-  //   print('ChatsCubit Messages: ${chatsCubit.friendMessages[10].messageText}');
-  //   await _msgRepoImpl.makeMessagesIsRead(friendId, loginCubit);
-  //   await _msgRepoImpl.makeMeInChatUser(friendId, loginCubit);
-  //   await ifTwoUsersInChat(loginCubit.currentUser.user_id, friendId);
-  // }
   void onEnterChat(int friendId) {
     print(
         'username from authProvider cubit ${authProvider.currentUser.username}');
@@ -203,5 +193,14 @@ class MessagesCubit extends Cubit<MessagesState> {
         ),
       );
     }
+  }
+
+  Future<void> deleteMessage(clsMessage message) async {
+    await supabase.client
+        .from('messages')
+        .delete()
+        .eq('message_text', message.messageText)
+        .or('receiver_id.eq.${message.senderId},receiver_id.eq.${message.friendId}') // Correct usage of OR for receiver_id
+        .or('sender_id.eq.${message.senderId},sender_id.eq.${message.friendId}'); // Correct usage of OR for sender_id
   }
 }

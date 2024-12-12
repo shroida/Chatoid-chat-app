@@ -1,10 +1,13 @@
 import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:chatoid/presntation/widgets/mainMessage.dart';
-import 'package:chatoid/presntation/widgets/replyMessage.dart';
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/mainMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/replyMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
+import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class MessageListView extends StatefulWidget {
   final List<clsMessage> messages;
@@ -39,6 +42,7 @@ class _MessageListViewState extends State<MessageListView> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatsCubit>(context, listen: true);
+    final messagesCubit = Provider.of<MessagesCubit>(context, listen: true);
 
     return Expanded(
       child: ListView.builder(
@@ -83,8 +87,16 @@ class _MessageListViewState extends State<MessageListView> {
               widget.onMessageTextToReplyChanged(message.messageText);
             },
             onLongPress: () {
-              print('message reply${message.messsagReply}');
-              // Add your long press actions here if needed
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'Delete message\n"${message.messageText}"',
+                confirmBtnText: 'Delete!',
+                onConfirmBtnTap: () {
+                  Navigator.of(context).pop();
+                  messagesCubit.deleteMessage(message);
+                },
+              );
             },
             child: Transform.translate(
               offset: Offset(widget.dragOffsets[index]!, 0),

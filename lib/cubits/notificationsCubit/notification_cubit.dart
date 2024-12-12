@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:chatoid/cubits/notificationsCubit/notification_state.dart';
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

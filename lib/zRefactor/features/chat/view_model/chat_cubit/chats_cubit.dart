@@ -1,4 +1,4 @@
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
@@ -112,4 +112,22 @@ class ChatsCubit extends Cubit<ChatsState> {
           .subscribe();
     } catch (e) {}
   }
+
+  Future<void> setReactOnMessage(
+    String messageText,
+    int receiverId,
+    int senderId,
+    String reaction,
+  ) async {
+    final response = await supabase.client
+        .from('messages')
+        .update({'reaction': reaction})
+        .eq('sender_id', senderId)
+        .eq('message_text', messageText)
+        .eq('receiver_id', receiverId);
+
+    if (response != null) {
+    } else {}
+  }
+
 }

@@ -1,5 +1,5 @@
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:flutter/material.dart';
 import 'reaction_button.dart'; // Ensure you import the ReactionButton widget
@@ -30,7 +30,6 @@ class MainMessage extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none, // Allow overflow for the reaction button
       children: [
-        // Main message container
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -113,12 +112,12 @@ class MainMessage extends StatelessWidget {
           child: ReactionButton(
             reactFromDatabase: message.react ?? 'none',
             onReactionChanged: (reaction) {
-              // chatProvider.setReactOnMessage(
-              //   message.messageText,
-              //   message.friendId,
-              //   message.senderId,
-              //   reaction,
-              // );
+              chatProvider.setReactOnMessage(
+                message.messageText,
+                message.friendId,
+                message.senderId,
+                reaction,
+              );
             },
           ),
         ),
@@ -127,14 +126,3 @@ class MainMessage extends StatelessWidget {
   }
 }
 
-String _handleLongText(String text) {
-  // Insert a line break after a specific number of characters
-  int lineBreakIndex =
-      20; // Customize this number based on how short you want the first line
-  if (text.length > lineBreakIndex) {
-    return text.substring(0, lineBreakIndex) +
-        '\n' +
-        text.substring(lineBreakIndex);
-  }
-  return text; // If it's shorter, return the text as is
-}

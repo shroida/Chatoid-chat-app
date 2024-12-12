@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/repository/chat_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';

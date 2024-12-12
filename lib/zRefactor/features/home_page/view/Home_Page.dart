@@ -1,6 +1,6 @@
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/home_view.dart';

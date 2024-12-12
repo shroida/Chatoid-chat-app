@@ -1,4 +1,4 @@
-import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 
 abstract class ChatsState {}
