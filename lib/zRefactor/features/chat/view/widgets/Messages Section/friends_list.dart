@@ -1,5 +1,6 @@
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chatoid/zRefactor/features/chat/model/clsMessage.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
@@ -11,10 +12,12 @@ class FriendsList extends StatelessWidget {
     super.key,
     required this.chatsCubit,
     required this.authCubit,
+    required this.messagesCubit,
   });
 
   final ChatsCubit chatsCubit;
   final LoginCubit authCubit;
+  final MessagesCubit messagesCubit;
 
   clsMessage? _getLastMessage(UserData friend) {
     List<clsMessage> conversationMessages = chatsCubit.friendMessages
@@ -39,11 +42,12 @@ class FriendsList extends StatelessWidget {
     return "$hour:$minute";
   }
 
-  List<clsMessage> _messagesNotReadByMe(
-      int friendId, int currentUserId) {
+  List<clsMessage> _messagesNotReadByMe(int friendId, int currentUserId) {
     return chatsCubit.friendMessages
         .where((msg) =>
-            friendId == msg.senderId && !msg.isRead && msg.friendId == currentUserId)
+            friendId == msg.senderId &&
+            !msg.isRead &&
+            msg.friendId == currentUserId)
         .toList();
   }
 
@@ -74,8 +78,8 @@ class FriendsList extends StatelessWidget {
               final friend = sortedFriendsList[index];
               final lastMessage = _getLastMessage(friend);
 
-              List<clsMessage> unreadMessages =
-                  _messagesNotReadByMe(friend.friendId, authCubit.currentUser.user_id);
+              List<clsMessage> unreadMessages = _messagesNotReadByMe(
+                  friend.friendId, authCubit.currentUser.user_id);
               final messagesCount = unreadMessages.length;
 
               return ChatCard(
@@ -85,10 +89,12 @@ class FriendsList extends StatelessWidget {
                 friendData: friend,
                 messageCount: messagesCount,
                 messageText: lastMessage?.messageText ?? "No messages yet",
-                isLastMessageFromFriend: lastMessage?.senderId == friend.friendId,
+                isLastMessageFromFriend:
+                    lastMessage?.senderId == friend.friendId,
                 isLastMessageSeenByUser: lastMessage?.isRead ?? false,
                 onTap: () {
-                  // chatsCubit.onEnterChat(friend.friendId);
+                  messagesCubit.onEnterChat(friend.friendId);
+                  print('object');
                   Navigator.push(
                     context,
                     MaterialPageRoute(

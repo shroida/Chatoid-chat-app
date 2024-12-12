@@ -4,6 +4,7 @@ import 'package:chatoid/zRefactor/features/chat/view/widgets/Messages%20Section/
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,8 +14,8 @@ class MessagesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = BlocProvider.of<LoginCubit>(context);
-    final chatsCubit =
-        BlocProvider.of<ChatsCubit>(context); // Accessing context here
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    final messagesCubit = BlocProvider.of<MessagesCubit>(context);
     final themeCubit = BlocProvider.of<ThemeCubit>(context);
 
     return BlocBuilder<ChatsCubit, ChatsState>(
@@ -55,6 +56,7 @@ class MessagesSection extends StatelessWidget {
           );
         } else {
           return FriendsList(
+            messagesCubit: messagesCubit,
             chatsCubit: chatsCubit,
             authCubit: authProvider,
           );

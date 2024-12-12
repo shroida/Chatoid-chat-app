@@ -1,13 +1,14 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:chatoid/data/provider/chat_provider.dart';
-import 'package:chatoid/presntation/widgets/messageInputAreal.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/messageInputAreal.dart';
+import 'package:chatoid/zRefactor/features/messages/view/widgets/button_scroll_down.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/messages_list.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/my_header_widget.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/text_in_chat.dart';
+import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,10 +52,10 @@ class ChatScreenState extends State<ChatScreen> {
     Future<void> checkIfUsersInChat() async {
       final loginCubit = context.read<LoginCubit>();
       final currentUserId = loginCubit.currentUser.user_id;
-      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+      final messagesCubit = Provider.of<MessagesCubit>(context, listen: false);
 
       // Call the function and update the state accordingly
-      bool isInChat = await chatProvider.ifTwoUsersInChat(
+      bool isInChat = await messagesCubit.ifTwoUsersInChat(
           currentUserId, widget.friendUser.friendId);
 
       setState(() {
@@ -66,7 +67,6 @@ class ChatScreenState extends State<ChatScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final chatProvider = Provider.of<ChatsCubit>(context, listen: false);
-      // final chatProvider = Provider.of<ChatProvider>(context, listen: false);
       final loginCubit = context.read<LoginCubit>();
 
       chatProvider.fetchAllMessages(loginCubit.currentUser);
@@ -139,8 +139,8 @@ class ChatScreenState extends State<ChatScreen> {
     messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     Future<bool> onWillPop() async {
-      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-      chatProvider.onLeaveChat();
+      final messagesCubit = Provider.of<MessagesCubit>(context, listen: false);
+      messagesCubit.onLeaveChat();
       return true;
     }
 
@@ -225,14 +225,8 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               if (_isScrollDownButtonVisible)
-                Positioned(
-                  bottom: 80,
-                  right: 10,
-                  child: FloatingActionButton(
-                    onPressed: _scrollToBottom,
-                    backgroundColor: ChatAppColors.backgroundColor,
-                    child: const Icon(Icons.arrow_downward, color: Colors.grey),
-                  ),
+                ButtonScrollDown(
+                  scrollToBottom: _scrollToBottom,
                 ),
             ],
           ),
@@ -243,18 +237,21 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage(
       int currentUserId, int friendUserId, String message, bool inChat) async {
-    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     final loginCubit = context.read<LoginCubit>();
-
+    final chatProvider = context.read<MessagesCubit>();
 
     if (inChat) {
       if (!iWillReply) {
-        await chatProvider.sendMessage(loginCubit.currentUser.user_id,
-            widget.friendUser.friendId, _messageController.text,
+        await chatProvider.sendMessage(
+          loginCubit.currentUser.user_id,
+            widget.friendUser.friendId,
+           _messageController.text,
             makeItReadWeAreInChat: true);
       } else {
-        await chatProvider.sendMessage(loginCubit.currentUser.user_id,
-            widget.friendUser.friendId, _messageController.text,
+        await chatProvider.sendMessage(
+          loginCubit.currentUser.user_id,
+            widget.friendUser.friendId,
+            _messageController.text,
             willReply: iWillReply,
             messageTextWillReply: messageTextToReply,
             makeItReadWeAreInChat: true);

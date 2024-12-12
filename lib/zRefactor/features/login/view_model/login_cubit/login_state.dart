@@ -4,6 +4,7 @@ import 'package:chatoid/data/models/userData/user_data.dart';
 abstract class LoginState {}
 
 class LoginLoading extends LoginState {}
+class LoginInital extends LoginState {}
 class LoginLogout extends LoginState {}
 
 class LoginSuccess extends LoginState {

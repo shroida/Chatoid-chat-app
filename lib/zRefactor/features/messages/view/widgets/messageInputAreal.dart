@@ -10,19 +10,19 @@ class MessageInputArea extends StatefulWidget {
   final VoidCallback onCloseReply; // Callback to close reply state
 
   const MessageInputArea({
-    Key? key,
+    super.key,
     required this.username,
     required this.onCloseReply, // Required callback for closing
     this.messageTextToReply,
     required this.iWillReply, // Updated to use the passed value
     required this.messageController,
-  }) : super(key: key);
+  });
 
   @override
-  _MessageInputAreaState createState() => _MessageInputAreaState();
+  MessageInputAreaState createState() => MessageInputAreaState();
 }
 
-class _MessageInputAreaState extends State<MessageInputArea> {
+class MessageInputAreaState extends State<MessageInputArea> {
   late FocusNode _focusNode;
 
   @override

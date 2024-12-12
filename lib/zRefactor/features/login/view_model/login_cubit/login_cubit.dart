@@ -9,12 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginLoading());
-  Future<void> recoverSession(BuildContext context) async {
-    await _repo.recoverSession(context);
-  }
+  LoginCubit() : super(LoginInital());
 
   final LoginRepoImpl _repo = LoginRepoImpl();
+  
+  Future<void> recoverSession(BuildContext context) async {
+    print("Recovering session...");
+    await _repo.recoverSession(context);
+    print("Recovered session, user: ${currentUser.username}");
+  }
+
   late UserData currentUser =
       UserData(user_id: 0, username: '', email: '', friendId: 0);
   UserData get currentUserData => currentUser;

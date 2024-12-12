@@ -121,7 +121,7 @@ class LoginRepoImpl with LoginRepo {
   Future<void> recoverSession(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final loginCubit = context.read<LoginCubit>();
-
+  
     final storedSession = prefs.getString(sessionKey);
 
     if (storedSession != null) {

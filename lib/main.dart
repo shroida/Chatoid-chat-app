@@ -1,5 +1,6 @@
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
@@ -35,7 +36,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<LoginCubit>(
-          create: (context) => LoginCubit(),
+          create: (_) => LoginCubit(),
         ),
         BlocProvider<SignupCubit>(
           create: (context) => SignupCubit(),
@@ -45,6 +46,14 @@ void main() async {
         ),
         BlocProvider<ChatsCubit>(
           create: (context) => ChatsCubit(),
+        ),
+        BlocProvider<MessagesCubit>(
+          create: (context) {
+            final authProvider = BlocProvider.of<LoginCubit>(context);
+            final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+            return MessagesCubit(
+                authProvider: authProvider, chatsCubit: chatsCubit);
+          },
         ),
       ],
       child: MultiProvider(
@@ -83,20 +92,15 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => LoginCubit()),
-      ],
-      child: MaterialApp.router(
-        routerConfig: AppRouter.router,
-        debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+      routerConfig: AppRouter.router,
+      debugShowCheckedModeBanner: false,
 
-        // theme: ThemeData.dark().copyWith(
-        // scaffoldBackgroundColor: kPrimaryColor,
-        // textTheme:
-        //     GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
-        // ),
-      ),
+      // theme: ThemeData.dark().copyWith(
+      // scaffoldBackgroundColor: kPrimaryColor,
+      // textTheme:
+      //     GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
+      // ),
     );
   }
 }
