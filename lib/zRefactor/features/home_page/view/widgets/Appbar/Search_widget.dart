@@ -1,7 +1,6 @@
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
-import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/zRefactor/features/profile/view/profile.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +97,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 child: Text(
                     result[0].toUpperCase()), // First letter as avatar text
               ),
-              title: Text(result, style: TextStyle(fontSize: 16)),
+              title: Text(result, style: const TextStyle(fontSize: 16)),
               trailing: Icon(Icons.arrow_forward_ios,
                   size: 16, color: Colors.grey[600]), // Subtle arrow icon
               onTap: () async {

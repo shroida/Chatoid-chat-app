@@ -5,7 +5,6 @@ import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cu
 import 'package:chatoid/zRefactor/features/messages/repository/msg_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MsgRepoImpl with MsgRepo {
@@ -20,37 +19,8 @@ class MsgRepoImpl with MsgRepo {
   }
 
   @override
-  Future<void> sendPushNotification(
-      String playerId, String message, String senderusername) async {
-    const String onesignalAppId = 'e1416184-6af7-4fcc-8603-72e042e1718d';
-    const String onesignalApiKey =
-        'NjkxZDkwMWMtMGMyZC00NTBhLWI5N2EtNmE0ZTA4MTA1MGUx';
-
-    const url = 'https://onesignal.com/api/v1/notifications';
-
-    final headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': 'Basic $onesignalApiKey',
-    };
-
-    final body = jsonEncode({
-      'app_id': onesignalAppId,
-      'include_player_ids': [playerId],
-      'contents': {'en': message},
-      'headings': {'en': senderusername},
-    });
-
-    await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: body,
-    );
-  }
-
-  @override
   Future<void> leaveChat(LoginCubit loginCubit) async {
     try {
-      print('sdfsdfsdf leeeeaaaaaaaa ss${loginCubit.currentUser.username}');
       await supabase.client
           .from('user_profiles')
           .update({'in_chat': null}) // Set in_chat to null
@@ -99,4 +69,17 @@ class MsgRepoImpl with MsgRepo {
           {'in_chat': friendId}).eq('user_id', loginCubit.currentUser.user_id);
     } catch (e) {}
   }
+  @override
+   Future<String> fetchUsername(int userId) async {
+      try {
+        final response = await supabase.client
+            .from('user_profiles')
+            .select('username')
+            .eq('user_id', userId)
+            .single();
+        return response['username'] ?? 'Unknown';
+      } catch (e) {
+        return 'Unknown';
+      }
+    }
 }

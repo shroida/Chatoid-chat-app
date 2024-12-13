@@ -25,7 +25,7 @@ class ChatsCubit extends Cubit<ChatsState> {
           .or('user_id.eq.$currentUserId,friend_id.eq.$currentUserId');
 
       if (response.isNotEmpty) {
-        final Set<int> uniqueFriendIds = Set();
+        final Set<int> uniqueFriendIds = {};
         friendsList = [];
 
         for (var friend in response) {

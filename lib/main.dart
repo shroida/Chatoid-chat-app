@@ -4,8 +4,6 @@ import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/mes
 import 'package:chatoid/zRefactor/features/profile/view_model/cubit/profile_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/provider/chat_provider.dart';
-import 'package:chatoid/data/provider/notificaitionsprovider.dart';
 import 'package:chatoid/firebase_options.dart';
 import 'package:chatoid/zRefactor/core/utlis/app_router.dart';
 import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
@@ -13,7 +11,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants.dart';
 
@@ -58,8 +55,9 @@ void main() async {
           create: (context) {
             final authProvider = BlocProvider.of<LoginCubit>(context);
             final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+
             return MessagesCubit(
-                authProvider: authProvider, chatsCubit: chatsCubit);
+                loginCubit: authProvider, chatsCubit: chatsCubit);
           },
         ),
       ],

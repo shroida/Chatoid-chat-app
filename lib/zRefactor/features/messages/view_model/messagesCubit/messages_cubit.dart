@@ -1,22 +1,26 @@
-import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
-import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
-import 'package:chatoid/zRefactor/features/messages/repository/msg_repo_impl.dart';
-import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_state.dart';
-import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chatoid/zRefactor/features/notification/repository/noti_repo_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
+import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
+import 'package:chatoid/zRefactor/features/messages/repository/msg_repo_impl.dart';
+import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_state.dart';
+
 class MessagesCubit extends Cubit<MessagesState> {
   final ChatsCubit chatsCubit;
-  final LoginCubit authProvider;
+  final LoginCubit loginCubit;
   MessagesCubit({
     required this.chatsCubit,
-    required this.authProvider,
+    required this.loginCubit,
   }) : super(MessagesInitial());
 
   final supabase = Supabase.instance;
   final MsgRepoImpl _msgRepoImpl = MsgRepoImpl();
+  final NotiRepoImpl _notiRepoImpl = NotiRepoImpl();
 
   Future<void> sendMessage(int senderId, int receiverId, String messageText,
       {bool willReply = false,
@@ -56,49 +60,11 @@ class MessagesCubit extends Cubit<MessagesState> {
 
     await _msgRepoImpl.saveMessages(chatsCubit.friendMessages);
 
-    String playerId;
-    try {
-      final response = await supabase.client
-          .from('user_profiles')
-          .select('player_id')
-          .eq('user_id', receiverId)
-          .single();
-
-      playerId = response['player_id'];
-    } catch (e) {
-      playerId = ''; // Set playerId to null if there's an error
-    }
-
-    Future<String> fetchUsername(int userId) async {
-      try {
-        final response = await supabase.client
-            .from('user_profiles')
-            .select('username')
-            .eq('user_id', userId)
-            .single();
-        return response['username'] ?? 'Unknown';
-      } catch (e) {
-        return 'Unknown';
-      }
-    }
-
-    String senderUsername = await fetchUsername(senderId);
-    if (await ifTwoUsersInChat(authProvider.currentUser.user_id, receiverId) ==
+    String senderUsername = await _msgRepoImpl.fetchUsername(senderId);
+    if (await ifTwoUsersInChat(loginCubit.currentUser.user_id, receiverId) ==
         false) {
-      _msgRepoImpl.sendPushNotification(playerId, messageText, senderUsername);
-    }
-  }
-
-  Future<String> fetchUsername(int userId) async {
-    try {
-      final response = await supabase.client
-          .from('user_profiles')
-          .select('username')
-          .eq('user_id', userId)
-          .single();
-      return response['username'] ?? 'Unknown';
-    } catch (e) {
-      return 'Unknown';
+      _notiRepoImpl.sendPushNotification(
+          receiverId, messageText, senderUsername);
     }
   }
 
@@ -140,30 +106,19 @@ class MessagesCubit extends Cubit<MessagesState> {
   }
 
   void onLeaveChat() {
-    print('username ${authProvider.currentUser.username}');
-
-    _msgRepoImpl.leaveChat(authProvider);
+    _msgRepoImpl.leaveChat(loginCubit);
   }
 
   void onEnterChat(int friendId) {
-    print(
-        'username from authProvider cubit ${authProvider.currentUser.username}');
-    print('test for chatsCubit ${chatsCubit.friendsList[5].username}');
-
-    print('onEnterChat');
     makeMessagesIsRead(friendId);
     makeMeInChatUser(friendId);
-    ifTwoUsersInChat(authProvider.currentUser.user_id, friendId);
+    ifTwoUsersInChat(loginCubit.currentUser.user_id, friendId);
   }
 
   Future<void> makeMeInChatUser(int friendId) async {
     try {
-      print('makeMeInChatUser');
-
-      await supabase.client
-          .from('user_profiles')
-          .update({'in_chat': friendId}).eq(
-              'user_id', authProvider.currentUser.user_id);
+      await supabase.client.from('user_profiles').update(
+          {'in_chat': friendId}).eq('user_id', loginCubit.currentUser.user_id);
     } catch (e) {
       print('Error updating messages to read: $e');
     }
@@ -172,7 +127,6 @@ class MessagesCubit extends Cubit<MessagesState> {
   Future<void> makeMessagesIsRead(int senderId) async {
     try {
       final supabase = Supabase.instance.client;
-      print('makeMessagesIsRead');
 
       // Update only the messages where you are the receiver and senderId is the sender
       await supabase
@@ -181,7 +135,7 @@ class MessagesCubit extends Cubit<MessagesState> {
           .eq('sender_id',
               senderId) // Match senderId (messages sent by this user)
           .eq('receiver_id',
-              authProvider.currentUser.user_id); // Match receiverId (you)
+              loginCubit.currentUser.user_id); // Match receiverId (you)
     } catch (e) {
       final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
           GlobalKey<ScaffoldMessengerState>();
@@ -203,4 +157,6 @@ class MessagesCubit extends Cubit<MessagesState> {
         .or('receiver_id.eq.${message.senderId},receiver_id.eq.${message.friendId}') // Correct usage of OR for receiver_id
         .or('sender_id.eq.${message.senderId},sender_id.eq.${message.friendId}'); // Correct usage of OR for sender_id
   }
+  
+
 }
