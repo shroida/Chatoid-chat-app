@@ -49,6 +49,7 @@ class _HomeViewState extends State<HomeView> {
       const HomePageChats(),
       Profile(userProfile: currentUser),
     ];
+
   }
 
   Future<void> _loadThemePreference() async {

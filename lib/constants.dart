@@ -4,7 +4,6 @@ const mySupakey =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodXNodG9vaGJma2d3Y3RnYWtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2NjczMDgsImV4cCI6MjA0MjI0MzMwOH0.709yDvDz8nVhsVW7CkbF6np1a5s7dzChZPOFQ16BUg8';
 const urlSupa = 'https://ehushtoohbfkgwctgakh.supabase.co';
 
-
 // Define your light mode theme
 final ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
@@ -21,7 +20,7 @@ final ThemeData darkMode = ThemeData(
 
 class ChatAppColors {
   static const Color primaryColor =
-      Color(0xFF604CD4); // Bright Blue for main actions
+      Color(0xFF1E3A8A); // Bright Blue for main actions
   static const Color primaryColor2 =
       Color(0xFFB30BAA); // Bright Blue for main actions
   static const Color primaryColor3 =
@@ -29,9 +28,9 @@ class ChatAppColors {
   static const Color primaryColor4 =
       Color(0xFFBE0C0C); // Bright Blue for main actions
   static const Color primaryColor5 =
-      Color(0xFFBCD100);// Bright Blue for main actions
+      Color(0xFFBCD100); // Bright Blue for main actions
   static const Color primaryColor6 =
-      Color(0xFF1E3A8A); // Bright Blue for main actions
+      Color(0xFF604CD4); // Bright Blue for main actions
   static const Color primaryColor7 =
       Color(0xFF4ADE80); // Bright Blue for main actions
   static const Color primaryColor8 =
@@ -46,8 +45,7 @@ class ChatAppColors {
       Color(0xFFF1F5F9); // Soft grayish-white background
   static const Color backgroundColorDark =
       Color(0xFF36383A); // Soft grayish-white background
-  
-  
+
   static const Color chatBubbleColorSender =
       Color(0xFFD0EFFF); // Soft Blue for sender bubble
   static const Color chatBubbleColorReceiver =
@@ -63,7 +61,6 @@ class ChatAppColors {
 
   static const Color onlineIndicatorColor =
       Color(0xFF4ADE80); // Fresh Green for online status
-  
 
   // AppBar and Icons
   static const Color appBarColor =
@@ -76,13 +73,7 @@ class ChatAppColors {
       Color(0xFF00B4D8); // Light Blue for message sent/read status
   static const Color dividerColor =
       Color(0xFFE0E0E0); // Soft divider between chat bubbles
-
-
-
-
 }
-
-
 
 const List<String> profilesImages = [
   'assets/girl1.gif',

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:chatoid/data/models/story/story.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
@@ -36,9 +35,16 @@ class ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    print("Test Friend Data before initialization: $friendData");
+    initializeFriendData();
     initializeProfile(); // Call the async initialization method
     getStoriesProfile(); // Synchronous call to fetch stories
+  }
+
+  /// Initialize friendData from ChatsCubit
+  void initializeFriendData() {
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    friendData = List.from(chatsCubit.friendsList); // Use current friendsList
+    print("Initialized friendData: $friendData");
   }
 
   /// Asynchronous initialization logic
@@ -48,44 +54,22 @@ class ProfileState extends State<Profile> {
     if (isCurrentUserProfileInit) {
       print("I'm the current user.");
       print("Is current user profile initialized: $isCurrentUserProfileInit");
+      print("Is current user  ${widget.userProfile}");
       fetchFriendsFromCubit();
     } else {
-      print("I'm not the current user.");
-      print("Is current user profile initialized: $isCurrentUserProfileInit");
+      final profileCubit = BlocProvider.of<ProfileCubit>(context);
 
-      // Fetch friends asynchronously
-      friendData = await fetchFriendsIfNotCurrent();
-
-      // Debugging to confirm data update
-      print("Updated Friend Data: $friendData");
-
-      // Refresh UI with updated friendData
+      friendData = await profileCubit.fetchFriends(widget.userProfile.friendId);
       setState(() {});
     }
   }
 
-  /// Fetch friends from ChatsCubit for the current user
   void fetchFriendsFromCubit() {
-    final friendsList = BlocProvider.of<ChatsCubit>(context).friendsList;
-
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
     setState(() {
-      friendData = friendsList; // Update friendData with Cubit's list
+      friendData = List.from(chatsCubit.friendsList); // Refresh friendData
     });
-
-    print("Friend Data from ChatsCubit: $friendData");
-    print("Friend Data from ChatsCubit length: ${friendData.length}");
-  }
-
-  Future<List<UserData>> fetchFriendsIfNotCurrent() async {
-    final profileCubit = BlocProvider.of<ProfileCubit>(context);
-    return profileCubit.fetchFriends(widget.userProfile.friendId);
-  }
-
-  Future<void> fetchFriendsIfCurrent() async {
-    final profileCubit = BlocProvider.of<ProfileCubit>(context);
-    final loginCubit = BlocProvider.of<LoginCubit>(context);
-
-    await profileCubit.fetchFriends(loginCubit.currentUser.user_id);
+    print("friendData updated: $friendData.");
   }
 
   void getStoriesProfile() {
@@ -124,6 +108,7 @@ class ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Text(authProvider.currentUser.username),
             ProfileFriendsImage(
               friendData: friendData,
               isCurrentUserProfile: isCurrentUserProfile,
@@ -180,12 +165,17 @@ class ProfileState extends State<Profile> {
                           Expanded(
                             child: ListView.builder(
                               key: ValueKey(friendData),
-                              itemCount: friendData.length,
+                              itemCount: widget.userProfile.user_id != 0
+                                  ? friendData.length
+                                  : chatProvider.friendsList.length,
+
                               // itemCount: widget.userProfile.user_id != 0
                               //     ? chatProvider.friendsList.length
                               //     : friendData.length,
                               itemBuilder: (context, index) {
-                                final friend = friendData[index];
+                                final friend = widget.userProfile.user_id != 0
+                                    ? friendData[index]
+                                    : chatProvider.friendsList[index];
                                 // final friend = widget.userProfile.user_id != 0
                                 //     ? chatProvider.friendsList[index]
                                 //     : friendData[index];
