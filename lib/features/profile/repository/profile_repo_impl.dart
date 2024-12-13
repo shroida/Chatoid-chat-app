@@ -1,5 +1,6 @@
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/profile/repository/profile_repo.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileRepoImpl with ProfileRepo {
@@ -42,11 +43,17 @@ class ProfileRepoImpl with ProfileRepo {
           }
         }
       }
-      print("from profile cubit $friendData");
-      print("from profile cubit ${friendData.length}");
       return friendData;
     } catch (e) {
-      print("Error fetching friends: $e");
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
     return friendData; // Ensure a return statement at the end
   }

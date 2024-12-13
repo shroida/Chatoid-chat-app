@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'reaction_button.dart'; // Ensure you import the ReactionButton widget
 
 class MainMessage extends StatelessWidget {
-  final clsMessage message;
+  final ClsMessage message;
   final bool isSentByUser;
   final ChatsCubit chatsCubit; // Assuming you need to pass ChatschatsCubit
 

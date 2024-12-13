@@ -26,7 +26,7 @@ class MessagesCubit extends Cubit<MessagesState> {
       {bool willReply = false,
       String? messageTextWillReply,
       bool? makeItReadWeAreInChat}) async {
-    clsMessage newMessage = clsMessage(
+    ClsMessage newMessage = ClsMessage(
       senderId: senderId,
       friendId: receiverId,
       messageText: messageText,
@@ -120,7 +120,15 @@ class MessagesCubit extends Cubit<MessagesState> {
       await supabase.client.from('user_profiles').update(
           {'in_chat': friendId}).eq('user_id', loginCubit.currentUser.userId);
     } catch (e) {
-      print('Error updating messages to read: $e');
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('There is an issue'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -149,7 +157,7 @@ class MessagesCubit extends Cubit<MessagesState> {
     }
   }
 
-  Future<void> deleteMessage(clsMessage message) async {
+  Future<void> deleteMessage(ClsMessage message) async {
     await supabase.client
         .from('messages')
         .delete()
@@ -157,6 +165,4 @@ class MessagesCubit extends Cubit<MessagesState> {
         .or('receiver_id.eq.${message.senderId},receiver_id.eq.${message.friendId}') // Correct usage of OR for receiver_id
         .or('sender_id.eq.${message.senderId},sender_id.eq.${message.friendId}'); // Correct usage of OR for sender_id
   }
-
-
 }

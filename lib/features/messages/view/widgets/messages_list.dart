@@ -1,6 +1,6 @@
 import 'package:chatoid/core/utlis/user_data.dart';
-import 'package:chatoid/features/messages/view/widgets/mainMessage.dart';
-import 'package:chatoid/features/messages/view/widgets/replyMessage.dart';
+import 'package:chatoid/features/messages/view/widgets/main_message.dart';
+import 'package:chatoid/features/messages/view/widgets/reply_message.dart';
 import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/messages/view_model/messagesCubit/messages_cubit.dart';
@@ -10,7 +10,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class MessageListView extends StatefulWidget {
-  final List<clsMessage> messages;
+  final List<ClsMessage> messages;
   final int currentUserId;
   final String? messsagReply;
 

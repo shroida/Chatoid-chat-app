@@ -19,8 +19,8 @@ class FriendsList extends StatelessWidget {
   final LoginCubit authCubit;
   final MessagesCubit messagesCubit;
 
-  clsMessage? _getLastMessage(UserData friend) {
-    List<clsMessage> conversationMessages = chatsCubit.friendMessages
+  ClsMessage? _getLastMessage(UserData friend) {
+    List<ClsMessage> conversationMessages = chatsCubit.friendMessages
         .where((msg) =>
             (msg.senderId == friend.friendId &&
                 msg.friendId == authCubit.currentUser.userId) ||
@@ -42,7 +42,7 @@ class FriendsList extends StatelessWidget {
     return "$hour:$minute";
   }
 
-  List<clsMessage> _messagesNotReadByMe(int friendId, int currentUserId) {
+  List<ClsMessage> _messagesNotReadByMe(int friendId, int currentUserId) {
     return chatsCubit.friendMessages
         .where((msg) =>
             friendId == msg.senderId &&
@@ -78,7 +78,7 @@ class FriendsList extends StatelessWidget {
               final friend = sortedFriendsList[index];
               final lastMessage = _getLastMessage(friend);
 
-              List<clsMessage> unreadMessages = _messagesNotReadByMe(
+              List<ClsMessage> unreadMessages = _messagesNotReadByMe(
                   friend.friendId, authCubit.currentUser.userId);
               final messagesCount = unreadMessages.length;
 

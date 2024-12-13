@@ -10,7 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MsgRepoImpl with MsgRepo {
   final supabase = Supabase.instance;
   @override
-  Future<void> saveMessages(List<clsMessage> messagesToSave) async {
+  Future<void> saveMessages(List<ClsMessage> messagesToSave) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> messagesJsonList = messagesToSave
         .map((message) => jsonEncode(message.toJson()))

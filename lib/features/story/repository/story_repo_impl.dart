@@ -19,7 +19,17 @@ class StoryRepoImpl with StoryRepo {
       allStories =
           (response as List).map((story) => Story.fromJson(story)).toList();
       return allStories;
-    } catch (e) {}
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('There is an issue'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
     return [];
   }
 
@@ -47,7 +57,17 @@ class StoryRepoImpl with StoryRepo {
           .select('user_id, username, email');
 
       return (response as List).map((user) => UserData.fromJson(user)).toList();
-    } catch (e) {}
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('There is an issue'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
     return [];
   }
 
@@ -66,7 +86,17 @@ class StoryRepoImpl with StoryRepo {
 
       if (response != null) {
       } else {}
-    } catch (e) {}
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('There is an issue'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -108,7 +138,17 @@ class StoryRepoImpl with StoryRepo {
             entry.key); // Implement this function to fetch user details
         viewersWithStories.add({viewer: entry.value});
       }
-    } catch (e) {}
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('There is an issue'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
 
     return viewersWithStories;
   }

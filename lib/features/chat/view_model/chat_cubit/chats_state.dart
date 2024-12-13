@@ -15,7 +15,7 @@ class ChatFriendsFetched extends ChatsState {
 }
 
 class ChatMessagesFetched extends ChatsState {
-  final List<clsMessage> friendMessages;
+  final List<ClsMessage> friendMessages;
 
   ChatMessagesFetched({required this.friendMessages});
 }

@@ -1,6 +1,6 @@
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
-import 'package:chatoid/features/messages/view/widgets/messageInputAreal.dart';
+import 'package:chatoid/features/messages/view/widgets/message_input_areal.dart';
 import 'package:chatoid/features/messages/view/widgets/button_scroll_down.dart';
 import 'package:chatoid/features/messages/view/widgets/messages_list.dart';
 import 'package:chatoid/features/messages/view/widgets/my_header_widget.dart';

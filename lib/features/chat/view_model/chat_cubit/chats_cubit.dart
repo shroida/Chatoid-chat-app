@@ -11,7 +11,7 @@ class ChatsCubit extends Cubit<ChatsState> {
 
   List<UserData> friendsList = [];
   final supabase = Supabase.instance;
-  List<clsMessage> friendMessages = []; // Store messages for each friend
+  List<ClsMessage> friendMessages = []; // Store messages for each friend
 
   final ChatRepoImpl _chatRepoImpl = ChatRepoImpl();
 
@@ -72,7 +72,7 @@ class ChatsCubit extends Cubit<ChatsState> {
       if (response.isNotEmpty) {
         friendMessages.clear();
         for (var message in response) {
-          friendMessages.add(clsMessage(
+          friendMessages.add(ClsMessage(
             senderId: message['sender_id'] as int,
             friendId: message['receiver_id'] as int,
             messageText: message['message_text'] as String,

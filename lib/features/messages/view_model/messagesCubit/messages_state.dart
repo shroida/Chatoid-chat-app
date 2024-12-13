@@ -8,7 +8,7 @@ final class MessagesInitial extends MessagesState {}
 final class MessagesLoading extends MessagesState {}
 
 final class MessagesSend extends MessagesState {
-  final List<clsMessage> messages;
+  final List<ClsMessage> messages;
 
   MessagesSend(this.messages);
 }

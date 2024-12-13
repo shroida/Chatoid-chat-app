@@ -1,4 +1,4 @@
-class clsMessage {
+class ClsMessage {
   int senderId;
   int friendId;
   String messageText;
@@ -7,7 +7,7 @@ class clsMessage {
   String? react;
   String? messsagReply;
 
-  clsMessage({
+  ClsMessage({
     required this.senderId,
     required this.friendId,
     required this.messageText,
@@ -28,9 +28,9 @@ class clsMessage {
             messsagReply, 
       };
 
-  // Create a clsMessage object from a JSON map
-  factory clsMessage.fromJson(Map<String, dynamic> json) {
-    return clsMessage(
+  // Create a ClsMessage object from a JSON map
+  factory ClsMessage.fromJson(Map<String, dynamic> json) {
+    return ClsMessage(
       friendId: json['friend_id'] as int,
       senderId: json['user_id'] as int,
       messageText: json['message_text'] as String,

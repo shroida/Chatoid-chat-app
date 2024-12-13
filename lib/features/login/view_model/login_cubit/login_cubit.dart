@@ -14,9 +14,7 @@ class LoginCubit extends Cubit<LoginState> {
   final LoginRepoImpl _repo = LoginRepoImpl();
   
   Future<void> recoverSession(BuildContext context) async {
-    print("Recovering session...");
     await _repo.recoverSession(context);
-    print("Recovered session, user: ${currentUser.username}");
   }
 
   late UserData currentUser =

@@ -21,7 +21,7 @@ void main() async {
   );
 
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize('e1416184-6af7-4fcc-8603-72e042e1718d');
+  OneSignal.initialize(oneSignal);
   OneSignal.Notifications.requestPermission(true);
 
   await Supabase.initialize(

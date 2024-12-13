@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart' as rive;
 
@@ -25,17 +26,25 @@ class RiveAnimationManager {
     controllerLookDownLeft = rive.SimpleAnimation('Look_down_left');
   }
 
- Future<void> loadArtboard(String assetPath) async {
-  try {
-    final data = await rootBundle.load(assetPath);
-    final file = rive.RiveFile.import(data);
-    final artboard = file.mainArtboard;
-    artboard.addController(controllerIdle);
-    riveArtboard = artboard;
-  } catch (e) {
-    print('Error loading Rive artboard: $e');
+  Future<void> loadArtboard(String assetPath) async {
+    try {
+      final data = await rootBundle.load(assetPath);
+      final file = rive.RiveFile.import(data);
+      final artboard = file.mainArtboard;
+      artboard.addController(controllerIdle);
+      riveArtboard = artboard;
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('There is an issue'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
-}
 
   void addAnimation(rive.RiveAnimationController controller) {
     if (riveArtboard != null) {
@@ -43,7 +52,6 @@ class RiveAnimationManager {
       riveArtboard!.addController(controller);
     }
   }
-  
 
   void _removeAllControllers() {
     if (riveArtboard != null) {

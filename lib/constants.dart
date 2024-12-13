@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const mySupakey =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodXNodG9vaGJma2d3Y3RnYWtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2NjczMDgsImV4cCI6MjA0MjI0MzMwOH0.709yDvDz8nVhsVW7CkbF6np1a5s7dzChZPOFQ16BUg8';
 const urlSupa = 'https://ehushtoohbfkgwctgakh.supabase.co';
-
+const oneSignal='e1416184-6af7-4fcc-8603-72e042e1718d';
 // Define your light mode theme
 final ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
