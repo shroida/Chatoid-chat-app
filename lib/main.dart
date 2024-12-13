@@ -9,6 +9,7 @@ import 'package:chatoid/data/provider/notificaitionsprovider.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/firebase_options.dart';
 import 'package:chatoid/zRefactor/core/utlis/app_router.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,6 +51,9 @@ void main() async {
         ),
         BlocProvider<ProfileCubit>(
           create: (context) => ProfileCubit(),
+        ),
+        BlocProvider<StoryCubit>(
+          create: (context) => StoryCubit(),
         ),
         BlocProvider<MessagesCubit>(
           create: (context) {

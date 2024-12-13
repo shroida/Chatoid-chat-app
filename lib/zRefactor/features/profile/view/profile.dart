@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:chatoid/zRefactor/features/story/model/story.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/profile/view/widgets/card_friend.dart';
@@ -10,10 +9,10 @@ import 'package:chatoid/zRefactor/features/profile/view/widgets/send_request.dar
 import 'package:chatoid/zRefactor/features/profile/view/widgets/smooth_indicator_profile.dart';
 import 'package:chatoid/zRefactor/features/profile/view/widgets/text_friend_stories_row.dart';
 import 'package:chatoid/zRefactor/features/profile/view_model/cubit/profile_cubit.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   final UserData userProfile;
@@ -73,18 +72,11 @@ class ProfileState extends State<Profile> {
   }
 
   void getStoriesProfile() {
-    final storyProvider = Provider.of<StoryProvider>(context, listen: false);
-    if (widget.userProfile.user_id != 0) {
-      storyProfile = storyProvider.allStories
-          .where((story) => story.userId == widget.userProfile.friendId)
-          .toList();
-    } else {
-      final authProvider = BlocProvider.of<LoginCubit>(context);
-      print('auth cueuureuuruurueu${authProvider.currentUser.user_id}');
-      storyProfile = storyProvider.allStories
-          .where((story) => story.userId == authProvider.currentUser.user_id)
-          .toList();
-    }
+    final storyCubit = BlocProvider.of<StoryCubit>(context, listen: false);
+    storyCubit.fetchAllStories(); // Ensure stories are fetched
+    storyProfile = storyCubit.allStories
+        .where((story) => story.userId == widget.userProfile.friendId)
+        .toList();
     setState(() {});
   }
 

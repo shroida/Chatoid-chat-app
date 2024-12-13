@@ -50,7 +50,7 @@ class AddStoryScreen extends StatelessWidget {
           ),
 
           // Use a Container to give a finite size to the Stack
-          Container(
+          SizedBox(
             height: 80, // Define a height for the Container
             child: Stack(
               children: [

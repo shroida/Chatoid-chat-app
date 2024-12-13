@@ -6,6 +6,7 @@ import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubi
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/home_view.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -23,8 +24,8 @@ class _HomePageState extends State<HomePage> {
   // Declare ChatsCubit
   late ChatsCubit chatsCubit;
 
-  // Declare StoryProvider
-  late StoryProvider storyProvider;
+  // Declare sotryCubit
+  late StoryCubit sotryCubit;
 
   @override
   void initState() {
@@ -36,9 +37,9 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // Access ChatsCubit and StoryProvider from the context
+    // Access ChatsCubit and sotryCubit from the context
     chatsCubit = context.read<ChatsCubit>();
-    storyProvider = context.read<StoryProvider>();
+    sotryCubit = context.read<StoryCubit>();
   }
 
   Future<void> _loadUserData() async {
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
       'stories',
       () async {
         if (mounted) {
-          await storyProvider.fetchAllStories();
+          sotryCubit.fetchAllStories();
         }
       },
     );

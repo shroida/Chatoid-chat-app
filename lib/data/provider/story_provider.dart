@@ -169,16 +169,7 @@ class StoryProvider with ChangeNotifier {
     }
   }
 
-  Future<UserData> _getUserDataById(int userId) async {
-    final response = await supabase
-        .from('user_profiles')
-        .select()
-        .eq('user_id', userId)
-        .single();
-    return UserData.fromJson(response);
-  }
-
   Future<void> deleteStory(int storyId) async {
-    final response = await supabase.from('stories').delete().eq('id', storyId);
+    await supabase.from('stories').delete().eq('id', storyId);
   }
 }
