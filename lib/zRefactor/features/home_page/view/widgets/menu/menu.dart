@@ -1,6 +1,6 @@
 import 'package:chatoid/zRefactor/core/utlis/app_router.dart';
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/menu/menu_items.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/menu/menu_user_info.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/menu/user_profile_section.dart';

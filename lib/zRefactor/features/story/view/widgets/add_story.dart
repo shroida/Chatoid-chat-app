@@ -1,9 +1,9 @@
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/my_header_widget.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddStoryScreen extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
@@ -12,8 +12,8 @@ class AddStoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the StoryProvider instance
-    final storyProvider = Provider.of<StoryProvider>(context, listen: false);
+    // Get the StoryCubit instance
+    final storyCubit = BlocProvider.of<StoryCubit>(context, listen: false);
     // Optionally, you can get the current user from LoginCubit
     final loginCubit = context.read<LoginCubit>();
 
@@ -69,9 +69,9 @@ class AddStoryScreen extends StatelessWidget {
                       onPressed: () async {
                         final storyText = _controller.text;
 
-                        // Call the addToStory method from StoryProvider
+                        // Call the addToStory method from StoryCubit
                         if (storyText.isNotEmpty) {
-                          await storyProvider.addToStory(storyText, context);
+                          await storyCubit.addToStory(storyText, context);
                           Navigator.pop(context);
                         } else {
                           // Handle empty story text case, e.g., show a SnackBar

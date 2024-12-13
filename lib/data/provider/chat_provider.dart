@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';

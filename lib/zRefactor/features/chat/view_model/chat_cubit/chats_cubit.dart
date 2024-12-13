@@ -1,5 +1,5 @@
 import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:flutter/material.dart';

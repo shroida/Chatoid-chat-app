@@ -1,4 +1,4 @@
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

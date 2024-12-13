@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/features/profile/view/widgets/text_friend_stories_row.dart';
 import 'package:chatoid/zRefactor/features/story/model/story.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
@@ -7,12 +9,11 @@ import 'package:chatoid/zRefactor/features/profile/view/widgets/card_story.dart'
 import 'package:chatoid/zRefactor/features/profile/view/widgets/profile_friends_image.dart';
 import 'package:chatoid/zRefactor/features/profile/view/widgets/send_request.dart';
 import 'package:chatoid/zRefactor/features/profile/view/widgets/smooth_indicator_profile.dart';
-import 'package:chatoid/zRefactor/features/profile/view/widgets/text_friend_stories_row.dart';
 import 'package:chatoid/zRefactor/features/profile/view_model/cubit/profile_cubit.dart';
 import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 
 class Profile extends StatefulWidget {
   final UserData userProfile;
@@ -82,9 +83,10 @@ class ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = BlocProvider.of<ChatsCubit>(context);
+    final chatCubit = BlocProvider.of<ChatsCubit>(context);
     final authProvider = BlocProvider.of<LoginCubit>(context);
-    bool areFriends = chatProvider.friendsList.any((friend) =>
+    final themeCubit = BlocProvider.of<ThemeCubit>(context);
+    bool areFriends = chatCubit.friendsList.any((friend) =>
         friend.friendId == widget.userProfile.friendId &&
         friend.user_id == authProvider.currentUser.user_id);
 
@@ -159,20 +161,23 @@ class ProfileState extends State<Profile> {
                               key: ValueKey(friendData),
                               itemCount: widget.userProfile.user_id != 0
                                   ? friendData.length
-                                  : chatProvider.friendsList.length,
+                                  : chatCubit.friendsList.length,
 
                               // itemCount: widget.userProfile.user_id != 0
-                              //     ? chatProvider.friendsList.length
+                              //     ? chatCubit.friendsList.length
                               //     : friendData.length,
                               itemBuilder: (context, index) {
                                 final friend = widget.userProfile.user_id != 0
                                     ? friendData[index]
-                                    : chatProvider.friendsList[index];
+                                    : chatCubit.friendsList[index];
                                 // final friend = widget.userProfile.user_id != 0
-                                //     ? chatProvider.friendsList[index]
+                                //     ? chatCubit.friendsList[index]
                                 //     : friendData[index];
 
-                                return CardFriend(username: friend.username);
+                                return CardFriend(
+                                  username: friend.username,
+                                  themeCubit: themeCubit,
+                                );
                               },
                             ),
                           ),

@@ -1,4 +1,4 @@
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Appbar/build_theme_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,7 +69,7 @@ class ShowThemeOptions extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
               ),
-              const BuildThemeOptions(),
+              const BuildThemeColorOptions(),
             ],
           ),
         ),

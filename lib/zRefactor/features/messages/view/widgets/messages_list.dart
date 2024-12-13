@@ -1,4 +1,4 @@
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/mainMessage.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/replyMessage.dart';
 import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
@@ -41,7 +41,7 @@ class MessageListView extends StatefulWidget {
 class _MessageListViewState extends State<MessageListView> {
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatsCubit>(context, listen: true);
+    final chatsCubit = Provider.of<ChatsCubit>(context, listen: true);
     final messagesCubit = Provider.of<MessagesCubit>(context, listen: true);
 
     return Expanded(
@@ -118,7 +118,7 @@ class _MessageListViewState extends State<MessageListView> {
                         MainMessage(
                           message: message,
                           isSentByUser: isSentByUser,
-                          chatProvider: chatProvider,
+                          chatsCubit: chatsCubit,
                         ),
                       ],
                     ),

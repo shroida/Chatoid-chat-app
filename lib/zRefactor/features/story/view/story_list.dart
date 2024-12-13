@@ -1,12 +1,12 @@
-
-import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/story/view/widgets/add_story.dart';
 import 'package:chatoid/zRefactor/features/story/view/widgets/story_view.dart';
 import 'package:chatoid/zRefactor/features/story/view/widgets/story_element.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/story/model/story.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class StoryList extends StatefulWidget {
@@ -21,17 +21,17 @@ class StoryListState extends State<StoryList> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<StoryProvider>(context, listen: false).loadStories();
+      Provider.of<StoryCubit>(context, listen: false).loadStories();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final loginCubit = Provider.of<LoginCubit>(context, listen: true);
-    final storyProvider = Provider.of<StoryProvider>(context, listen: true);
+    final storyCubit = BlocProvider.of<StoryCubit>(context, listen: true);
 
     // Get the current user's stories
-    final currentUserStories = storyProvider.allStories
+    final currentUserStories = storyCubit.allStories
         .where((story) => story.userId == loginCubit.currentUser.user_id)
         .toList();
 
@@ -70,7 +70,7 @@ class StoryListState extends State<StoryList> {
                 ),
               ),
             const SizedBox(width: 10),
-            ...storyProvider.usersStory.where((userData) {
+            ...storyCubit.usersStory.where((userData) {
               final user = userData.keys.first;
               // Filter out the current user's stories
               return user.user_id != loginCubit.currentUser.user_id;
@@ -80,7 +80,7 @@ class StoryListState extends State<StoryList> {
 
               return GestureDetector(
                 onTap: () {
-                  storyProvider.setViewOnStory(
+                  storyCubit.setViewOnStory(
                       stories[0].id, loginCubit.currentUser.user_id);
 
                   Navigator.push(

@@ -3,10 +3,9 @@ import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cu
 import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:chatoid/zRefactor/features/profile/view_model/cubit/profile_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/data/provider/notificaitionsprovider.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/firebase_options.dart';
 import 'package:chatoid/zRefactor/core/utlis/app_router.dart';
 import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
@@ -64,51 +63,30 @@ void main() async {
           },
         ),
       ],
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<ChatProvider>(
-            create: (context) {
-              final loginCubit = context.read<LoginCubit>();
-              final chatsCubit = context.read<ChatsCubit>();
-              return ChatProvider(
-                chatsCubit: chatsCubit,
-                loginCubit: loginCubit,
-              );
-            },
-          ),
-          ChangeNotifierProvider<NotificationProvider>(
-            create: (context) {
-              final chatProvider = Provider.of<ChatProvider>(context);
-              // final chatCubit = context.read<ChatCubit>();
-
-              return NotificationProvider(chatProvider);
-            },
-          ),
-          ChangeNotifierProvider<StoryProvider>(
-            create: (context) {
-              return StoryProvider();
-            },
-          ),
-        ],
-        child: const MyApp(),
-      ),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: AppRouter.router,
-      debugShowCheckedModeBanner: false,
+    return BlocBuilder<ThemeCubit, ThemeData>(
+      builder: (context, themeState) {
+        final themeCubit = context.read<ThemeCubit>();
 
-      // theme: ThemeData.dark().copyWith(
-      // scaffoldBackgroundColor: kPrimaryColor,
-      // textTheme:
-      //     GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
-      // ),
+        return MaterialApp.router(
+          routerConfig: AppRouter.router,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData.light().copyWith(
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          darkTheme: ThemeData.dark(),
+          themeMode: themeCubit.themeMode,
+        );
+      },
     );
   }
 }

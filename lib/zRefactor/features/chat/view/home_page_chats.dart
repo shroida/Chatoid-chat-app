@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/zRefactor/features/chat/view/widgets/Messages%20Section/messages_section.dart';
 import 'package:chatoid/zRefactor/features/chat/view/widgets/Tabbar/tap_bar.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';

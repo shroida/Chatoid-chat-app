@@ -30,7 +30,7 @@ class NotificationCubit extends Cubit<NotificationState> {
 
       await flutterLocalNotificationsPlugin.initialize(initializationSettings);
     } catch (e) {
-      emit(NotificationFailure('Failed to initialize notifications'));
+      emit(const NotificationFailure('Failed to initialize notifications'));
     }
   }
 

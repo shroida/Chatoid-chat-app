@@ -7,13 +7,13 @@ import 'reaction_button.dart'; // Ensure you import the ReactionButton widget
 class MainMessage extends StatelessWidget {
   final clsMessage message;
   final bool isSentByUser;
-  final ChatsCubit chatProvider; // Assuming you need to pass ChatProvider
+  final ChatsCubit chatsCubit; // Assuming you need to pass ChatschatsCubit
 
   const MainMessage({
     super.key,
     required this.message,
     required this.isSentByUser,
-    required this.chatProvider,
+    required this.chatsCubit,
   });
   String _formatMessageDate(DateTime date) {
     String hour = '';
@@ -112,7 +112,7 @@ class MainMessage extends StatelessWidget {
           child: ReactionButton(
             reactFromDatabase: message.react ?? 'none',
             onReactionChanged: (reaction) {
-              chatProvider.setReactOnMessage(
+              chatsCubit.setReactOnMessage(
                 message.messageText,
                 message.friendId,
                 message.senderId,

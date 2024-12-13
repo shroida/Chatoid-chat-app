@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,7 @@ class ProfileFriendsImage extends StatelessWidget {
   final UserData userProfile;
   @override
   Widget build(BuildContext context) {
-    final chatProvider = BlocProvider.of<ChatsCubit>(context);
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
     void showSliderBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -54,7 +54,7 @@ class ProfileFriendsImage extends StatelessWidget {
                           print(
                               'Displaying profile for: ${userProfile.username}');
                           // setState(() {
-                          //   chatProvider.upLoadImageProfile(
+                          //   chatsCubit.upLoadImageProfile(
                           //       imagePath,
                           //       widget.userProfile
                           //           .user_id);
@@ -109,7 +109,7 @@ class ProfileFriendsImage extends StatelessWidget {
               children: [
                 Text(
                   isCurrentUserProfile
-                      ? chatProvider.friendsList.length.toString()
+                      ? chatsCubit.friendsList.length.toString()
                       : friendData.length.toString(),
                   style: const TextStyle(
                       fontSize: 22, fontWeight: FontWeight.w600),

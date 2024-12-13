@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:chatoid/zRefactor/features/login/model/login_data.dart';
 import 'package:chatoid/zRefactor/features/login/repository/login_repo_ilmpl.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_state.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';

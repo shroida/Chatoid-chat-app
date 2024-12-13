@@ -1,11 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BuildThemeOptions extends StatelessWidget {
-  const BuildThemeOptions({super.key});
+class BuildThemeColorOptions extends StatelessWidget {
+  const BuildThemeColorOptions({super.key});
 
   @override
   Widget build(BuildContext context) {

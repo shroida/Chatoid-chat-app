@@ -1,14 +1,14 @@
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/view/home_page_chats.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Home%20screen/home_screen_story_posts.dart';
 import 'package:chatoid/zRefactor/features/profile/view/profile.dart';
-import 'package:chatoid/presntation/screens/search_screen.dart';
+import 'package:chatoid/zRefactor/features/home_page/view/widgets/Home%20screen/search_screen.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Appbar/app_bar_home_view.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/Bottom%20Navigation/bottom_curved_navigation.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -49,7 +49,6 @@ class _HomeViewState extends State<HomeView> {
       const HomePageChats(),
       Profile(userProfile: currentUser),
     ];
-
   }
 
   Future<void> _loadThemePreference() async {
@@ -62,8 +61,8 @@ class _HomeViewState extends State<HomeView> {
   Future<void> _refreshData() async {
     if (_currentIndex == 0) {
       // Refresh HomePageStoryPosts
-      final storyProvider = context.read<StoryProvider>();
-      await storyProvider.fetchAllStories();
+      final storyProvider = context.read<StoryCubit>();
+      storyProvider.fetchAllStories();
     } else if (_currentIndex == 1) {
     } else if (_currentIndex == 2) {
       final chatsCubit = context.read<ChatsCubit>();

@@ -1,11 +1,11 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/zRefactor/features/story/model/story.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/home_page.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/my_header_widget.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/zRefactor/features/story/view/widgets/eye_views.dart';
+import 'package:chatoid/zRefactor/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -55,7 +55,7 @@ class StoryViewState extends State<StoryView> {
   }
 
   Future<void> _getViewers(int storyId) async {
-    final storyProvider = Provider.of<StoryProvider>(context, listen: false);
+    final storyCubit = Provider.of<StoryCubit>(context, listen: false);
     final loginCubit = Provider.of<LoginCubit>(context, listen: false);
 
     try {
@@ -66,9 +66,9 @@ class StoryViewState extends State<StoryView> {
 
       // Fetch viewers for the specific story
       List<Map<UserData, List<Story>>> viewers =
-          await storyProvider.retrieveViewersForMyStories(
+          await storyCubit.retrieveViewersForMyStories(
         loginCubit.currentUser.user_id,
-        storyId,
+        storyId,storyCubit.allUsers
       );
       setState(() {
         _viewers = viewers; // Update the state with fetched viewers
@@ -153,11 +153,11 @@ class StoryViewState extends State<StoryView> {
                           ElevatedButton(
                             onPressed: () async {
                               // Call the deleteStory method when the button is pressed
-                              final storyProvider = Provider.of<StoryProvider>(
+                              final storyCubit = Provider.of<StoryCubit>(
                                   context,
                                   listen:
-                                      false); // Get an instance of your StoryProvider
-                              await storyProvider.deleteStory(
+                                      false); // Get an instance of your storyCubit
+                              await storyCubit.deleteStory(
                                   widget.stories[_currentIndex].id);
                               Navigator.pushReplacement(
                                   context,

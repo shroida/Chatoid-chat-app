@@ -1,7 +1,5 @@
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/provider/story_provider.dart';
+import 'package:chatoid/zRefactor/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/menu/menu.dart';
-import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/widgets/home_view.dart';
@@ -51,14 +49,6 @@ class _HomePageState extends State<HomePage> {
     // Fetch friends and messages from Supabase using ChatsCubit
     await chatsCubit.fetchFriends(currentUser.user_id);
     await chatsCubit.fetchAllMessages(currentUser);
-    List<clsMessage> shroidaEGTMessages = chatsCubit.friendMessages
-        .where((msg) =>
-            msg.friendId == 6 && msg.senderId == 7 ||
-            msg.friendId == 7 && msg.senderId == 6)
-        .toList();
-    for (var message in shroidaEGTMessages) {
-      print("message replis shroida ${message.messsagReply}");
-    }
 
     // Subscribe to real-time updates for messages and friends
     await chatsCubit.subscribe(
@@ -74,7 +64,7 @@ class _HomePageState extends State<HomePage> {
       'stories',
       () async {
         if (mounted) {
-          sotryCubit.fetchAllStories();
+          sotryCubit.fetchAllStories(); // Ensure this updates the state
         }
       },
     );

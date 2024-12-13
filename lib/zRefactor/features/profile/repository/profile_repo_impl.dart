@@ -1,4 +1,4 @@
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/profile/repository/profile_repo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

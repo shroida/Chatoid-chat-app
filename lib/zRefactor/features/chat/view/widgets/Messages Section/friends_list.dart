@@ -3,7 +3,7 @@ import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cu
 import 'package:chatoid/zRefactor/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chatoid/zRefactor/features/messages/model/clsMessage.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/zRefactor/features/chat/view/widgets/chat_card.dart';
 import 'package:chatoid/zRefactor/features/messages/view/chat_screen.dart';
 

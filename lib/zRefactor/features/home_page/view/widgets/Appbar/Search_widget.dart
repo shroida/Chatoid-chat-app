@@ -1,5 +1,6 @@
+import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/register/view_model/signUp/signup_cubit.dart';
-import 'package:chatoid/data/models/userData/user_data.dart';
+import 'package:chatoid/zRefactor/core/utlis/user_data.dart';
 import 'package:chatoid/data/provider/chat_provider.dart';
 import 'package:chatoid/zRefactor/features/profile/view/profile.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
@@ -126,8 +127,8 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    List<UserData> friendsList = chatProvider.friendsList;
+    final chatsCubit = Provider.of<ChatsCubit>(context, listen: false);
+    List<UserData> friendsList = chatsCubit.friendsList;
 
     final List<UserData> filteredSuggestions = friendsList.where((user) {
       final queryLower = query.toLowerCase();

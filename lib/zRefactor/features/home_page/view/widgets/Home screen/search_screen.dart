@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class SearchScreen extends StatelessWidget {
   final BuildContext parentContext;
 
-  const SearchScreen({Key? key, required this.parentContext}) : super(key: key);
+  const SearchScreen({super.key, required this.parentContext});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class SearchScreen extends StatelessWidget {
               delegate: CustomSearchDelegate(parentContext: parentContext),
             );
           },
-          child: Text('Open Search'),
+          child: const Text('Open Search'),
         ),
       ),
     );
