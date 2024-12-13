@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:chatoid/data/models/story/story.dart';
+import 'package:chatoid/zRefactor/features/story/model/story.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';

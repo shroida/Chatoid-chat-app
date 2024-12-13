@@ -1,22 +1,22 @@
 import 'package:chatoid/constants.dart';
-import 'package:chatoid/cubits/themeCubit/theme_cubit.dart';
-import 'package:chatoid/data/models/story/story.dart';
+import 'package:chatoid/zRefactor/features/story/model/story.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
 import 'package:chatoid/zRefactor/features/home_page/view/home_page.dart';
 import 'package:chatoid/zRefactor/features/messages/view/widgets/my_header_widget.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/story/view/widgets/eye_views.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ShowStory extends StatefulWidget {
+class StoryView extends StatefulWidget {
   final List<Story> stories;
   final String username;
   final int initialIndex;
   final bool isCurrentUserStory;
 
-  const ShowStory({
+  const StoryView({
     super.key,
     required this.stories,
     required this.username,
@@ -25,10 +25,10 @@ class ShowStory extends StatefulWidget {
   });
 
   @override
-  ShowStoryState createState() => ShowStoryState();
+  StoryViewState createState() => StoryViewState();
 }
 
-class ShowStoryState extends State<ShowStory> {
+class StoryViewState extends State<StoryView> {
   late PageController _pageController;
   late int _currentIndex;
   List<Map<UserData, List<Story>>> _viewers = [];
@@ -162,10 +162,10 @@ class ShowStoryState extends State<ShowStory> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => HomePage()));
+                                      builder: (context) => const HomePage()));
                               setState(() {});
                             },
-                            child: Icon(Icons.delete,
+                            child: const Icon(Icons.delete,
                                 color: ChatAppColors.primaryColor4),
                           ),
                           const SizedBox(height: 10),
@@ -202,37 +202,7 @@ class ShowStoryState extends State<ShowStory> {
                   },
                 );
               },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color.fromARGB(
-                            255, 179, 179, 179), // Add border color
-                        width: 2.0, // Border width
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/eye.gif',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '${_viewers.length}',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                  ),
-                ],
-              ),
+              child: EyeViews(countViews: _viewers.length),
             ),
         ],
       ),

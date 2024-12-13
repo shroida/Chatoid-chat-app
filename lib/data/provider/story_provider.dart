@@ -1,4 +1,4 @@
-import 'package:chatoid/data/models/story/story.dart';
+import 'package:chatoid/zRefactor/features/story/model/story.dart';
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +45,7 @@ class StoryProvider with ChangeNotifier {
       _allStories =
           (response as List).map((story) => Story.fromJson(story)).toList();
       notifyListeners();
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   // Fetch all users
@@ -59,8 +58,7 @@ class StoryProvider with ChangeNotifier {
       _allUsers =
           (response as List).map((user) => UserData.fromJson(user)).toList();
       notifyListeners();
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> loadStories() async {
@@ -139,38 +137,36 @@ class StoryProvider with ChangeNotifier {
           .select('user_id, stories!inner(id, user_id, story_text)')
           .eq('stories.user_id', currentuser);
 
-
       // Initialize a map to group stories by viewer (user_id)
       Map<int, List<Story>> viewersMap = {};
 
-      for (var row in response) {
-        // Extract user data and story information
-        int viewerId = row['user_id'];
-        var storyData = row['stories'];
-        Story story = Story.fromJson(
-            storyData); // Assuming you have a Story.fromJson constructor
+      for (var entry in response) {
+        int viewerId = entry['user_id'];
+        Map<String, dynamic> storyData = entry['stories'];
+        Story story = Story.fromJson(storyData);
 
-        // If the viewer is not yet in the map, initialize their story list
-        if (!viewersMap.containsKey(viewerId)) {
-          viewersMap[viewerId] = [];
+        if (viewersMap.containsKey(viewerId)) {
+          viewersMap[viewerId]!.add(story);
+        } else {
+          viewersMap[viewerId] = [story];
         }
-
-        // Add the current story to the viewer's list of stories
-        viewersMap[viewerId]!.add(story);
       }
 
-      // Convert the map into a list of UserData with their viewed stories
-      for (var entry in viewersMap.entries) {
-        // Fetch user data for each viewer (assuming UserData.fromJson is defined)
-        UserData viewer = await _getUserDataById(
-            entry.key); // Implement this function to fetch user details
-        viewersWithStories.add({viewer: entry.value});
+      // Convert the map to the required format
+      for (var viewerId in viewersMap.keys) {
+        final viewerData = _allUsers.firstWhere(
+          (user) => user.user_id == viewerId,
+          orElse: () => UserData(
+              friendId: 0, user_id: viewerId, username: 'Unknown', email: ''),
+        );
+        viewersWithStories.add({viewerData: viewersMap[viewerId]!});
       }
 
+      return viewersWithStories;
     } catch (e) {
+      debugPrint('Error retrieving viewers: $e');
+      return [];
     }
-
-    return viewersWithStories;
   }
 
   Future<UserData> _getUserDataById(int userId) async {
@@ -181,10 +177,8 @@ class StoryProvider with ChangeNotifier {
         .single();
     return UserData.fromJson(response);
   }
-   Future<void> deleteStory(int storyId) async {
-    final response = await supabase
-        .from('stories')
-        .delete()
-        .eq('id', storyId);
+
+  Future<void> deleteStory(int storyId) async {
+    final response = await supabase.from('stories').delete().eq('id', storyId);
   }
 }

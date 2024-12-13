@@ -1,4 +1,4 @@
-import 'package:chatoid/presntation/screens/stories/story_element.dart';
+import 'package:chatoid/zRefactor/features/story/view/story_list.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenStoryPosts extends StatefulWidget {

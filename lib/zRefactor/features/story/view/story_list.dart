@@ -1,79 +1,13 @@
-import 'package:chatoid/data/models/story/story.dart';
+
 import 'package:chatoid/data/models/userData/user_data.dart';
 import 'package:chatoid/data/provider/story_provider.dart';
-import 'package:chatoid/presntation/screens/stories/add_story.dart';
-import 'package:chatoid/presntation/screens/stories/show_story.dart';
+import 'package:chatoid/zRefactor/features/story/view/widgets/add_story.dart';
+import 'package:chatoid/zRefactor/features/story/view/widgets/story_view.dart';
+import 'package:chatoid/zRefactor/features/story/view/widgets/story_element.dart';
 import 'package:chatoid/zRefactor/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/zRefactor/features/story/model/story.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-class StoryWidget extends StatelessWidget {
-  final String imageUrl;
-  final String username;
-  final bool isAddStory;
-  final int storyCount;
-
-  const StoryWidget({
-    super.key,
-    required this.imageUrl,
-    required this.username,
-    this.isAddStory = false,
-    this.storyCount = 1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 30), // Increase left padding
-      margin: const EdgeInsets.only(
-        bottom: 5,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 70,
-                height: 70,
-
-                //borderStory
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: storyCount > 0 ? Colors.blue : Colors.transparent,
-                    width: 3,
-                  ),
-                ),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: isAddStory ? null : AssetImage(imageUrl),
-                  backgroundColor: isAddStory ? Colors.grey[300] : null,
-                  child: isAddStory
-                      ? const Icon(
-                          Icons.add,
-                          size: 30,
-                          color: Colors.black,
-                        )
-                      : null,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 1),
-          Text(
-            isAddStory ? 'Add Story' : username,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class StoryList extends StatefulWidget {
   const StoryList({super.key});
@@ -152,7 +86,7 @@ class StoryListState extends State<StoryList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ShowStory(
+                      builder: (context) => StoryView(
                         stories: stories,
                         username: user.username,
                         isCurrentUserStory: false,
@@ -212,7 +146,7 @@ void _showOptionsToAddStoryOrShow(BuildContext context,
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ShowStory(
+                                    builder: (context) => StoryView(
                                           isCurrentUserStory: true,
                                           stories: currentUserStories,
                                           username: currentUser.username,
