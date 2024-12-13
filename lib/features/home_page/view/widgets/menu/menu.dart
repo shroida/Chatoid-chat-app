@@ -17,6 +17,7 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = BlocProvider.of<LoginCubit>(context);
+    final themeCubit = BlocProvider.of<ThemeCubit>(context);
 
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, themeData) {
@@ -33,7 +34,7 @@ class MenuScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 20),
-                MenuUserInfo(themeData: themeData),
+                MenuUserInfo(themeCubit: themeCubit),
                 const SizedBox(height: 20),
                 // Menu items
                 MenuItems(themeData: themeData, profileData: profileData),

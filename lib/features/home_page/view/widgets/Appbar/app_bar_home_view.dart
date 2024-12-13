@@ -1,4 +1,4 @@
-import 'package:chatoid/features/home_page/view/widgets/Appbar/search_widget.dart';
+import 'package:chatoid/features/home_page/view/widgets/Appbar/custom_search_delegate.dart';
 import 'package:chatoid/features/home_page/view/widgets/Appbar/show_theme_options.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';

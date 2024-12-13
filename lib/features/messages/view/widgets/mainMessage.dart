@@ -1,6 +1,6 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
-import 'package:chatoid/features/messages/model/clsMessage.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:flutter/material.dart';
 import 'reaction_button.dart'; // Ensure you import the ReactionButton widget
 

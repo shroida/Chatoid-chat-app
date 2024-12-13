@@ -2,7 +2,7 @@ import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view/widgets/chat_card.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
-import 'package:chatoid/features/messages/model/clsMessage.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/features/messages/view/chat_screen.dart';
 import 'package:chatoid/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';

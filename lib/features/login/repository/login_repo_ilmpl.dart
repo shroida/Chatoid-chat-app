@@ -92,9 +92,8 @@ class LoginRepoImpl with LoginRepo {
   }
 
   @override
-  Future<void> saveOneSignalPlayerId(int userId,String email) async {
+  Future<void> saveOneSignalPlayerId(int userId, String email) async {
     try {
-
       String? playerId = await OneSignal.User.getExternalId();
 
       // Get the player's subscription ID as a fallback
@@ -107,10 +106,9 @@ class LoginRepoImpl with LoginRepo {
 
       if (playerId != null) {
         await Supabase.instance.client.from('user_profiles').upsert({
-          'user_id':userId,
+          'user_id': userId,
           'player_id': playerId,
-          'email':
-              email, // Make sure to include email here
+          'email': email, // Make sure to include email here
         });
       } else {}
     } catch (e) {

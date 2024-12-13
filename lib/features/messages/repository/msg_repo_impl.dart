@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chatoid/features/messages/model/clsMessage.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/messages/repository/msg_repo.dart';
 import 'package:flutter/material.dart';
@@ -67,19 +67,22 @@ class MsgRepoImpl with MsgRepo {
     try {
       await supabase.client.from('user_profiles').update(
           {'in_chat': friendId}).eq('user_id', loginCubit.currentUser.userId);
-    } catch (e) {}
-  }
-  @override
-   Future<String> fetchUsername(int userId) async {
-      try {
-        final response = await supabase.client
-            .from('user_profiles')
-            .select('username')
-            .eq('user_id', userId)
-            .single();
-        return response['username'] ?? 'Unknown';
-      } catch (e) {
-        return 'Unknown';
-      }
+    } catch (e) {
+      rethrow;
     }
+  }
+
+  @override
+  Future<String> fetchUsername(int userId) async {
+    try {
+      final response = await supabase.client
+          .from('user_profiles')
+          .select('username')
+          .eq('user_id', userId)
+          .single();
+      return response['username'] ?? 'Unknown';
+    } catch (e) {
+      return 'Unknown';
+    }
+  }
 }

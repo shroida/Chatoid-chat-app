@@ -14,7 +14,8 @@ class ThemeCubit extends Cubit<ThemeData> {
     loadThemeMode();
     loadColorOfApp();
   }
-
+  bool get isDark => _themeMode == ThemeMode.dark;
+  Color get textColor => isDark ? Colors.white : Colors.black;
   // Switch to light mode
   void toggleLightMode() async {
     _themeMode = ThemeMode.light;

@@ -1,7 +1,7 @@
-import 'package:chatoid/features/messages/model/clsMessage.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_state.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

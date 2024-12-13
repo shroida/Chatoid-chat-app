@@ -6,10 +6,10 @@ import 'package:chatoid/features/login/view/widgets/button_to_register.dart';
 import 'package:chatoid/features/login/view/widgets/email_field.dart';
 import 'package:chatoid/features/login/view/widgets/login_button.dart';
 import 'package:chatoid/features/login/view/widgets/password_field.dart';
-import 'package:chatoid/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chatoid/features/login/view/widgets/diver.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -71,8 +71,7 @@ class _LoginViewState extends State<LoginView> {
         if (state is LoginLoading) {
           isLoading = true;
         } else if (state is LoginSuccess) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const SplashScreen()));
+          GoRouter.of(context).push('/');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

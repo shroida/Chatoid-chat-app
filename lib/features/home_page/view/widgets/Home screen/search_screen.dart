@@ -1,4 +1,4 @@
-import 'package:chatoid/features/home_page/view/widgets/Appbar/Search_widget.dart';
+import 'package:chatoid/features/home_page/view/widgets/Appbar/search_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatelessWidget {

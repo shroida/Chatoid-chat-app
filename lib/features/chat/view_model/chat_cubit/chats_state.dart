@@ -1,4 +1,4 @@
-import 'package:chatoid/features/messages/model/clsMessage.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 
 abstract class ChatsState {}

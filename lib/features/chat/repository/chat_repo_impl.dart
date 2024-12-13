@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chatoid/features/messages/model/clsMessage.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/repository/chat_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
-import 'package:chatoid/features/messages/model/clsMessage.dart';
+import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/features/messages/repository/msg_repo_impl.dart';
 import 'package:chatoid/features/messages/view_model/messagesCubit/messages_state.dart';
 

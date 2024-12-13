@@ -44,7 +44,6 @@ class ProfileState extends State<Profile> {
   void initializeFriendData() {
     final chatsCubit = BlocProvider.of<ChatsCubit>(context);
     friendData = List.from(chatsCubit.friendsList); // Use current friendsList
-    print("Initialized friendData: $friendData");
   }
 
   /// Asynchronous initialization logic

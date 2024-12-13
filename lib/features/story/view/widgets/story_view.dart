@@ -1,12 +1,13 @@
 import 'package:chatoid/constants.dart';
+import 'package:chatoid/core/utlis/app_router.dart';
 import 'package:chatoid/features/story/model/story.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
-import 'package:chatoid/features/home_page/view/home_page.dart';
 import 'package:chatoid/features/messages/view/widgets/my_header_widget.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/story/view/widgets/eye_views.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -73,7 +74,9 @@ class StoryViewState extends State<StoryView> {
       setState(() {
         _viewers = viewers; // Update the state with fetched viewers
       });
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
@@ -159,10 +162,7 @@ class StoryViewState extends State<StoryView> {
                                       false); // Get an instance of your storyCubit
                               await storyCubit.deleteStory(
                                   widget.stories[_currentIndex].id);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()));
+                              GoRouter.of(context).push(AppRouter.kHomePage);
                               setState(() {});
                             },
                             child: const Icon(Icons.delete,
