@@ -13,7 +13,7 @@ mixin StoryRepo {
     int viewerId,
   );
   Future<List<Map<UserData, List<Story>>>> retrieveViewersForMyStories(
-      int currentuser, int storyId, List<UserData> allUsers);
+      int currentuser, int storyId,);
 
   Future<void> deleteStory(int storyId);
 }

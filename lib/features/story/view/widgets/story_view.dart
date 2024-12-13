@@ -68,7 +68,7 @@ class StoryViewState extends State<StoryView> {
       List<Map<UserData, List<Story>>> viewers =
           await storyCubit.retrieveViewersForMyStories(
         loginCubit.currentUser.userId,
-        storyId,storyCubit.allUsers
+        storyId,
       );
       setState(() {
         _viewers = viewers; // Update the state with fetched viewers

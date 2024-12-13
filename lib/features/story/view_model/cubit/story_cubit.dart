@@ -63,10 +63,10 @@ class StoryCubit extends Cubit<StoryState> {
   }
 
   Future<List<Map<UserData, List<Story>>>> retrieveViewersForMyStories(
-      int currentuser, int storyId, List<UserData> allUsers) async {
+      int currentuser, int storyId,) async {
     List<Map<UserData, List<Story>>> viewersWithStories = [];
     viewersWithStories = await _storyRepoImpl.retrieveViewersForMyStories(
-        currentuser, storyId, allUsers);
+        currentuser, storyId);
     return viewersWithStories;
   }
 

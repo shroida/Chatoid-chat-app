@@ -71,45 +71,55 @@ class StoryRepoImpl with StoryRepo {
 
   @override
   Future<List<Map<UserData, List<Story>>>> retrieveViewersForMyStories(
-      int currentuser, int storyId, List<UserData> allUsers) async {
+    int currentuser,
+    int storyId,
+  ) async {
     List<Map<UserData, List<Story>>> viewersWithStories = [];
 
     try {
       final response = await supabase
           .from('story_views')
           .select('user_id, stories!inner(id, user_id, story_text)')
-          .eq('stories.userId', currentuser);
+          .eq('stories.user_id', currentuser);
 
       // Initialize a map to group stories by viewer (user_id)
       Map<int, List<Story>> viewersMap = {};
 
-      for (var entry in response) {
-        int viewerId = entry['user_id'];
-        Map<String, dynamic> storyData = entry['stories'];
-        Story story = Story.fromJson(storyData);
+      for (var row in response) {
+        // Extract user data and story information
+        int viewerId = row['user_id'];
+        var storyData = row['stories'];
+        Story story = Story.fromJson(
+            storyData); // Assuming you have a Story.fromJson constructor
 
-        if (viewersMap.containsKey(viewerId)) {
-          viewersMap[viewerId]!.add(story);
-        } else {
-          viewersMap[viewerId] = [story];
+        // If the viewer is not yet in the map, initialize their story list
+        if (!viewersMap.containsKey(viewerId)) {
+          viewersMap[viewerId] = [];
         }
+
+        // Add the current story to the viewer's list of stories
+        viewersMap[viewerId]!.add(story);
       }
 
-      // Convert the map to the required format
-      for (var viewerId in viewersMap.keys) {
-        final viewerData = allUsers.firstWhere(
-          (user) => user.userId == viewerId,
-          orElse: () => UserData(
-              friendId: 0, userId: viewerId, username: 'Unknown', email: ''),
-        );
-        viewersWithStories.add({viewerData: viewersMap[viewerId]!});
+      // Convert the map into a list of UserData with their viewed stories
+      for (var entry in viewersMap.entries) {
+        // Fetch user data for each viewer (assuming UserData.fromJson is defined)
+        UserData viewer = await _getUserDataById(
+            entry.key); // Implement this function to fetch user details
+        viewersWithStories.add({viewer: entry.value});
       }
+    } catch (e) {}
 
-      return viewersWithStories;
-    } catch (e) {
-      debugPrint('Error retrieving viewers: $e');
-      return [];
-    }
+    return viewersWithStories;
+  }
+
+  Future<UserData> _getUserDataById(int userId) async {
+    final response = await supabase
+        .from('user_profiles')
+        .select()
+        .eq('user_id', userId)
+        .single();
+    return UserData.fromJson(response);
   }
 
   @override
