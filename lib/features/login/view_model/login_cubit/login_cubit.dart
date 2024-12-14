@@ -9,7 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginInital());
+  LoginCubit() : super(LoginInitial()) {
+    print('=========================');
+    print('===initial Login Cubit========');
+  }
 
   final LoginRepoImpl _repo = LoginRepoImpl();
   

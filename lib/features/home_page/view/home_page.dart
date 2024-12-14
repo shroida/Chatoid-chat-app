@@ -1,7 +1,6 @@
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/features/home_page/view/widgets/menu/menu.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
-import 'package:chatoid/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/features/home_page/view/widgets/home_view.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
@@ -64,19 +63,19 @@ class _HomePageState extends State<HomePage> {
       'stories',
       () async {
         if (mounted) {
-          sotryCubit.fetchAllStories(); // Ensure this updates the state
+          await sotryCubit.fetchAllStories(); // Ensure this updates the state
         }
       },
     );
 
-    await chatsCubit.subscribe(
-      'friendships',
-      () async {
-        if (mounted) {
-          await chatsCubit.fetchFriends(currentUser.userId);
-        }
-      },
-    );
+    // await chatsCubit.subscribe(
+    //   'friendships',
+    //   () async {
+    //     if (mounted) {
+    //       await chatsCubit.fetchFriends(currentUser.userId);
+    //     }
+    //   },
+    // );
   }
 
   @override
@@ -86,27 +85,21 @@ class _HomePageState extends State<HomePage> {
 
     final currentUser = loginCubit.currentUser;
 
-    return BlocBuilder<ChatsCubit, ChatsState>(
-      builder: (context, state) {
-        return ZoomDrawer(
-          controller: _drawerController,
-          menuScreen: MenuScreen(profileData: currentUser),
-          mainScreen: HomeView(drawerController: _drawerController),
-          angle: -15,
-          duration:
-              const Duration(milliseconds: 600), // Smooth transition duration
-          slideWidth: MediaQuery.of(context).size.width * 0.65,
-          borderRadius: 30.0, // Round edges of drawer
-          menuBackgroundColor: themeCubit
-              .colorOfApp, // Blue background between drawer and content
-          mainScreenOverlayColor: themeCubit.colorOfApp
-              .withOpacity(0.2), // Overlay when drawer is open
-          showShadow: true, // 3D effect
-          shadowLayer2Color: Colors.black.withOpacity(0.3), // Custom shadow
-          shadowLayer1Color:
-              Colors.black.withOpacity(0.1), // More subtle shadows
-        );
-      },
+    return ZoomDrawer(
+      controller: _drawerController,
+      menuScreen: MenuScreen(profileData: currentUser),
+      mainScreen: HomeView(drawerController: _drawerController),
+      angle: -15,
+      duration: const Duration(milliseconds: 600), // Smooth transition duration
+      slideWidth: MediaQuery.of(context).size.width * 0.65,
+      borderRadius: 30.0, // Round edges of drawer
+      menuBackgroundColor:
+          themeCubit.colorOfApp, // Blue background between drawer and content
+      mainScreenOverlayColor:
+          themeCubit.colorOfApp.withOpacity(0.2), // Overlay when drawer is open
+      showShadow: true, // 3D effect
+      shadowLayer2Color: Colors.black.withOpacity(0.3), // Custom shadow
+      shadowLayer1Color: Colors.black.withOpacity(0.1), // More subtle shadows
     );
   }
 }

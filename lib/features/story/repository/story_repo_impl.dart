@@ -166,4 +166,25 @@ class StoryRepoImpl with StoryRepo {
   Future<void> deleteStory(int storyId) async {
     await supabase.from('stories').delete().eq('id', storyId);
   }
+
+  Future<void> subscribe(
+    String table,
+    Future<void> Function() callbackAction,
+  ) async {
+    try {
+      supabase
+          .channel('public:$table')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: table,
+            callback: (payload) async {
+              await callbackAction();
+            },
+          )
+          .subscribe();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

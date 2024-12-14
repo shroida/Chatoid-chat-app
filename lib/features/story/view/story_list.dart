@@ -7,34 +7,24 @@ import 'package:chatoid/features/story/model/story.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class StoryList extends StatefulWidget {
-  const StoryList({super.key});
-
+  const StoryList({
+    super.key,
+  });
   @override
   StoryListState createState() => StoryListState();
 }
 
 class StoryListState extends State<StoryList> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<StoryCubit>(context, listen: false).loadStories();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final loginCubit = Provider.of<LoginCubit>(context, listen: true);
-    final storyCubit = BlocProvider.of<StoryCubit>(context, listen: true);
+    final storyCubit = BlocProvider.of<StoryCubit>(context, listen: false);
+    final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
 
-    // Get the current user's stories
     final currentUserStories = storyCubit.allStories
         .where((story) => story.userId == loginCubit.currentUser.userId)
         .toList();
-
     return SizedBox(
       height: 100,
       child: SingleChildScrollView(
