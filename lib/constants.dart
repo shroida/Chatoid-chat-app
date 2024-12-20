@@ -42,7 +42,7 @@ class ChatAppColors {
 
   // Background and surfaces
   static const Color backgroundColor =
-      Color(0xFFF1F5F9); // Soft grayish-white background
+      Color.fromARGB(255, 226, 226, 226); // Soft grayish-white background
   static const Color backgroundColorDark =
       Color(0xFF36383A); // Soft grayish-white background
 

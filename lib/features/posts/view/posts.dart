@@ -1,3 +1,5 @@
+import 'package:chatoid/core/utlis/user_data.dart';
+import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/posts/view/widgets/post_widget.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_state.dart';
@@ -22,6 +24,7 @@ class PostsWidgetState extends State<Posts> {
 
   @override
   Widget build(BuildContext context) {
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
     return Scaffold(
       body: BlocBuilder<PostsCubit, PostsState>(
         builder: (context, state) {
@@ -32,10 +35,19 @@ class PostsWidgetState extends State<Posts> {
             return ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {
-                return PostWidget(
-                  post: posts[index],
-                  username: 'shroida', // Update this as needed
-                );
+                try {
+                  UserData usernamePost = chatsCubit.allUsersApp.firstWhere(
+                      (user) =>
+                          user.userId ==
+                          posts[index].id); // Find the user matching the post
+                  return PostWidget(
+                    post: posts[index],
+                    username: usernamePost.username, // Pass the username
+                  );
+                } catch (e) {
+                  return const Center(
+                      child: Text('Error retrieving user data.'));
+                }
               },
             );
           } else if (state is PostsError) {

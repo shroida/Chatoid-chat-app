@@ -63,6 +63,14 @@ class _HomePageState extends State<HomePage> {
       },
     );
     await chatsCubit.subscribe(
+      'posts',
+      () async {
+        if (mounted) {
+          await postsCubit.getAllPosts();
+        }
+      },
+    );
+    await chatsCubit.subscribe(
       'all_messages_group',
       () async {
         if (mounted) {

@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
           routerConfig: AppRouter.router,
           debugShowCheckedModeBanner: false,
           theme: ThemeData.light().copyWith(
-            scaffoldBackgroundColor: Colors.white,
+            scaffoldBackgroundColor:ChatAppColors.backgroundColor,
           ),
           darkTheme: ThemeData.dark(),
           themeMode: themeCubit.themeMode,

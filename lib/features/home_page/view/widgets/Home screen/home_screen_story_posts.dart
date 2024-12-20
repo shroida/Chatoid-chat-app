@@ -1,3 +1,4 @@
+import 'package:chatoid/features/home_page/view/widgets/Home%20screen/field_add_post.dart';
 import 'package:chatoid/features/posts/view/posts.dart';
 import 'package:chatoid/features/story/view/story_list.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
@@ -32,7 +33,17 @@ class HomeScreenStoryPostsState extends State<HomeScreenStoryPosts> {
                   color: Colors.grey,
                 ),
               ),
-              Expanded(child: Posts()), // Wrap in Expanded
+              FieldAddPost(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  thickness: 2,
+                  color: Colors.grey,
+                ),
+              ),
+              Expanded(child: Posts()),
             ],
           );
         } else if (state is StoryError) {
