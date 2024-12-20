@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     // Fetch friends and messages from Supabase using ChatsCubit
     await chatsCubit.fetchFriends(currentUser.userId);
     await chatsCubit.fetchAllMessages(currentUser);
+    await chatsCubit.fetchAllMessagesInGroupForAllUsers();
 
     // Subscribe to real-time updates for messages and friends
     await chatsCubit.subscribe(
@@ -55,6 +56,14 @@ class _HomePageState extends State<HomePage> {
       () async {
         if (mounted) {
           await chatsCubit.fetchAllMessages(currentUser);
+        }
+      },
+    );
+    await chatsCubit.subscribe(
+      'all_messages_group',
+      () async {
+        if (mounted) {
+          await chatsCubit.fetchAllMessagesInGroupForAllUsers();
         }
       },
     );
@@ -68,14 +77,14 @@ class _HomePageState extends State<HomePage> {
       },
     );
 
-    // await chatsCubit.subscribe(
-    //   'friendships',
-    //   () async {
-    //     if (mounted) {
-    //       await chatsCubit.fetchFriends(currentUser.userId);
-    //     }
-    //   },
-    // );
+    await chatsCubit.subscribe(
+      'friendships',
+      () async {
+        if (mounted) {
+          await chatsCubit.fetchFriends(currentUser.userId);
+        }
+      },
+    );
   }
 
   @override

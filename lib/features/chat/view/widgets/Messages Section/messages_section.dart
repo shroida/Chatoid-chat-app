@@ -20,9 +20,11 @@ class MessagesSection extends StatelessWidget {
 
     return BlocBuilder<ChatsCubit, ChatsState>(
       builder: (context, state) {
-        if (state is ChatLoading) {
-          return Center(child: Image.asset('assets/loading_earth.gif'));
-        } else if (state is ChatEmpty) {
+        // if (state is ChatLoading) {
+        //   return Center(child: Image.asset('assets/loading_earth.gif'));
+        // } else
+
+        if (state is ChatEmpty) {
           return Center(
             child: Column(
               children: [

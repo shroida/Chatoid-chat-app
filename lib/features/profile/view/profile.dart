@@ -37,7 +37,7 @@ class ProfileState extends State<Profile> {
     super.initState();
     initializeFriendData();
     initializeProfile(); // Call the async initialization method
-    getStoriesProfile(); // Synchronous call to fetch stories
+    getStoriesProfile();
   }
 
   /// Initialize friendData from ChatsCubit

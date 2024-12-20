@@ -5,6 +5,7 @@ import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:intl/intl.dart';
 
 class ChatsCubit extends Cubit<ChatsState> {
   ChatsCubit() : super(ChatInitial());
@@ -12,6 +13,7 @@ class ChatsCubit extends Cubit<ChatsState> {
   List<UserData> friendsList = [];
   final supabase = Supabase.instance;
   List<ClsMessage> friendMessages = []; // Store messages for each friend
+  List<ClsMessage> allUsersMessagesGroup = []; // Store messages for all users
 
   final ChatRepoImpl _chatRepoImpl = ChatRepoImpl();
 
@@ -92,6 +94,51 @@ class ChatsCubit extends Cubit<ChatsState> {
     } catch (e) {
       emit(ChatError(
           "Error fetching messages: $e")); // Emit error state for messages
+    }
+  }
+
+  Future<void> fetchAllMessagesInGroupForAllUsers() async {
+    emit(ChatLoading());
+    try {
+      final response = await supabase.client
+          .from('all_messages_group')
+          .select('id, user_id, created_at, msg_text, message_reply');
+
+      print("================================================");
+      print("Response from Supabase: $response");
+      print("================================================");
+      allUsersMessagesGroup.clear();
+      for (var message in response) {
+        allUsersMessagesGroup.add(ClsMessage(
+          senderId: message['user_id'] as int,
+          friendId: -1,
+          messageText: message['msg_text'] as String,
+          createdAt: DateTime.parse(message['created_at']),
+          isRead: false,
+          messsagReply: message['message_reply'] as String?,
+        ));
+      }
+    } catch (e) {
+      print("Error fetching messages: $e");
+      emit(ChatError("Error fetching messages: $e"));
+    }
+  }
+
+  String formatMessageDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date).inDays;
+
+    if (difference > 8) {
+      // More than 2 days ago
+      return DateFormat('hh:mm a\ndd/MM/yyyy ').format(date);
+    } else {
+      // Within the last 2 days
+      String hour = (date.hour < 10 ? '0' : '') +
+          (date.hour > 12 ? '${date.hour - 12}' : '${date.hour}');
+      String minute = date.minute < 10 ? '0${date.minute}' : '${date.minute}';
+      String period = date.hour >= 12 ? 'PM' : 'AM';
+
+      return "$hour:$minute $period";
     }
   }
 

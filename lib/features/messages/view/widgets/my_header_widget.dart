@@ -8,16 +8,15 @@ class MyHeaderWidget extends StatefulWidget {
   final IconData leftIcon; // For the back icon
   final Color backgroundColor;
   final Color? iconColor;
-  final UserData userProfile;
+  final UserData? userProfile;
 
   const MyHeaderWidget({
     super.key,
     required this.headername,
     required this.leftIcon,
     this.iconColor,
-    required this.userProfile,
-    this.backgroundColor =
-        ChatAppColors.appBarColor, 
+    this.userProfile,
+    this.backgroundColor = ChatAppColors.appBarColor,
   });
 
   @override
@@ -56,7 +55,8 @@ class MyHeaderWidgetState extends State<MyHeaderWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back), // Use the passed left icon
+                    icon: const Icon(
+                        Icons.arrow_back), // Use the passed left icon
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -66,8 +66,13 @@ class MyHeaderWidgetState extends State<MyHeaderWidget> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  Profile(userProfile: widget.userProfile)));
+                              builder: (context) => Profile(
+                                  userProfile: widget.userProfile ??
+                                      UserData(
+                                          friendId: 5,
+                                          userId: 3,
+                                          username: 'username',
+                                          email: 'email'))));
                     },
                     child: CircleAvatar(
                       child: Image.asset('assets/profile.gif'),

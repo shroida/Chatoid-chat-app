@@ -84,7 +84,7 @@ class FriendsList extends StatelessWidget {
 
               return ChatCard(
                 messageDate: lastMessage != null
-                    ? _formatDate(lastMessage.createdAt)
+                    ? chatsCubit.formatMessageDate(lastMessage.createdAt)
                     : "No messages",
                 friendData: friend,
                 messageCount: messagesCount,

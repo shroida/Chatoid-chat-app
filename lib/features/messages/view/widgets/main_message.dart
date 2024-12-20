@@ -15,15 +15,7 @@ class MainMessage extends StatelessWidget {
     required this.isSentByUser,
     required this.chatsCubit,
   });
-  String _formatMessageDate(DateTime date) {
-    String hour = '';
-    hour = (date.hour < 10 ? '0' : '') +
-        (date.hour > 12 ? '0${date.hour - 12}' : date.hour.toString());
-
-    String minute = date.minute < 10 ? '0${date.minute}' : '${date.minute}';
-
-    return "$hour:$minute";
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +75,7 @@ class MainMessage extends StatelessWidget {
                 children: [
                   // Message Date
                   Text(
-                    _formatMessageDate(message.createdAt),
+                    chatsCubit.formatMessageDate(message.createdAt),
                     style: const TextStyle(
                       fontSize: 12,
                       color: Color.fromARGB(

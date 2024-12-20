@@ -3,7 +3,7 @@ import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/features/chat/view/widgets/Messages%20Section/messages_section.dart';
 import 'package:chatoid/features/chat/view/widgets/Tabbar/tap_bar.dart';
-import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
+import 'package:chatoid/features/chat/view/widgets/Group%20Section/group_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,7 +37,7 @@ class HomePageChatsState extends State<HomePageChats> {
             child: _currentIndexHomePage == 0
                 ? const MessagesSection()
                 : _currentIndexHomePage == 1
-                    ? _buildGroupsSection()
+                    ?const GroupSection()
                     : _buildSettingsSection(context, themeProvider),
           ),
         ],
@@ -45,12 +45,7 @@ class HomePageChatsState extends State<HomePageChats> {
     );
   }
 
-  Widget _buildGroupsSection() {
-    final chatsCubit = BlocProvider.of<ChatsCubit>(context, listen: true);
-
-    return Text(
-        'We will add this feature soon! ${chatsCubit.friendMessages.length }');
-  }
+  
 
   Widget _buildSettingsSection(BuildContext context, ThemeCubit themeProvider) {
     List<Color> colors = [

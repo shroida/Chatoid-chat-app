@@ -68,6 +68,41 @@ class MessagesCubit extends Cubit<MessagesState> {
     }
   }
 
+  Future<void> insertMessageGroup(
+    int senderId,
+    String messageText,
+  ) async {
+    ClsMessage newMessage = ClsMessage(
+      senderId: senderId,
+      friendId: -1,
+      messageText: messageText,
+      createdAt: DateTime.now(),
+      isRead: false,
+      messsagReply: '',
+    );
+
+    chatsCubit.allUsersMessagesGroup.add(newMessage);
+    try {
+      await supabase.client.from('all_messages_group').insert({
+        'user_id': senderId,
+        'msg_text': messageText,
+        'created_at': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+          GlobalKey<ScaffoldMessengerState>();
+
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          content: Text('Try to send from home page'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+
+    await _msgRepoImpl.saveMessages(chatsCubit.allUsersMessagesGroup);
+  }
+
   Future<bool> ifTwoUsersInChat(int currentUserId, int friendId) async {
     try {
       final response = await supabase.client
