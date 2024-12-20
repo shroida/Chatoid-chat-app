@@ -130,9 +130,6 @@ class ChatsCubit extends Cubit<ChatsState> {
           .from('all_messages_group')
           .select('id, user_id, created_at, msg_text, message_reply');
 
-      print("================================================");
-      print("Response from Supabase: $response");
-      print("================================================");
       allUsersMessagesGroup.clear();
       for (var message in response) {
         allUsersMessagesGroup.add(ClsMessage(

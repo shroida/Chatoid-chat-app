@@ -30,7 +30,6 @@ class StoryCubit extends Cubit<StoryState> {
   Future<void> fetchAllStories() async {
     emit(StoryLoading());
     try {
-      print("Fetching all stories from repository");
       final stories = await _storyRepoImpl.fetchAllStories();
       _allStories = stories;
 
