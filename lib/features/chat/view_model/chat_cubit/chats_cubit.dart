@@ -11,9 +11,10 @@ class ChatsCubit extends Cubit<ChatsState> {
   ChatsCubit() : super(ChatInitial());
 
   List<UserData> friendsList = [];
+  List<UserData> allUsersApp = [];
   final supabase = Supabase.instance;
-  List<ClsMessage> friendMessages = []; // Store messages for each friend
-  List<ClsMessage> allUsersMessagesGroup = []; // Store messages for all users
+  List<ClsMessage> friendMessages = [];
+  List<ClsMessage> allUsersMessagesGroup = [];
 
   final ChatRepoImpl _chatRepoImpl = ChatRepoImpl();
 
@@ -57,6 +58,31 @@ class ChatsCubit extends Cubit<ChatsState> {
         emit(ChatFriendsFetched(friendsList: friendsList));
       } else {
         emit(ChatFriendsFetched(friendsList: []));
+      }
+    } catch (e) {
+      emit(ChatError("Error fetching friends: $e"));
+    }
+  }
+
+  Future<void> fetchAllUsersGroup() async {
+    emit(ChatLoading());
+    try {
+      final response = await supabase.client
+          .from('user_profiles')
+          .select('user_id, username,email');
+
+      if (response.isNotEmpty) {
+        {
+          for (var user in response) {
+            allUsersApp.add(UserData(
+                userId: user['user_id'],
+                friendId: -1,
+                username: user['username'],
+                email: user['email']));
+          }
+        }
+
+        await _chatRepoImpl.saveFriendList(allUsersApp);
       }
     } catch (e) {
       emit(ChatError("Error fetching friends: $e"));

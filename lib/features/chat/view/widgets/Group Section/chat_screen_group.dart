@@ -1,4 +1,6 @@
+import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
+import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/messages/model/cls_message.dart';
@@ -57,6 +59,15 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
     final messagesCubit = BlocProvider.of<MessagesCubit>(context, listen: true);
     final loginCubit = BlocProvider.of<LoginCubit>(context, listen: true);
     final themeCubit = BlocProvider.of<ThemeCubit>(context, listen: true);
+    String senderUsername(int senderMessageID) {
+      // Find the user with the matching ID from allUsersApp list
+      final user = chatsCubit.allUsersApp.firstWhere(
+        (user) => user.userId == senderMessageID,
+        orElse: () => UserData(
+            userId: -1, username: 'Unknown User', friendId: -1, email: ''),
+      );
+      return user.username;
+    }
 
     return Scaffold(
       body: Container(
@@ -110,10 +121,40 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                MainMessage(
-                                  message: message,
-                                  isSentByUser: isSentByUser,
-                                  chatsCubit: chatsCubit,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(60),
+                                          topLeft: Radius.circular(60),
+                                        ),
+                                        color: isSentByUser
+                                            ? ChatAppColors
+                                                .chatBubbleColorReceiver
+                                            : const Color.fromARGB(
+                                                115, 180, 180, 180),
+                                      ),
+                                      child: Text(
+                                        senderUsername(
+                                          message.senderId,
+                                        ),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    MainMessage(
+                                      message: message,
+                                      isSentByUser: isSentByUser,
+                                      chatsCubit: chatsCubit,
+                                    )
+                                  ],
                                 ),
                               ],
                             ),

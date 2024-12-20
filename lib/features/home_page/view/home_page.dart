@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     await chatsCubit.fetchFriends(currentUser.userId);
     await chatsCubit.fetchAllMessages(currentUser);
     await chatsCubit.fetchAllMessagesInGroupForAllUsers();
+    await chatsCubit.fetchAllUsersGroup();
 
     // Subscribe to real-time updates for messages and friends
     await chatsCubit.subscribe(
