@@ -19,6 +19,7 @@ class SignupCubit extends Cubit<SignUpLoading> {
   }) async {
     bool usernameExists = await _repo.isUsernameExist(userData.username);
     if (usernameExists) {
+      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Username already exists. Please choose another one.'),

@@ -142,7 +142,6 @@ class ChatsCubit extends Cubit<ChatsState> {
         ));
       }
     } catch (e) {
-      print("Error fetching messages: $e");
       emit(ChatError("Error fetching messages: $e"));
     }
   }

@@ -38,7 +38,7 @@ class HomePageChatsState extends State<HomePageChats> {
                 ? const MessagesSection()
                 : _currentIndexHomePage == 1
                     ?const GroupSection()
-                    : _buildSettingsSection(context, themeProvider),
+                    : _buildThemeSection(context, themeProvider),
           ),
         ],
       ),
@@ -47,7 +47,7 @@ class HomePageChatsState extends State<HomePageChats> {
 
   
 
-  Widget _buildSettingsSection(BuildContext context, ThemeCubit themeProvider) {
+  Widget _buildThemeSection(BuildContext context, ThemeCubit themeProvider) {
     List<Color> colors = [
       const Color.fromARGB(0, 96, 76, 212),
       ChatAppColors.primaryColor,

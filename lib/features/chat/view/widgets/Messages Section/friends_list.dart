@@ -33,15 +33,6 @@ class FriendsList extends StatelessWidget {
     return conversationMessages.isNotEmpty ? conversationMessages.first : null;
   }
 
-  String _formatDate(DateTime date) {
-    String hour = (date.hour < 10 ? '0' : '') +
-        (date.hour > 12 ? '0${date.hour - 12}' : date.hour.toString());
-
-    String minute = date.minute < 10 ? '0${date.minute}' : '${date.minute}';
-
-    return "$hour:$minute";
-  }
-
   List<ClsMessage> _messagesNotReadByMe(int friendId, int currentUserId) {
     return chatsCubit.friendMessages
         .where((msg) =>
