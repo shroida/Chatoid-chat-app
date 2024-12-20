@@ -1,6 +1,7 @@
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
+import 'package:chatoid/features/chat/view/widgets/Group%20Section/all_users_list.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/messages/model/cls_message.dart';
@@ -76,7 +77,13 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
           children: [
             GestureDetector(
               onTap: () {
-                print('group Info');
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return AllUsersList(
+                        chatsCubit: chatsCubit,
+                      );
+                    });
               },
               child: const MyHeaderWidget(
                 headername: "@all",
@@ -85,14 +92,13 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
             ),
             Expanded(
               child: ListView.builder(
-                controller: scrollController, // Use the scroll controller here
+                controller: scrollController,
                 itemCount: widget.allUsersMessages.length,
                 itemBuilder: (context, index) {
                   final message = widget.allUsersMessages[index];
                   final bool isSentByUser =
                       loginCubit.currentUser.userId == message.senderId;
 
-                  // Ensure dragOffsets is initialized for the index
                   dragOffsets[index] = dragOffsets[index] ?? 0;
 
                   return GestureDetector(
@@ -109,8 +115,7 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                       );
                     },
                     child: Transform.translate(
-                      offset:
-                          Offset(dragOffsets[index]!, 0), // Apply drag offset
+                      offset: Offset(dragOffsets[index]!, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
