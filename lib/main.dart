@@ -1,6 +1,7 @@
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/messages/view_model/messagesCubit/messages_cubit.dart';
+import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:chatoid/features/profile/view_model/cubit/profile_cubit.dart';
 import 'package:chatoid/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
@@ -41,6 +42,9 @@ void main() async {
         ),
         BlocProvider<ThemeCubit>(
           create: (context) => ThemeCubit(),
+        ),
+        BlocProvider<PostsCubit>(
+          create: (context) => PostsCubit(),
         ),
         BlocProvider<ChatsCubit>(
           create: (context) => ChatsCubit(),

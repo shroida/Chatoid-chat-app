@@ -3,6 +3,7 @@ import 'package:chatoid/features/home_page/view/widgets/menu/menu.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/home_page/view/widgets/home_view.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   // Declare ChatsCubit
   late ChatsCubit chatsCubit;
+  late PostsCubit postsCubit;
 
   // Declare sotryCubit
   late StoryCubit sotryCubit;
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
     // Access ChatsCubit and sotryCubit from the context
     chatsCubit = context.read<ChatsCubit>();
+    postsCubit = context.read<PostsCubit>();
     sotryCubit = context.read<StoryCubit>();
   }
 
@@ -50,8 +53,7 @@ class _HomePageState extends State<HomePage> {
     await chatsCubit.fetchAllMessages(currentUser);
     await chatsCubit.fetchAllMessagesInGroupForAllUsers();
     await chatsCubit.fetchAllUsersGroup();
-
-    // Subscribe to real-time updates for messages and friends
+    await postsCubit.getAllPosts();
     await chatsCubit.subscribe(
       'messages',
       () async {

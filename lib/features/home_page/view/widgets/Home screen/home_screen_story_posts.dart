@@ -1,3 +1,4 @@
+import 'package:chatoid/features/posts/view/posts.dart';
 import 'package:chatoid/features/story/view/story_list.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
 import 'package:chatoid/features/story/view_model/cubit/story_state.dart';
@@ -31,6 +32,7 @@ class HomeScreenStoryPostsState extends State<HomeScreenStoryPosts> {
                   color: Colors.grey,
                 ),
               ),
+              Expanded(child: Posts()), // Wrap in Expanded
             ],
           );
         } else if (state is StoryError) {
