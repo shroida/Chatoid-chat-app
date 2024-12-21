@@ -15,14 +15,15 @@ class PostsCubit extends Cubit<PostsState> {
     emit(PostsLoading());
     try {
       final response = await supabase.client.from('posts').select(
-          'user_id, created_at, posts_text, reacts'); // Ensure you call execute() to get the response
+          'user_id, created_at, posts_text, reacts,id'); // Ensure you call execute() to get the response
 
       allPosts.clear(); // Clear the previous posts
       print(response);
       for (var post in response) {
         allPosts.add(ClsPost(
+          postID: post['id'] ?? 0,
           createdAt: DateTime.parse(post['created_at']), // Parse the date
-          id: post['user_id'] ?? 0, // Use a default value if null
+          userID: post['user_id'] ?? 0, // Use a default value if null
           postsText: post['posts_text'] ?? '', // Use an empty string if null
           reacts: post['reacts'] ?? 0, // Use a default value if null
         ));
@@ -36,33 +37,51 @@ class PostsCubit extends Cubit<PostsState> {
   Future<void> increaseReacts(int postId) async {
     try {
       // Find the post in the list
-      final postIndex = allPosts.indexWhere((post) => post.id == postId);
-      if (postIndex == -1) throw Exception('Post not found');
+      final index = allPosts.indexWhere((post) => post.postID == postId);
 
-      // Update the reacts count locally
-      allPosts[postIndex].reacts += 1;
-      emit(PostsLoaded(posts: allPosts));
+      if (index == -1) {
+        emit(PostsError(errorMsg: "Post not found."));
+        return;
+      }
 
-      // Update the reacts count in the database
+      // Increase reacts locally
+      final updatedPost = ClsPost(
+        postID: allPosts[index].postID,
+        postsText: allPosts[index].postsText,
+        userID: allPosts[index].userID,
+        createdAt: allPosts[index].createdAt,
+        reacts: allPosts[index].reacts + 1, // Increment reacts
+      );
+
+      allPosts[index] = updatedPost;
+
+      // Emit updated state for UI
+      emit(PostsLoaded(posts: List.from(allPosts)));
+
+      // Update the reacts count in Supabase
       await supabase.client.from('posts').update({
-        'reacts': allPosts[postIndex].reacts,
-      }).eq('user_id', postId);
+        'reacts': updatedPost.reacts,
+      }).eq('id', postId);
     } catch (e) {
       emit(PostsError(errorMsg: "Error increasing reacts: $e"));
     }
   }
 
   Future<void> insertPost(
-    int id,
+    int userID,
     String postsText,
   ) async {
     ClsPost newPost = ClsPost(
-        postsText: postsText, id: id, createdAt: DateTime.now(), reacts: 0);
+        postID: 0,
+        postsText: postsText,
+        userID: userID,
+        createdAt: DateTime.now(),
+        reacts: 0);
     allPosts.add(newPost);
     print('new post${newPost.postsText}');
     try {
       await supabase.client.from('posts').insert({
-        'user_id': id,
+        'user_id': userID,
         'posts_text': postsText,
         'created_at': DateTime.now().toIso8601String(),
       });

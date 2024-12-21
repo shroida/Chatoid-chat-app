@@ -19,6 +19,7 @@ class PostWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(post.postID.toString()),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -59,7 +60,7 @@ class PostWidget extends StatelessWidget {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    postsCubit.increaseReacts(post.id);
+                    postsCubit.increaseReacts(post.postID);
                   },
                   icon: const Icon(
                     Icons.favorite,

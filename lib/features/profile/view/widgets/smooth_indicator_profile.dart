@@ -8,7 +8,7 @@ class SmoothIndicatorProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SmoothPageIndicator(
       controller: controller,
-      count: 2,
+      count: 3,
       effect: WormEffect(
         activeDotColor: Colors.blue,
         dotColor: Colors.white.withOpacity(0.5),

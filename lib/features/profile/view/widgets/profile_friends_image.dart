@@ -10,8 +10,10 @@ class ProfileFriendsImage extends StatelessWidget {
       {super.key,
       required this.isCurrentUserProfile,
       required this.friendData,
-      required this.userProfile});
+      required this.userProfile,
+      required this.likes});
   final bool isCurrentUserProfile;
+  final int likes;
   final List<UserData> friendData;
   final UserData userProfile;
   @override
@@ -101,7 +103,7 @@ class ProfileFriendsImage extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 20),
-        Column(
+        Row(
           children: [
             Column(
               children: [
@@ -114,6 +116,22 @@ class ProfileFriendsImage extends StatelessWidget {
                 ),
                 const Text(
                   'Friends',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
+            const SizedBox(
+              width: 40,
+            ),
+            Column(
+              children: [
+                Text(
+                  likes.toString(),
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                const Text(
+                  'Likes',
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ],

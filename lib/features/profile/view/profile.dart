@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
+import 'package:chatoid/features/posts/model/cls_post.dart';
+import 'package:chatoid/features/posts/view/widgets/post_widget.dart';
+import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:chatoid/features/profile/view/widgets/text_friend_stories_row.dart';
 import 'package:chatoid/features/story/model/story.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
@@ -83,6 +86,7 @@ class ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final chatCubit = BlocProvider.of<ChatsCubit>(context);
+    final postsCubit = BlocProvider.of<PostsCubit>(context);
     final authProvider = BlocProvider.of<LoginCubit>(context);
     final themeCubit = BlocProvider.of<ThemeCubit>(context);
     bool areFriends = chatCubit.friendsList.any((friend) =>
@@ -90,10 +94,18 @@ class ProfileState extends State<Profile> {
         friend.userId == authProvider.currentUser.userId);
 
     String currentUserName = authProvider.currentUser.username;
+    List<ClsPost> myPosts = postsCubit.allPosts
+        .where((post) => post.userID == authProvider.currentUser.userId)
+        .toList();
+    List<ClsPost> friendPosts = postsCubit.allPosts
+        .where((post) => post.userID == widget.userProfile.friendId)
+        .toList();
 
     bool isCurrentUserProfile = widget.userProfile.userId == 0 &&
         widget.userProfile.userId != authProvider.currentUser.userId;
-
+    int totalLikes = widget.userProfile.userId == 0
+        ? myPosts.fold(0, (sum, post) => sum + post.reacts)
+        : friendPosts.fold(0, (sum, post) => sum + post.reacts);
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -101,8 +113,8 @@ class ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(authProvider.currentUser.username),
             ProfileFriendsImage(
+              likes: totalLikes,
               friendData: friendData,
               isCurrentUserProfile: isCurrentUserProfile,
               userProfile: widget.userProfile,
@@ -146,10 +158,35 @@ class ProfileState extends State<Profile> {
             Expanded(
               child: PageView.builder(
                 controller: _controller,
-                itemCount: 2, // Two pages: one for friends, one for stories
+                itemCount: 3,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    // First Page: Friends List
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            key: ValueKey(friendData),
+                            itemCount: widget.userProfile.userId == 0
+                                ? myPosts.length
+                                : friendPosts.length,
+                            itemBuilder: (context, index) {
+                              final post = widget.userProfile.userId == 0
+                                  ? myPosts[index]
+                                  : friendPosts[index];
+
+                              return PostWidget(
+                                username: widget.userProfile.userId == 0
+                                    ? authProvider.currentUser.username
+                                    : widget.userProfile.username,
+                                post: post,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  } else if (index == 1) {
                     return Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
@@ -161,17 +198,10 @@ class ProfileState extends State<Profile> {
                               itemCount: widget.userProfile.userId != 0
                                   ? friendData.length
                                   : chatCubit.friendsList.length,
-
-                              // itemCount: widget.userProfile.userId != 0
-                              //     ? chatCubit.friendsList.length
-                              //     : friendData.length,
                               itemBuilder: (context, index) {
                                 final friend = widget.userProfile.userId != 0
                                     ? friendData[index]
                                     : chatCubit.friendsList[index];
-                                // final friend = widget.userProfile.userId != 0
-                                //     ? chatCubit.friendsList[index]
-                                //     : friendData[index];
 
                                 return CardFriend(
                                   username: friend.username,
@@ -183,8 +213,8 @@ class ProfileState extends State<Profile> {
                         ],
                       ),
                     );
-                  } else {
                     // Second Page: Stories
+                  } else {
                     return Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(

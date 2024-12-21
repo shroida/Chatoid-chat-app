@@ -9,6 +9,13 @@ class TextFriendStoriesRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(
+          "Posts",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
           "Friends",
           style: TextStyle(
             fontSize: 24,

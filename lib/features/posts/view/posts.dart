@@ -39,7 +39,7 @@ class PostsWidgetState extends State<Posts> {
                   UserData usernamePost = chatsCubit.allUsersApp.firstWhere(
                       (user) =>
                           user.userId ==
-                          posts[index].id); // Find the user matching the post
+                          posts[index].userID); // Find the user matching the post
                   return PostWidget(
                     post: posts[index],
                     username: usernamePost.username, // Pass the username
