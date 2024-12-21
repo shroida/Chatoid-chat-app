@@ -66,9 +66,11 @@ class _HomeViewState extends State<HomeView> {
       // Refresh HomePageStoryPosts
       final storyProvider = context.read<StoryCubit>();
       storyProvider.fetchAllStories();
-    } else if (_currentIndex == 1) {
     } else if (_currentIndex == 2) {
-      final chatsCubit = context.read<ChatsCubit>();
+      final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+      final loginCubit = BlocProvider.of<LoginCubit>(context);
+
+      await chatsCubit.fetchFriends(loginCubit.currentUser.userId);
       await chatsCubit.fetchAllMessages(currentUser);
     } else if (_currentIndex == 3) {}
   }
@@ -96,10 +98,10 @@ class _HomeViewState extends State<HomeView> {
           ),
           floatingActionButton: Container(
             width: 60.0,
-            height: 60.0, 
+            height: 60.0,
             decoration: BoxDecoration(
-              shape: BoxShape.circle, 
-              color: widget.themeCubit.colorOfApp, 
+              shape: BoxShape.circle,
+              color: widget.themeCubit.colorOfApp,
             ),
             child: IconButton(
               onPressed: () {
@@ -107,7 +109,7 @@ class _HomeViewState extends State<HomeView> {
               },
               icon: const Icon(
                 Icons.add,
-                color: Colors.white, 
+                color: Colors.white,
               ),
             ),
           ),

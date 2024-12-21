@@ -2,10 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
+import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ProfileFriendsImage extends StatelessWidget {
+class ProfileFriendsImage extends StatefulWidget {
   const ProfileFriendsImage(
       {super.key,
       required this.isCurrentUserProfile,
@@ -16,9 +18,18 @@ class ProfileFriendsImage extends StatelessWidget {
   final int likes;
   final List<UserData> friendData;
   final UserData userProfile;
+
+  @override
+  State<ProfileFriendsImage> createState() => _ProfileFriendsImageState();
+}
+
+class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
+  final supabase = Supabase.instance;
+
   @override
   Widget build(BuildContext context) {
     final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    final loginCubit = BlocProvider.of<LoginCubit>(context);
     void showSliderBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -27,14 +38,12 @@ class ProfileFriendsImage extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: CarouselSlider(
               options: CarouselOptions(
-                height: 200, // Adjust the height of the slider
-                enlargeCenterPage: true, // Zoom in the centered item
-                autoPlay: true, // Auto slide the images
-                autoPlayInterval:
-                    const Duration(seconds: 3), // Duration between slides
-                enableInfiniteScroll: true, // Loop through the items
-                viewportFraction:
-                    0.8, // How much of the previous/next item is visible
+                height: 200,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                enableInfiniteScroll: true,
+                viewportFraction: 0.8,
               ),
               items: profilesImages.map((imagePath) {
                 return Builder(
@@ -52,15 +61,10 @@ class ProfileFriendsImage extends StatelessWidget {
                         ],
                       ),
                       child: GestureDetector(
-                        onTap: () {
-                          // setState(() {
-                          //   chatsCubit.upLoadImageProfile(
-                          //       imagePath,
-                          //       widget.userProfile
-                          //           .user_id);
-                          //   widget.userProfile.profile_image = imagePath;
-                          //   Navigator.pop(context);
-                          // });
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await chatsCubit.upLoadImageProfile(
+                              imagePath, loginCubit.currentUser.userId);
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
@@ -94,9 +98,13 @@ class ProfileFriendsImage extends StatelessWidget {
             ),
             child: ClipOval(
               child: Image.asset(
-                'assets/profile.gif',
-                width: 120,
-                height: 120,
+                widget.isCurrentUserProfile
+                    ? (widget.userProfile.profileImage.isNotEmpty
+                        ? widget.userProfile.profileImage
+                        : 'assets/profile.gif')
+                    : 'assets/profile.gif',
+                width: 150,
+                height: 150,
                 fit: BoxFit.cover,
               ),
             ),
@@ -108,9 +116,9 @@ class ProfileFriendsImage extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  isCurrentUserProfile
+                  widget.isCurrentUserProfile
                       ? chatsCubit.friendsList.length.toString()
-                      : friendData.length.toString(),
+                      : widget.friendData.length.toString(),
                   style: const TextStyle(
                       fontSize: 22, fontWeight: FontWeight.w600),
                 ),
@@ -126,7 +134,7 @@ class ProfileFriendsImage extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  likes.toString(),
+                  widget.likes.toString(),
                   style: const TextStyle(
                       fontSize: 22, fontWeight: FontWeight.w600),
                 ),

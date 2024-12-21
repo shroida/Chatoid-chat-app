@@ -62,22 +62,29 @@ class MyHeaderWidgetState extends State<MyHeaderWidget> {
                     },
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Profile(
-                                  userProfile: widget.userProfile ??
-                                      UserData(
-                                          friendId: 5,
-                                          userId: 3,
-                                          username: 'username',
-                                          email: 'email'))));
-                    },
-                    child: CircleAvatar(
-                      child: Image.asset('assets/profile.gif'),
-                    ),
-                  ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Profile(
+                                    userProfile: widget.userProfile ??
+                                        UserData(
+                                            friendId: 5,
+                                            userId: 3,
+                                            username: 'username',
+                                            email: 'email'))));
+                      },
+                      child: CircleAvatar(
+                        radius: 20, 
+                        backgroundImage: widget.userProfile != null
+                            ? (widget.userProfile!.profileImage
+                                    .startsWith('http')
+                                ? NetworkImage(widget.userProfile!.profileImage)
+                                : AssetImage(widget.userProfile!.profileImage)
+                                    as ImageProvider)
+                            : const AssetImage(
+                                'assets/profile.gif'), // Fallback image
+                      )),
                   const SizedBox(width: 5),
                   Text(
                     widget.headername,

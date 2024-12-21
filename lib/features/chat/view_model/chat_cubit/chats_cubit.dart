@@ -17,14 +17,13 @@ class ChatsCubit extends Cubit<ChatsState> {
   List<ClsMessage> allUsersMessagesGroup = [];
 
   final ChatRepoImpl _chatRepoImpl = ChatRepoImpl();
-
   Future<void> fetchFriends(int currentUserId) async {
     emit(ChatLoading());
     try {
       final response = await supabase.client
           .from('friendships')
           .select(
-              'user_id, friend_id, user_profiles_friend:friend_id(username, email), user_profiles_user:user_id(username, email)')
+              'user_id, friend_id, user_profiles_friend:friend_id(username, email, profile_image), user_profiles_user:user_id(username, email, profile_image)')
           .or('user_id.eq.$currentUserId,friend_id.eq.$currentUserId');
 
       if (response.isNotEmpty) {
@@ -44,8 +43,14 @@ class ChatsCubit extends Cubit<ChatsState> {
             userProfile = friend['user_profiles_user'] as Map<String, dynamic>;
           }
 
+          // Check if profile_image is empty or null, and set a default value if true
+          String profileImage =
+              userProfile['profile_image'] ?? 'assets/profile.gif';
+
           if (uniqueFriendIds.add(friendUserId)) {
             friendsList.add(UserData.fromJson({
+              'profile_image':
+                  profileImage, 
               'friend_id': friendUserId,
               'user_id': currentUserId,
               'username': userProfile['username'] ?? 'Unknown User',
@@ -245,6 +250,16 @@ class ChatsCubit extends Cubit<ChatsState> {
           backgroundColor: Colors.green,
         ),
       );
+    }
+  }
+
+  Future<void> upLoadImageProfile(String imagePath, int userID) async {
+    try {
+      await supabase.client.from('user_profiles').update({
+        'profile_image': imagePath,
+      }).eq('user_id', userID);
+    } catch (e) {
+      rethrow;
     }
   }
 }

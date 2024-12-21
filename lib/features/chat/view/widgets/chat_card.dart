@@ -29,13 +29,15 @@ class ChatCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
         child: Row(
           children: [
-            
-            CircleAvatar(
-              radius: 30,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
               child: Image.asset(
                 friendData.profileImage.isNotEmpty
                     ? friendData.profileImage
                     : 'assets/profile.gif',
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 10),

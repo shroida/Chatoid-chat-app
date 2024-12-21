@@ -15,10 +15,9 @@ class PostsCubit extends Cubit<PostsState> {
     emit(PostsLoading());
     try {
       final response = await supabase.client.from('posts').select(
-          'user_id, created_at, posts_text, reacts,id'); // Ensure you call execute() to get the response
+          'user_id, created_at, posts_text, reacts, id'); // Ensure you call execute() to get the response
 
       allPosts.clear(); // Clear the previous posts
-      print(response);
       for (var post in response) {
         allPosts.add(ClsPost(
           postID: post['id'] ?? 0,
@@ -28,6 +27,10 @@ class PostsCubit extends Cubit<PostsState> {
           reacts: post['reacts'] ?? 0, // Use a default value if null
         ));
       }
+
+      // Sort posts by date (newest first)
+      allPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
       emit(PostsLoaded(posts: allPosts));
     } catch (e) {
       emit(PostsError(errorMsg: "Error fetching posts: $e"));
@@ -54,7 +57,8 @@ class PostsCubit extends Cubit<PostsState> {
       );
 
       allPosts[index] = updatedPost;
-
+      allPosts
+          .sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Sort by date
       // Emit updated state for UI
       emit(PostsLoaded(posts: List.from(allPosts)));
 
@@ -67,24 +71,27 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-  Future<void> insertPost(
-    int userID,
-    String postsText,
-  ) async {
+  Future<void> insertPost(int userID, String postsText) async {
     ClsPost newPost = ClsPost(
-        postID: 0,
-        postsText: postsText,
-        userID: userID,
-        createdAt: DateTime.now(),
-        reacts: 0);
+      postID: 0,
+      postsText: postsText,
+      userID: userID,
+      createdAt: DateTime.now(),
+      reacts: 0,
+    );
+
     allPosts.add(newPost);
-    print('new post${newPost.postsText}');
     try {
       await supabase.client.from('posts').insert({
         'user_id': userID,
         'posts_text': postsText,
         'created_at': DateTime.now().toIso8601String(),
       });
+
+      // Sort the posts by creation date (newest first)
+      allPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      emit(PostsLoaded(posts: List.from(allPosts)));
     } catch (e) {
       final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
           GlobalKey<ScaffoldMessengerState>();

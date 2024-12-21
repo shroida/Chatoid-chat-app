@@ -47,7 +47,9 @@ class CardStory extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             storyText,
+
             style: const TextStyle(
+                color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold), // Adjust text style as needed
           ),

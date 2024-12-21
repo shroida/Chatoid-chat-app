@@ -34,11 +34,12 @@ class LoginRepoImpl with LoginRepo {
       final supabase = Supabase.instance.client;
       final response = await supabase
           .from('user_profiles')
-          .select('user_id, username, email')
+          .select('user_id, username, email,profile_image')
           .eq('email', email)
           .single();
       loginCubit.currentUser.userId = response['user_id'] as int;
       loginCubit.currentUser.username = response['username'] as String;
+      loginCubit.currentUser.profileImage = response['profile_image'] as String;
       loginCubit.currentUser.email = response['email'] as String;
     } catch (e) {
       SnackBar(
@@ -118,8 +119,8 @@ class LoginRepoImpl with LoginRepo {
 
   @override
   Future<void> recoverSession(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
     final loginCubit = context.read<LoginCubit>();
+    final prefs = await SharedPreferences.getInstance();
 
     final storedSession = prefs.getString(sessionKey);
 
