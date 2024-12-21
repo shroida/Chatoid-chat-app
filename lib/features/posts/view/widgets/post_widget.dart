@@ -12,25 +12,46 @@ class PostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final postsCubit = BlocProvider.of<PostsCubit>(context);
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              username,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: Image.asset('assets/profile.gif'),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      username,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  postsCubit.formatMessageDate(post.createdAt),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                )
+              ],
             ),
             const SizedBox(height: 8),
             Text(
               post.postsText,
-              style: const TextStyle(fontSize: 14),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               overflow: TextOverflow.clip,
+              maxLines: 20,
             ),
             const SizedBox(height: 12),
             Row(
@@ -42,34 +63,30 @@ class PostWidget extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.favorite,
-                    size: 20,
+                    size: 25,
                     color: Colors.red,
                   ),
-                  label: Text('${post.reacts} Like',
+                  label: Text('${post.reacts}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(color: Colors.black)),
                 ),
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.comment,
-                    size: 20,
-                    color: Colors.blue,
-                  ),
-                  label: const Text('Comment',
-                      style: TextStyle(color: Colors.black)),
+                const Icon(
+                  Icons.comment,
+                  size: 25,
+                  color: Colors.blue,
                 ),
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.share,
-                    size: 20,
-                    color: Colors.blue,
-                  ),
-                  label: const Text('Share',
-                      style: TextStyle(color: Colors.black)),
+                const Icon(
+                  Icons.share,
+                  size: 25,
+                  color: Colors.blue,
                 ),
               ],
+            ),
+            const Divider(
+              indent: 10,
+              endIndent: 10,
+              thickness: 1,
+              color: Colors.grey,
             ),
           ],
         ),

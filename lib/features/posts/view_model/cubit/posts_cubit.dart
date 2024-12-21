@@ -2,6 +2,7 @@ import 'package:chatoid/features/posts/model/cls_post.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PostsCubit extends Cubit<PostsState> {
@@ -76,5 +77,9 @@ class PostsCubit extends Cubit<PostsState> {
         ),
       );
     }
+  }
+
+  String formatMessageDate(DateTime date) {
+    return DateFormat('hh:mm a dd/MM/yyyy ').format(date);
   }
 }

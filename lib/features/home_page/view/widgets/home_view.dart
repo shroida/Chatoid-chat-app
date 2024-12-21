@@ -1,3 +1,4 @@
+import 'package:chatoid/core/utlis/app_router.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view/home_page_chats.dart';
@@ -12,12 +13,14 @@ import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key, required this.drawerController});
+  const HomeView(
+      {super.key, required this.drawerController, required this.themeCubit});
   final ZoomDrawerController drawerController;
-
+  final ThemeCubit themeCubit;
   @override
   State<HomeView> createState() => _HomeViewState();
 }
@@ -75,22 +78,40 @@ class _HomeViewState extends State<HomeView> {
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, state) {
         return Scaffold(
-            appBar: AppBarHomeView(
-              drawerController: widget.drawerController,
+          appBar: AppBarHomeView(
+            drawerController: widget.drawerController,
+          ),
+          body: screens != null
+              ? RefreshIndicator(
+                  onRefresh: _refreshData,
+                  child: IndexedStack(
+                    index: _currentIndex,
+                    children: screens!,
+                  ),
+                )
+              : const Center(child: CircularProgressIndicator()),
+          bottomNavigationBar: BottomCurvedNavigation(
+            currentIndex: _currentIndex,
+            onItemTapped: _onItemTapped,
+          ),
+          floatingActionButton: Container(
+            width: 60.0,
+            height: 60.0, 
+            decoration: BoxDecoration(
+              shape: BoxShape.circle, 
+              color: widget.themeCubit.colorOfApp, 
             ),
-            body: screens != null
-                ? RefreshIndicator(
-                    onRefresh: _refreshData,
-                    child: IndexedStack(
-                      index: _currentIndex,
-                      children: screens!,
-                    ),
-                  )
-                : const Center(child: CircularProgressIndicator()),
-            bottomNavigationBar: BottomCurvedNavigation(
-              currentIndex: _currentIndex,
-              onItemTapped: _onItemTapped,
-            ));
+            child: IconButton(
+              onPressed: () {
+                GoRouter.of(context).push(AppRouter.kAddPost);
+              },
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white, 
+              ),
+            ),
+          ),
+        );
       },
     );
   }

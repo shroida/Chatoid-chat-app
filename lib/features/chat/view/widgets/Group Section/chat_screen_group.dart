@@ -1,4 +1,3 @@
-import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view/widgets/Group%20Section/all_users_list.dart';
@@ -117,17 +116,20 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                     child: Transform.translate(
                       offset: Offset(dragOffsets[index]!, 0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Align(
                             alignment: isSentByUser
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
+                                
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: message.senderId !=
+                                          loginCubit.currentUser.userId
+                                      ? CrossAxisAlignment.start
+                                      : CrossAxisAlignment.end,
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.symmetric(
@@ -140,8 +142,7 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                                           topLeft: Radius.circular(60),
                                         ),
                                         color: isSentByUser
-                                            ? ChatAppColors
-                                                .chatBubbleColorReceiver
+                                            ? const Color.fromARGB(255, 233, 233, 233)
                                             : const Color.fromARGB(
                                                 115, 180, 180, 180),
                                       ),
@@ -160,7 +161,7 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                                       chatsCubit: chatsCubit,
                                     )
                                   ],
-                                ),
+                                )
                               ],
                             ),
                           ),

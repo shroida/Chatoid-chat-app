@@ -20,6 +20,8 @@ class _AppBarHomeViewState extends State<AppBarHomeView> {
   Widget build(BuildContext context) {
     final loginCubit = context.watch<LoginCubit>();
     return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
       leading: IconButton(
         icon: const Icon(Icons.menu),
         onPressed: () {
