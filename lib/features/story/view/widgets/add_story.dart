@@ -72,6 +72,8 @@ class AddStoryScreen extends StatelessWidget {
                         // Call the addToStory method from StoryCubit
                         if (storyText.isNotEmpty) {
                           await storyCubit.addToStory(storyText, context);
+                        
+
                           Navigator.pop(context);
                         } else {
                           // Handle empty story text case, e.g., show a SnackBar

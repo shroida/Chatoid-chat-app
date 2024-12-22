@@ -8,8 +8,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SignupCubit extends Cubit<SignUpLoading> {
   SignupCubit() : super(SignUpLoading());
   final RegisterRepoImpl _repo = RegisterRepoImpl();
-  
- 
 
   Future<void> submitForm({
     required final RegisterModel userData,
@@ -19,7 +17,6 @@ class SignupCubit extends Cubit<SignUpLoading> {
   }) async {
     bool usernameExists = await _repo.isUsernameExist(userData.username);
     if (usernameExists) {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Username already exists. Please choose another one.'),
@@ -41,15 +38,6 @@ class SignupCubit extends Cubit<SignUpLoading> {
           userData.email, userData.password, userData.username);
     }
   }
-
-
-
-
-
-
-
-
-
 
   Future<List<String>> searchUsernames(String query) async {
     try {

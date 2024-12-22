@@ -42,7 +42,6 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     final loginCubit = BlocProvider.of<LoginCubit>(context);
     currentUser = loginCubit.currentUser;
-    print('from home${currentUser.userId}');
     _loadThemePreference();
     context.read<ThemeCubit>().loadThemeMode();
   }

@@ -28,13 +28,11 @@ class MenuScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 40),
-                // User profile section
                 UserProfileSection(
                   profileData: profileData,
                 ),
-
                 const SizedBox(height: 20),
-                MenuUserInfo(themeCubit: themeCubit),
+                MenuUserInfo(loginCubit: authProvider, themeCubit: themeCubit),
                 const SizedBox(height: 20),
                 // Menu items
                 MenuItems(themeData: themeData, profileData: profileData),

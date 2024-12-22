@@ -34,7 +34,8 @@ class LoginButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 15),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width / 15),
       child: TextButton(
         onPressed: () async {
           passwordFocusNode.unfocus();
@@ -51,10 +52,14 @@ class LoginButton extends StatelessWidget {
                 addAnimation(controllerSuccess);
               },
               failure: () {
+                final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+                    GlobalKey<ScaffoldMessengerState>();
+
                 addAnimation(controllerFail);
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessengerKey.currentState?.showSnackBar(
                   const SnackBar(
-                    content: Text('Email or password is incorrect.'),
+                    content: Text('Email or password is incorrect.',
+                        key: ValueKey('uniqueSnackBar1')),
                     backgroundColor: Colors.red,
                   ),
                 );

@@ -162,6 +162,7 @@ class StoryViewState extends State<StoryView> {
                                       false); // Get an instance of your storyCubit
                               await storyCubit.deleteStory(
                                   widget.stories[_currentIndex].id);
+
                               GoRouter.of(context).push(AppRouter.kHomePage);
                               setState(() {});
                             },

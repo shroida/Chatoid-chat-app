@@ -34,7 +34,7 @@ class LoginRepoImpl with LoginRepo {
       final supabase = Supabase.instance.client;
       final response = await supabase
           .from('user_profiles')
-          .select('user_id, username, email,profile_image')
+          .select('user_id, username, email, profile_image')
           .eq('email', email)
           .single();
       loginCubit.currentUser.userId = response['user_id'] as int;
@@ -43,7 +43,7 @@ class LoginRepoImpl with LoginRepo {
       loginCubit.currentUser.email = response['email'] as String;
     } catch (e) {
       SnackBar(
-        content: Text('Sign up with Google failed: $e'),
+        content: Text('faild fill user by email: $e'),
         backgroundColor: Colors.red,
       );
     }
@@ -77,11 +77,11 @@ class LoginRepoImpl with LoginRepo {
         text: 'You are ready to use our app',
         confirmBtnText: 'Let\'s Go!',
         onConfirmBtnTap: () {
+          saveUserData(context);
           Navigator.of(context).pop();
           GoRouter.of(context).push(AppRouter.kHomePage);
         },
       );
-      saveUserData(context);
     });
   }
 
@@ -127,10 +127,17 @@ class LoginRepoImpl with LoginRepo {
     if (storedSession != null) {
       final response =
           await Supabase.instance.client.auth.recoverSession(storedSession);
+
       if (response.session != null) {
+        // Check if the widget is still mounted
+
         loginCubit.userLoggedIn = response.user;
-        await fillCurrentUserDataByEmail(
-            loginCubit.userLoggedIn!.email!, context);
+
+        // Avoid async gaps with context usage
+        final email = loginCubit.userLoggedIn?.email;
+        if (email != null) {
+          await fillCurrentUserDataByEmail(email, context);
+        }
       }
     }
   }

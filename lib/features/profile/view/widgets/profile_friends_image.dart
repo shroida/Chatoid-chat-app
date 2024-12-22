@@ -86,29 +86,29 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
 
     return Row(
       children: [
-        GestureDetector(
-          onTap: () {
-            showSliderBottomSheet();
-          }, // Show slider on tap
-          child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                widget.isCurrentUserProfile
-                    ? loginCubit.currentUser.profileImage
-                    : widget.userProfile.profileImage.isNotEmpty
-                        ? widget.userProfile.profileImage
-                        : 'assets/profile.gif',
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: () {
+        //     showSliderBottomSheet();
+        //   }, // Show slider on tap
+        //   child: Card(
+        //     elevation: 4,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(16),
+        //     ),
+        //     child: ClipOval(
+        //       child: Image.asset(
+        //         widget.isCurrentUserProfile
+        //             ? loginCubit.currentUser.profileImage
+        //             : !widget.isCurrentUserProfile
+        //                 ? widget.userProfile.profileImage
+        //                 : 'assets/profile.gif',
+        //         width: 150,
+        //         height: 150,
+        //         fit: BoxFit.cover,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         const SizedBox(width: 20),
         Row(
           children: [

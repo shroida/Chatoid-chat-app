@@ -159,7 +159,6 @@ class CustomSearchDelegate extends SearchDelegate {
             ).getUserByUsername(suggestion.username);
 
             if (selectedUser != null) {
-              // Navigate to the user's profile screen
               Navigator.push(
                 context,
                 MaterialPageRoute(

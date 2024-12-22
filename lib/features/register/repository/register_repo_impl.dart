@@ -60,10 +60,6 @@ class RegisterRepoImpl with RegisterRepo {
         return false;
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('There is a problem'),
-        backgroundColor: Colors.red,
-      ));
       failure();
       return false;
     }

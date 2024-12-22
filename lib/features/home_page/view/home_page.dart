@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final loginCubit = context.watch<LoginCubit>();
+    final loginCubit = BlocProvider.of<LoginCubit>(context);
     final themeCubit = context.watch<ThemeCubit>();
 
     final currentUser = loginCubit.currentUser;
@@ -108,7 +108,8 @@ class _HomePageState extends State<HomePage> {
     return ZoomDrawer(
       controller: _drawerController,
       menuScreen: MenuScreen(profileData: currentUser),
-      mainScreen: HomeView(drawerController: _drawerController,themeCubit: themeCubit),
+      mainScreen:
+          HomeView(drawerController: _drawerController, themeCubit: themeCubit),
       angle: -15,
       duration: const Duration(milliseconds: 600), // Smooth transition duration
       slideWidth: MediaQuery.of(context).size.width * 0.65,

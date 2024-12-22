@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:chatoid/core/utlis/app_router.dart';
 import 'package:chatoid/features/login/model/login_data.dart';
 import 'package:chatoid/features/login/repository/login_repo_ilmpl.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_state.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -53,6 +55,7 @@ class LoginCubit extends Cubit<LoginState> {
       } else {
         _isLogin = true;
         success();
+        currentUser = UserData(userId: 0, username: '', email: '', friendId: 0);
         await _repo.fillCurrentUserDataByEmail(request.email, context);
         _repo.updateUser(currentUser, context);
         await Future.delayed(const Duration(seconds: 2));
@@ -73,10 +76,20 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> logout(BuildContext context) async {
     _isLogin = false;
     _authResponse = null;
-
+    _errorMessage = null;
+    currentUser = UserData(userId: 0, username: '', email: '', friendId: 0);
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('isLoggedIn');
+      await prefs.remove('currentuser'); // Clear saved user data
+
+      // Optionally, you can also clear any other session-related data
       await _repo.clearLoginSession();
       await _repo.clearUserData();
+
+      emit(LoginInitial());
+
+      GoRouter.of(context).push(AppRouter.kLoginView);
     } catch (e) {
       const SnackBar(
         content: Text('Failed to log out'),
@@ -90,7 +103,11 @@ class LoginCubit extends Cubit<LoginState> {
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     if (currentUserJson != null && isLoggedIn) {
       currentUser = UserData.fromJson(jsonDecode(currentUserJson));
-    } else {}
+      emit(
+          LoginSuccess(currentUser));
+    } else {
+      emit(LoginInitial());
+    }
   }
 
   Future<bool> isLoggedIn() async {

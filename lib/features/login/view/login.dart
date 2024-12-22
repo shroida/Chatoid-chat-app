@@ -72,11 +72,14 @@ class _LoginViewState extends State<LoginView> {
           isLoading = true;
         } else if (state is LoginSuccess) {
           GoRouter.of(context).push('/');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+        } else if (state is LoginFailure) {
+          final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+              GlobalKey<ScaffoldMessengerState>();
+
+          scaffoldMessengerKey.currentState?.showSnackBar(
             const SnackBar(
-              content: Text('Sign-up failed:"Unknown error"'),
-              backgroundColor: Colors.red,
+              content: Text('Sign-up failed"'),
+              backgroundColor: Color.fromARGB(255, 54, 244, 86),
             ),
           );
         }

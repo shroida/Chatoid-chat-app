@@ -94,8 +94,9 @@ class ProfileState extends State<Profile> {
         .where((post) => post.userID == widget.userProfile.friendId)
         .toList();
 
-    bool isCurrentUserProfile =
-        widget.userProfile.userId != 0 && widget.userProfile.friendId == 0&&widget.userProfile.username == authProvider.currentUser.username;
+    bool isCurrentUserProfile = widget.userProfile.userId != 0 &&
+        widget.userProfile.friendId == 0 &&
+        widget.userProfile.username == authProvider.currentUser.username;
     int totalLikes = isCurrentUserProfile
         ? myPosts.fold(0, (sum, post) => sum + post.reacts)
         : friendPosts.fold(0, (sum, post) => sum + post.reacts);
@@ -106,13 +107,6 @@ class ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: (){
-                print('username profile ${widget.userProfile.username}');
-                print('friendId userProfile ${widget.userProfile.friendId}');
-                print('userId userProfile ${widget.userProfile.userId}');
-                print('is current $isCurrentUserProfile');
-             
-            }, child: Text(widget.userProfile.username)),
             ProfileFriendsImage(
               likes: totalLikes,
               friendData: friendData,

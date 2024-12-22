@@ -1,34 +1,44 @@
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/features/login/view_model/login_cubit/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MenuUserInfo extends StatelessWidget {
-  const MenuUserInfo({super.key, required this.themeCubit});
+class MenuUserInfo extends StatefulWidget {
+  const MenuUserInfo(
+      {super.key, required this.themeCubit, required this.loginCubit});
   final ThemeCubit themeCubit;
+  final LoginCubit loginCubit;
+
+  @override
+  State<MenuUserInfo> createState() => _MenuUserInfoState();
+}
+
+class _MenuUserInfoState extends State<MenuUserInfo> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<LoginCubit>().loadUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authProvider = BlocProvider.of<LoginCubit>(context);
-    final currentUser = authProvider.currentUser;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          currentUser.username,
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color:
-                  themeCubit.textColor // Adjust text color for current theme
-              ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          currentUser.email,
-          style: TextStyle(fontSize: 14, color: themeCubit.textColor),
-        ),
-      ],
+    return BlocBuilder<LoginCubit, LoginState>(
+      builder: (context, state) {
+        if (state is LoginSuccess) {
+          final user = state.currentUser;
+          return Column(
+            children: [
+              Text(user.username),
+              Text(user.email),
+            ],
+          );
+        } else if (state is LoginLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return const Center(child: Text('Please log in.'));
+        }
+      },
     );
   }
 }
