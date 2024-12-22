@@ -15,7 +15,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   final LoginRepoImpl _repo = LoginRepoImpl();
-  
+
   Future<void> recoverSession(BuildContext context) async {
     await _repo.recoverSession(context);
   }
@@ -58,7 +58,8 @@ class LoginCubit extends Cubit<LoginState> {
         await Future.delayed(const Duration(seconds: 2));
         _repo.showSuccessLoginWidget(context, currentUser.username);
         await _repo.saveLoginSession();
-        await _repo.saveOneSignalPlayerId(currentUser.userId, currentUser.email);
+        await _repo.saveOneSignalPlayerId(
+            currentUser.userId, currentUser.email);
         emit(LoginSuccess(currentUser));
       }
     } catch (e) {
@@ -110,7 +111,7 @@ class LoginCubit extends Cubit<LoginState> {
           userId: response['user_id'] as int,
           username: response['username'] as String,
           email: response['email'] as String,
-          friendId: 0);
+          friendId: currentUser.userId);
     } catch (e) {
       return null;
     }

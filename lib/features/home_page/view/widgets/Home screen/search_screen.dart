@@ -14,7 +14,7 @@ class SearchScreen extends StatelessWidget {
           onPressed: () {
             showSearch(
               context: parentContext,
-              delegate: CustomSearchDelegate(parentContext: parentContext),
+              delegate: CustomSearchDelegate(),
             );
           },
           child: const Text('Open Search'),

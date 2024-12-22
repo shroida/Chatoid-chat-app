@@ -12,10 +12,10 @@ class SendRequest extends StatelessWidget {
   const SendRequest(
       {super.key,
       required this.areFriends,
-      required this.currentUserId,
+      required this.currentUser,
       required this.profileFriend});
   final bool areFriends;
-  final int currentUserId;
+  final UserData currentUser;
   final UserData profileFriend;
   @override
   Widget build(BuildContext context) {
@@ -41,8 +41,9 @@ class SendRequest extends StatelessWidget {
                 confirmBtnText: "Yes",
                 cancelBtnText: "No",
                 onConfirmBtnTap: () {
+
                   chatsCubit.addFriend(
-                    currentUserId,
+                    currentUser,
                     profileFriend,
                   );
                   Navigator.pushReplacement(

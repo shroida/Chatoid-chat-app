@@ -1,3 +1,4 @@
+import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/posts/model/cls_post.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final postsCubit = BlocProvider.of<PostsCubit>(context);
+    final loginCubit = BlocProvider.of<LoginCubit>(context);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -43,6 +45,7 @@ class PostWidget extends StatelessWidget {
                 Text(
                   postsCubit.formatMessageDate(post.createdAt),
                   style: const TextStyle(fontWeight: FontWeight.w500),
+                  overflow: TextOverflow.clip,
                 )
               ],
             ),
@@ -59,7 +62,7 @@ class PostWidget extends StatelessWidget {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    postsCubit.increaseReacts(post.postID);
+                    postsCubit.increaseReacts(post.postID,loginCubit.currentUser.username);
                   },
                   icon: const Icon(
                     Icons.favorite,

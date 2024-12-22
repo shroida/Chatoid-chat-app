@@ -25,7 +25,6 @@ class ProfileFriendsImage extends StatefulWidget {
 
 class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
   final supabase = Supabase.instance;
-
   @override
   Widget build(BuildContext context) {
     final chatsCubit = BlocProvider.of<ChatsCubit>(context);
@@ -99,10 +98,10 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
             child: ClipOval(
               child: Image.asset(
                 widget.isCurrentUserProfile
-                    ? (widget.userProfile.profileImage.isNotEmpty
+                    ? loginCubit.currentUser.profileImage
+                    : widget.userProfile.profileImage.isNotEmpty
                         ? widget.userProfile.profileImage
-                        : 'assets/profile.gif')
-                    : 'assets/profile.gif',
+                        : 'assets/profile.gif',
                 width: 150,
                 height: 150,
                 fit: BoxFit.cover,

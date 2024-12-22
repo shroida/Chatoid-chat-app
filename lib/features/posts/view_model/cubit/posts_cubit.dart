@@ -1,3 +1,4 @@
+import 'package:chatoid/features/notification/repository/noti_repo_impl.dart';
 import 'package:chatoid/features/posts/model/cls_post.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_state.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,8 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-  Future<void> increaseReacts(int postId) async {
+  Future<void> increaseReacts(int postId,String username) async {
+    NotiRepoImpl notiRepoImpl = NotiRepoImpl();
     try {
       // Find the post in the list
       final index = allPosts.indexWhere((post) => post.postID == postId);
@@ -46,8 +48,6 @@ class PostsCubit extends Cubit<PostsState> {
         emit(PostsError(errorMsg: "Post not found."));
         return;
       }
-
-      // Increase reacts locally
       final updatedPost = ClsPost(
         postID: allPosts[index].postID,
         postsText: allPosts[index].postsText,
@@ -55,6 +55,8 @@ class PostsCubit extends Cubit<PostsState> {
         createdAt: allPosts[index].createdAt,
         reacts: allPosts[index].reacts + 1, // Increment reacts
       );
+      notiRepoImpl.sendPushNotification(
+          updatedPost.userID, 'React on your post ♥️', username);
 
       allPosts[index] = updatedPost;
       allPosts
@@ -62,7 +64,6 @@ class PostsCubit extends Cubit<PostsState> {
       // Emit updated state for UI
       emit(PostsLoaded(posts: List.from(allPosts)));
 
-      // Update the reacts count in Supabase
       await supabase.client.from('posts').update({
         'reacts': updatedPost.reacts,
       }).eq('id', postId);
@@ -106,6 +107,6 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
   String formatMessageDate(DateTime date) {
-    return DateFormat('hh:mm a dd/MM/yyyy ').format(date);
+    return DateFormat('hh:mm a \ndd/MM/yyyy ').format(date);
   }
 }

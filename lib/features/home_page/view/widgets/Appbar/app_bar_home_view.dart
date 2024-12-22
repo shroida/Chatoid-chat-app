@@ -52,7 +52,7 @@ class _AppBarHomeViewState extends State<AppBarHomeView> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: CustomSearchDelegate(parentContext: context),
+                delegate: CustomSearchDelegate(),
               );
             },
           ),

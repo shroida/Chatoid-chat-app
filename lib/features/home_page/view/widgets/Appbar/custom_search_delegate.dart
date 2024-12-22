@@ -8,10 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  final BuildContext parentContext;
-
-  CustomSearchDelegate({required this.parentContext});
-
   @override
   ThemeData appBarTheme(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -99,23 +95,18 @@ class CustomSearchDelegate extends SearchDelegate {
               ),
               title: Text(result, style: const TextStyle(fontSize: 16)),
               trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: Colors.grey[600]), // Subtle arrow icon
+                  size: 16, color: Colors.grey[600]),
               onTap: () async {
-                // Fetch user details from Supabase based on the selected username
-                final selectedUser = await BlocProvider.of<LoginCubit>(
+                UserData selectedUser = await BlocProvider.of<LoginCubit>(
                   context,
                   listen: false,
-                ).getUserByUsername(result);
-
-                if (selectedUser != null) {
-                  // Navigate to the user's profile screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(userProfile: selectedUser),
-                    ),
-                  );
-                }
+                ).getUserByUsername(result) as UserData;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Profile(userProfile: selectedUser),
+                  ),
+                );
               },
             );
           },

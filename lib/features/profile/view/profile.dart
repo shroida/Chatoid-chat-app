@@ -39,24 +39,19 @@ class ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     initializeFriendData();
-    initializeProfile(); // Call the async initialization method
+    initializeProfile();
     getStoriesProfile();
   }
 
-  /// Initialize friendData from ChatsCubit
   void initializeFriendData() {
     final chatsCubit = BlocProvider.of<ChatsCubit>(context);
-    friendData = List.from(chatsCubit.friendsList); // Use current friendsList
+    friendData = List.from(chatsCubit.friendsList);
   }
 
-  /// Asynchronous initialization logic
   Future<void> initializeProfile() async {
     bool isCurrentUserProfileInit = widget.userProfile.userId == 0;
 
     if (isCurrentUserProfileInit) {
-      print("I'm the current user.");
-      print("Is current user profile initialized: $isCurrentUserProfileInit");
-      print("Is current user  ${widget.userProfile}");
       fetchFriendsFromCubit();
     } else {
       final profileCubit = BlocProvider.of<ProfileCubit>(context);
@@ -71,7 +66,6 @@ class ProfileState extends State<Profile> {
     setState(() {
       friendData = List.from(chatsCubit.friendsList); // Refresh friendData
     });
-    print("friendData updated: $friendData.");
   }
 
   void getStoriesProfile() {
@@ -92,7 +86,6 @@ class ProfileState extends State<Profile> {
     bool areFriends = chatCubit.friendsList.any((friend) =>
         friend.friendId == widget.userProfile.friendId &&
         friend.userId == authProvider.currentUser.userId);
-
     String currentUserName = authProvider.currentUser.username;
     List<ClsPost> myPosts = postsCubit.allPosts
         .where((post) => post.userID == authProvider.currentUser.userId)
@@ -101,9 +94,9 @@ class ProfileState extends State<Profile> {
         .where((post) => post.userID == widget.userProfile.friendId)
         .toList();
 
-    bool isCurrentUserProfile = widget.userProfile.userId == 0 &&
-        widget.userProfile.userId != authProvider.currentUser.userId;
-    int totalLikes = widget.userProfile.userId == 0
+    bool isCurrentUserProfile =
+        widget.userProfile.userId != 0 && widget.userProfile.friendId == 0&&widget.userProfile.username == authProvider.currentUser.username;
+    int totalLikes = isCurrentUserProfile
         ? myPosts.fold(0, (sum, post) => sum + post.reacts)
         : friendPosts.fold(0, (sum, post) => sum + post.reacts);
     return Scaffold(
@@ -113,6 +106,13 @@ class ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            ElevatedButton(onPressed: (){
+                print('username profile ${widget.userProfile.username}');
+                print('friendId userProfile ${widget.userProfile.friendId}');
+                print('userId userProfile ${widget.userProfile.userId}');
+                print('is current $isCurrentUserProfile');
+             
+            }, child: Text(widget.userProfile.username)),
             ProfileFriendsImage(
               likes: totalLikes,
               friendData: friendData,
@@ -144,7 +144,7 @@ class ProfileState extends State<Profile> {
                       ),
                       SendRequest(
                           areFriends: areFriends,
-                          currentUserId: authProvider.currentUser.userId,
+                          currentUser: authProvider.currentUser,
                           profileFriend: widget.userProfile),
                     ],
                   ),
@@ -167,16 +167,16 @@ class ProfileState extends State<Profile> {
                         Expanded(
                           child: ListView.builder(
                             key: ValueKey(friendData),
-                            itemCount: widget.userProfile.userId == 0
+                            itemCount: isCurrentUserProfile
                                 ? myPosts.length
                                 : friendPosts.length,
                             itemBuilder: (context, index) {
-                              final post = widget.userProfile.userId == 0
+                              final post = isCurrentUserProfile
                                   ? myPosts[index]
                                   : friendPosts[index];
 
                               return PostWidget(
-                                username: widget.userProfile.userId == 0
+                                username: isCurrentUserProfile
                                     ? authProvider.currentUser.username
                                     : widget.userProfile.username,
                                 post: post,
@@ -195,11 +195,11 @@ class ProfileState extends State<Profile> {
                           Expanded(
                             child: ListView.builder(
                               key: ValueKey(friendData),
-                              itemCount: widget.userProfile.userId != 0
+                              itemCount: !isCurrentUserProfile
                                   ? friendData.length
                                   : chatCubit.friendsList.length,
                               itemBuilder: (context, index) {
-                                final friend = widget.userProfile.userId != 0
+                                final friend = !isCurrentUserProfile
                                     ? friendData[index]
                                     : chatCubit.friendsList[index];
 
@@ -213,7 +213,6 @@ class ProfileState extends State<Profile> {
                         ],
                       ),
                     );
-                    // Second Page: Stories
                   } else {
                     return Padding(
                       padding: const EdgeInsets.all(20),

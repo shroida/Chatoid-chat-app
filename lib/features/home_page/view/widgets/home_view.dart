@@ -42,16 +42,9 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     final loginCubit = BlocProvider.of<LoginCubit>(context);
     currentUser = loginCubit.currentUser;
-
+    print('from home${currentUser.userId}');
     _loadThemePreference();
     context.read<ThemeCubit>().loadThemeMode();
-
-    screens = [
-      const HomeScreenStoryPosts(),
-      SearchScreen(parentContext: context),
-      const HomePageChats(),
-      Profile(userProfile: currentUser),
-    ];
   }
 
   Future<void> _loadThemePreference() async {
@@ -77,6 +70,14 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final loginCubit = BlocProvider.of<LoginCubit>(context);
+    currentUser = loginCubit.currentUser;
+    screens = [
+      const HomeScreenStoryPosts(),
+      SearchScreen(parentContext: context),
+      const HomePageChats(),
+      Profile(userProfile: currentUser),
+    ];
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, state) {
         return Scaffold(
@@ -88,7 +89,12 @@ class _HomeViewState extends State<HomeView> {
                   onRefresh: _refreshData,
                   child: IndexedStack(
                     index: _currentIndex,
-                    children: screens!,
+                    children: [
+                      const HomeScreenStoryPosts(),
+                      SearchScreen(parentContext: context),
+                      const HomePageChats(),
+                      Profile(userProfile: currentUser),
+                    ],
                   ),
                 )
               : const Center(child: CircularProgressIndicator()),

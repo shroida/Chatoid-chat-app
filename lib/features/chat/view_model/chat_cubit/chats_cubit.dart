@@ -2,6 +2,7 @@ import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_state.dart';
 import 'package:chatoid/features/messages/model/cls_message.dart';
+import 'package:chatoid/features/notification/repository/noti_repo_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -49,8 +50,7 @@ class ChatsCubit extends Cubit<ChatsState> {
 
           if (uniqueFriendIds.add(friendUserId)) {
             friendsList.add(UserData.fromJson({
-              'profile_image':
-                  profileImage, 
+              'profile_image': profileImage,
               'friend_id': friendUserId,
               'user_id': currentUserId,
               'username': userProfile['username'] ?? 'Unknown User',
@@ -207,31 +207,29 @@ class ChatsCubit extends Cubit<ChatsState> {
     } else {}
   }
 
-  Future<void> addFriend(int currentUserId, UserData friend) async {
+  Future<void> addFriend(UserData currentUser, UserData friend) async {
     final supabase = Supabase.instance;
-    if (currentUserId == friend.userId) return;
+    if (currentUser.userId == friend.userId) return;
 
     try {
-      // Check if friendship already exists
+      NotiRepoImpl notiRepoImpl = NotiRepoImpl();
       final response = await supabase.client
           .from('friendships')
           .select()
-          .eq('user_id', currentUserId)
-          .eq('friend_id', friend.userId); // Make sure to call execute()
+          .eq('user_id', currentUser.userId)
+          .eq('friend_id', friend.userId);
 
-      // Check if there is a friendship record
       if (response.isNotEmpty) {
-        return; // Friendship already exists
+        return;
       }
-
-      // If no friendship exists, proceed to insert a new record
       final insertResponse = await supabase.client.from('friendships').insert({
-        'user_id': currentUserId,
+        'user_id': currentUser.userId,
         'friend_id': friend.userId,
         'status': 'accepted',
         'created_at': DateTime.now().toIso8601String(),
       }); // Make sure to call
-
+      notiRepoImpl.sendPushNotification(
+          friend.userId, 'Sent you a friend request', currentUser.username);
       if (insertResponse.error != null) {
         return;
       }
