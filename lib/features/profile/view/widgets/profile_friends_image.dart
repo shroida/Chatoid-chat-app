@@ -3,17 +3,20 @@ import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
+import 'package:chatoid/features/login/view_model/login_cubit/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileFriendsImage extends StatefulWidget {
-  const ProfileFriendsImage(
-      {super.key,
-      required this.isCurrentUserProfile,
-      required this.friendData,
-      required this.userProfile,
-      required this.likes});
+  const ProfileFriendsImage({
+    super.key,
+    required this.isCurrentUserProfile,
+    required this.friendData,
+    required this.userProfile,
+    required this.likes,
+  });
+
   final bool isCurrentUserProfile;
   final int likes;
   final List<UserData> friendData;
@@ -24,11 +27,19 @@ class ProfileFriendsImage extends StatefulWidget {
 }
 
 class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<LoginCubit>().loadUserData(); // Load saved user data
+  }
+
   final supabase = Supabase.instance;
+
   @override
   Widget build(BuildContext context) {
     final chatsCubit = BlocProvider.of<ChatsCubit>(context);
     final loginCubit = BlocProvider.of<LoginCubit>(context);
+
     void showSliderBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -86,29 +97,36 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
 
     return Row(
       children: [
-        // GestureDetector(
-        //   onTap: () {
-        //     showSliderBottomSheet();
-        //   }, // Show slider on tap
-        //   child: Card(
-        //     elevation: 4,
-        //     shape: RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.circular(16),
-        //     ),
-        //     child: ClipOval(
-        //       child: Image.asset(
-        //         widget.isCurrentUserProfile
-        //             ? loginCubit.currentUser.profileImage
-        //             : !widget.isCurrentUserProfile
-        //                 ? widget.userProfile.profileImage
-        //                 : 'assets/profile.gif',
-        //         width: 150,
-        //         height: 150,
-        //         fit: BoxFit.cover,
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        GestureDetector(
+          onTap: () {
+            showSliderBottomSheet();
+          },
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child:
+                BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
+              String profileImage = 'assets/profile.gif'; // Default image
+
+              if (state is LoginSuccess || loginCubit.isLogin) {
+                profileImage = widget.isCurrentUserProfile
+                    ? loginCubit.currentUser.profileImage
+                    : widget.userProfile.profileImage;
+              }
+
+              return ClipOval(
+                child: Image.asset(
+                  profileImage,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+              );
+            }),
+          ),
+        ),
         const SizedBox(width: 20),
         Row(
           children: [
@@ -127,9 +145,7 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
                 ),
               ],
             ),
-            const SizedBox(
-              width: 40,
-            ),
+            const SizedBox(width: 40),
             Column(
               children: [
                 Text(

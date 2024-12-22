@@ -28,9 +28,21 @@ class _MenuUserInfoState extends State<MenuUserInfo> {
         if (state is LoginSuccess) {
           final user = state.currentUser;
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(user.username),
-              Text(user.email),
+              Text(
+                user.username,
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: widget.themeCubit.textColor),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                user.email,
+                style:
+                    TextStyle(fontSize: 14, color: widget.themeCubit.textColor),
+              ),
             ],
           );
         } else if (state is LoginLoading) {
