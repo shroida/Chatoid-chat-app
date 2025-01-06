@@ -1,7 +1,7 @@
-import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
+import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/profile/view_model/cubit/profile_cubit.dart';
 import 'package:chatoid/features/register/view_model/signUp/signup_cubit.dart';
 import 'package:chatoid/core/utlis/themeCubit/theme_cubit.dart';
@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants.dart';
 
@@ -34,14 +35,8 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<LoginCubit>(
-          create: (_) => LoginCubit(),
-        ),
-        BlocProvider<SignupCubit>(
-          create: (context) => SignupCubit(),
-        ),
-        BlocProvider<ThemeCubit>(
-          create: (context) => ThemeCubit(),
+        BlocProvider<StoryCubit>(
+          create: (context) => StoryCubit(),
         ),
         BlocProvider<PostsCubit>(
           create: (context) => PostsCubit(),
@@ -49,11 +44,21 @@ void main() async {
         BlocProvider<ChatsCubit>(
           create: (context) => ChatsCubit(),
         ),
+        BlocProvider(
+          create: (context) => LoginCubit(
+            context.read<ChatsCubit>(),
+            context.read<PostsCubit>(),
+            context.read<StoryCubit>(),
+          ),
+        ),
+        BlocProvider<SignupCubit>(
+          create: (context) => SignupCubit(),
+        ),
+        BlocProvider<ThemeCubit>(
+          create: (context) => ThemeCubit(),
+        ),
         BlocProvider<ProfileCubit>(
           create: (context) => ProfileCubit(),
-        ),
-        BlocProvider<StoryCubit>(
-          create: (context) => StoryCubit(),
         ),
         BlocProvider<MessagesCubit>(
           create: (context) {
@@ -73,22 +78,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Future<bool> checkLoginSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeData>(
-      builder: (context, themeState) {
-        final themeCubit = context.read<ThemeCubit>();
-
-        return MaterialApp.router(
+    return MaterialApp.router(
           routerConfig: AppRouter.router,
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.light().copyWith(
-            scaffoldBackgroundColor:ChatAppColors.backgroundColor,
-          ),
-          darkTheme: ThemeData.dark(),
-          themeMode: themeCubit.themeMode,
-        );
-      },
     );
   }
 }

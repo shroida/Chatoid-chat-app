@@ -3,6 +3,7 @@ import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,12 +18,31 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // Delay to allow animation to run first before checking login status
     Future.delayed(Duration.zero, () {
       setState(() {
         containerColor = ChatAppColors.appBarColor;
       });
     });
-    navigateToLoginViewAfterAnimation();
+    checkLoginSession();
+  }
+
+  Future<void> checkLoginSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    // Navigate to the appropriate screen based on login status
+    if (mounted) {
+      Future.delayed(const Duration(seconds: 3), () {
+        if (isLoggedIn) {
+          // If logged in, navigate to HomePage
+          GoRouter.of(context).push(AppRouter.kHomePage);
+        } else {
+          // If not logged in, navigate to Login view
+          GoRouter.of(context).push(AppRouter.kLoginView);
+        }
+      });
+    }
   }
 
   @override
@@ -52,14 +72,5 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
-  }
-
-  void navigateToLoginViewAfterAnimation() {
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        // Check if the widget is still mounted
-        GoRouter.of(context).push(AppRouter.kHomePage);
-      }
-    });
   }
 }

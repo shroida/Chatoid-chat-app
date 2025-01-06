@@ -4,6 +4,7 @@ import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view/home_page_chats.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/home_page/view/widgets/Home%20screen/home_screen_story_posts.dart';
+import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:chatoid/features/profile/view/profile.dart';
 import 'package:chatoid/features/home_page/view/widgets/Home%20screen/search_screen.dart';
 import 'package:chatoid/features/home_page/view/widgets/Appbar/app_bar_home_view.dart';
@@ -41,7 +42,9 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     final loginCubit = BlocProvider.of<LoginCubit>(context);
+    final postsCubit = BlocProvider.of<PostsCubit>(context);
     currentUser = loginCubit.currentUser;
+    postsCubit.getAllPosts();
     _loadThemePreference();
     context.read<ThemeCubit>().loadThemeMode();
   }
@@ -57,14 +60,16 @@ class _HomeViewState extends State<HomeView> {
     if (_currentIndex == 0) {
       // Refresh HomePageStoryPosts
       final storyProvider = context.read<StoryCubit>();
-      storyProvider.fetchAllStories();
+      final postsCubit = context.read<PostsCubit>();
+      await storyProvider.fetchAllStories();
+      await postsCubit.getAllPosts();
     } else if (_currentIndex == 2) {
       final chatsCubit = BlocProvider.of<ChatsCubit>(context);
       final loginCubit = BlocProvider.of<LoginCubit>(context);
 
       await chatsCubit.fetchFriends(loginCubit.currentUser.userId);
       await chatsCubit.fetchAllMessages(currentUser);
-    } else if (_currentIndex == 3) {}
+    }
   }
 
   @override

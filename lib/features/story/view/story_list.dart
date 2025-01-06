@@ -38,7 +38,7 @@ class StoryListState extends State<StoryList> {
                       context, currentUserStories, loginCubit.currentUser);
                 },
                 child: StoryWidget(
-                  imageUrl: 'assets/profile.gif',
+                  imageUrl: loginCubit.currentUser.profileImage,
                   username: 'My story',
                   storyCount: currentUserStories.length,
                 ),
@@ -84,7 +84,9 @@ class StoryListState extends State<StoryList> {
                     ),
                   );
                 },
-                child: StoryWidget(
+                child: 
+                
+                StoryWidget(
                   imageUrl: 'assets/profile.gif',
                   username: user.username,
                   storyCount: stories!.length, // Pass the number of stories

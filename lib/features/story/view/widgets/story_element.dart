@@ -13,7 +13,7 @@ class StoryWidget extends StatelessWidget {
     this.isAddStory = false,
     this.storyCount = 1,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,7 +41,9 @@ class StoryWidget extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundImage: isAddStory ? null : AssetImage(imageUrl),
+                  backgroundImage: isAddStory
+                      ? null
+                      : const AssetImage("assets/profile.gif"),
                   backgroundColor: isAddStory ? Colors.grey[300] : null,
                   child: isAddStory
                       ? const Icon(

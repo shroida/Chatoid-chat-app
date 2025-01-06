@@ -77,7 +77,6 @@ class ChatScreenState extends State<ChatScreen> {
           _scrollToBottom();
         }
       });
-      //subscribe to in chat
       chatsCubit.subscribe('user_profiles', () async {
         await messagesCubit.ifTwoUsersInChat(
             loginCubit.currentUser.userId, widget.friendUser.friendId);

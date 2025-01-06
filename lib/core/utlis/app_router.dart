@@ -19,7 +19,9 @@ abstract class AppRouter {
   static const kChatGroupScreen = '/chatGroupScreen';
   static final router = GoRouter(routes: [
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+    GoRoute(path: kHomePage, builder: (context, state) => const HomePage()),
     GoRoute(path: kLoginView, builder: (context, state) => const LoginView()),
+  
     GoRoute(path: kAddPost, builder: (context, state) => AddPostScreen()),
     GoRoute(
       path: kChatGroupScreen,
@@ -31,7 +33,6 @@ abstract class AppRouter {
     GoRoute(
         path: kRegisterScreen,
         builder: (context, state) => const RegisterScreen()),
-    GoRoute(path: kHomePage, builder: (context, state) => const HomePage()),
     GoRoute(
       path: kProfile,
       builder: (context, state) {

@@ -27,4 +27,20 @@ class ClsPost {
         createdAt: json['created_at'],
         reacts: json['reacts']);
   }
+  // Add the copyWith method
+  ClsPost copyWith({
+    String? postsText,
+    int? postID,
+    int? userID,
+    DateTime? createdAt,
+    int? reacts,
+  }) {
+    return ClsPost(
+      postsText: postsText ?? this.postsText,
+      postID: postID ?? this.postID,
+      userID: userID ?? this.userID,
+      createdAt: createdAt ?? this.createdAt,
+      reacts: reacts ?? this.reacts,
+    );
+  }
 }

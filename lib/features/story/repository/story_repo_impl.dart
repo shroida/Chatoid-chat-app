@@ -37,7 +37,7 @@ class StoryRepoImpl with StoryRepo {
   Future<void> addToStory(String text, BuildContext context) async {
     // Access the LoginCubit
     final loginCubit = Provider.of<LoginCubit>(context, listen: false);
-    final currentUser = loginCubit.currentUserData; // Get the current user
+    final currentUser = loginCubit.currentUser; // Get the current user
 
     await supabase.from('stories').insert({
       'user_id': currentUser.userId, // Use the current user's ID

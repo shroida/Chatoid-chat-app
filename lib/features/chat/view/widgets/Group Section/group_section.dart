@@ -15,30 +15,31 @@ class GroupSection extends StatefulWidget {
 class _GroupSectionState extends State<GroupSection> {
   @override
   Widget build(BuildContext context) {
-    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    // final chatsCubit = BlocProvider.of<ChatsCubit>(context);
 
-    String messageDate = chatsCubit.formatMessageDate(chatsCubit
-        .allUsersMessagesGroup[chatsCubit.allUsersMessagesGroup.length - 1]
-        .createdAt);
+    // String messageDate = chatsCubit.formatMessageDate(chatsCubit
+    //     .allUsersMessagesGroup[chatsCubit.allUsersMessagesGroup.length - 1]
+    //     .createdAt);
 
     return Column(
       children: [
-        GroupChatCard(
-          allMessages: chatsCubit.allUsersMessagesGroup,
-          isLastMessageFromOther: true,
-          messageCount: chatsCubit.allUsersMessagesGroup.length,
-          messageDate: messageDate,
-          messageText: chatsCubit.allUsersMessagesGroup.isNotEmpty
-              ? chatsCubit.allUsersMessagesGroup.last.messageText
-              : 'No messages yet',
-          onTap: () {
-            final allMessages = chatsCubit.allUsersMessagesGroup;
-            GoRouter.of(context).push(
-              AppRouter.kChatGroupScreen,
-              extra: allMessages,
-            );
-          },
-        ),
+        Text('group')
+        // GroupChatCard(
+        //   allMessages: chatsCubit.allUsersMessagesGroup,
+        //   isLastMessageFromOther: true,
+        //   messageCount: chatsCubit.allUsersMessagesGroup.length,
+        //   messageDate: messageDate,
+        //   messageText: chatsCubit.allUsersMessagesGroup.isNotEmpty
+        //       ? chatsCubit.allUsersMessagesGroup.last.messageText
+        //       : 'No messages yet',
+        //   onTap: () {
+        //     final allMessages = chatsCubit.allUsersMessagesGroup;
+        //     GoRouter.of(context).push(
+        //       AppRouter.kChatGroupScreen,
+        //       extra: allMessages,
+        //     );
+        //   },
+        // ),
       ],
     );
   }

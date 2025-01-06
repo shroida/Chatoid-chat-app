@@ -13,32 +13,30 @@ class MessagesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = BlocProvider.of<LoginCubit>(context);
-    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
-    final messagesCubit = BlocProvider.of<MessagesCubit>(context);
-    final themeCubit = BlocProvider.of<ThemeCubit>(context);
+    final loginCubit = context.read<LoginCubit>();
+    final chatsCubit = context.read<ChatsCubit>();
+    final messagesCubit = context.read<MessagesCubit>();
+    final themeCubit = context.read<ThemeCubit>();
 
     return BlocBuilder<ChatsCubit, ChatsState>(
       builder: (context, state) {
-        // if (state is ChatLoading) {
-        //   return Center(child: Image.asset('assets/loading_earth.gif'));
-        // } else
-
         if (state is ChatEmpty) {
           return Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/loading_earth.gif'),
+                const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {
-                    chatsCubit.fetchFriends(authProvider
-                        .currentUser.userId); // Trigger fetch friends
-                    chatsCubit.fetchAllMessages(
-                        authProvider.currentUser); // Trigger fetch messages
+                    chatsCubit.fetchFriends(loginCubit.currentUser.userId);
+                    chatsCubit.fetchAllMessages(loginCubit.currentUser);
                   },
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 34),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 34,
+                    ),
                     decoration: BoxDecoration(
                       color: themeCubit.colorOfApp,
                       borderRadius: BorderRadius.circular(12),
@@ -56,11 +54,15 @@ class MessagesSection extends StatelessWidget {
               ],
             ),
           );
+        } else if (state is ChatFriendsFetched) {
+          return Center(
+            child: Image.asset('assets/loading_earth.gif'),
+          );
         } else {
           return FriendsList(
             messagesCubit: messagesCubit,
             chatsCubit: chatsCubit,
-            authCubit: authProvider,
+            authCubit: loginCubit,
           );
         }
       },

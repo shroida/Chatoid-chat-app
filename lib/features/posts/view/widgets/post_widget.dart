@@ -1,14 +1,20 @@
+import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/posts/model/cls_post.dart';
 import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   final ClsPost post;
-  final String username;
-  const PostWidget({super.key, required this.post, required this.username});
+  final UserData user;
+  const PostWidget({super.key, required this.post, required this.user});
 
+  @override
+  State<PostWidget> createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     final postsCubit = BlocProvider.of<PostsCubit>(context);
@@ -26,15 +32,19 @@ class PostWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: Image.asset('assets/profile.gif'),
+                    ClipOval(
+                      child: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Image.asset(widget.user.profileImage.isNotEmpty
+                            ? widget.user.profileImage
+                            : 'assets/profile.gif'),
+                      ),
                     ),
                     const SizedBox(
                       width: 15,
                     ),
                     Text(
-                      username,
+                      widget.user.username,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -43,7 +53,7 @@ class PostWidget extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  postsCubit.formatMessageDate(post.createdAt),
+                  postsCubit.formatMessageDate(widget.post.createdAt),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                   overflow: TextOverflow.clip,
                 )
@@ -51,7 +61,7 @@ class PostWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              post.postsText,
+              widget.post.postsText,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               overflow: TextOverflow.clip,
               maxLines: 20,
@@ -61,17 +71,26 @@ class PostWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
-                  onPressed: () {
-                    postsCubit.increaseReacts(post.postID,loginCubit.currentUser.username);
+                  onPressed: () async{
+                    if (context.mounted) {
+                      print(widget.post.postsText);
+                      setState(() {
+                        widget.post.reacts += 1; // Increase the react count
+                      });
+                      await postsCubit.increaseReacts(
+                          widget.post.postID, loginCubit.currentUser.username);
+                    }
                   },
                   icon: const Icon(
                     Icons.favorite,
                     size: 25,
                     color: Colors.red,
                   ),
-                  label: Text('${post.reacts}',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.black)),
+                  label: Text(
+                    '${widget.post.reacts}',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black),
+                  ),
                 ),
                 const Icon(
                   Icons.comment,

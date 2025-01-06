@@ -74,7 +74,7 @@ class ChatsCubit extends Cubit<ChatsState> {
     try {
       final response = await supabase.client
           .from('user_profiles')
-          .select('user_id, username,email');
+          .select('user_id, username,email,profile_image');
 
       if (response.isNotEmpty) {
         {
@@ -83,6 +83,7 @@ class ChatsCubit extends Cubit<ChatsState> {
                 userId: user['user_id'],
                 friendId: -1,
                 username: user['username'],
+                profileImage: user['profile_image'] ?? '',
                 email: user['email']));
           }
         }
@@ -205,6 +206,15 @@ class ChatsCubit extends Cubit<ChatsState> {
 
     if (response != null) {
     } else {}
+  }
+
+  List<Function> subscriptions = []; // Store your subscription functions
+
+  void unsubscribe() {
+    for (var unsubscribe in subscriptions) {
+      unsubscribe();
+    }
+    subscriptions.clear(); // Clear the list after unsubscribing
   }
 
   Future<void> addFriend(UserData currentUser, UserData friend) async {

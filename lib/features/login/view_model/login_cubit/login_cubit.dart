@@ -1,9 +1,11 @@
-import 'dart:convert';
 import 'package:chatoid/core/utlis/app_router.dart';
+import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/model/login_data.dart';
 import 'package:chatoid/features/login/repository/login_repo_ilmpl.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_state.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
+import 'package:chatoid/features/posts/view_model/cubit/posts_cubit.dart';
+import 'package:chatoid/features/story/view_model/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,21 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginInitial()) {
-    print('=========================');
-    print('===initial Login Cubit========');
-  }
-
   final LoginRepoImpl _repo = LoginRepoImpl();
+  final ChatsCubit chatsCubit;
+  final PostsCubit postsCubit;
+  final StoryCubit storyCubit;
 
-  Future<void> recoverSession(BuildContext context) async {
-    await _repo.recoverSession(context);
-  }
+  LoginCubit(this.chatsCubit, this.postsCubit, this.storyCubit)
+      : super(LoginInitial());
 
   late UserData currentUser =
       UserData(userId: 0, username: '', email: '', friendId: 0);
-  UserData get currentUserData => currentUser;
-
   User? userLoggedIn;
   bool _isLogin = false;
   bool _isLoading = false;
@@ -33,18 +30,22 @@ class LoginCubit extends Cubit<LoginState> {
   AuthResponse? _authResponse;
 
   AuthResponse get authResponse => _authResponse ?? AuthResponse();
-
   bool get isLogin => _isLogin;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
   final supabase = Supabase.instance;
 
+  Future<void> recoverSession(BuildContext context) async {
+    await _repo.recoverSession(context);
+  }
+
   Future<void> onLogin(BuildContext context, LoginModel request,
       {required Function() success, required Function() failure}) async {
     try {
       _isLoading = true;
       emit(LoginLoading());
+
       final response = await _repo.onSingIn(request);
       _isLoading = false;
 
@@ -54,16 +55,12 @@ class LoginCubit extends Cubit<LoginState> {
         failure();
       } else {
         _isLogin = true;
-        success();
-        currentUser = UserData(userId: 0, username: '', email: '', friendId: 0);
-        await _repo.fillCurrentUserDataByEmail(request.email, context);
-        _repo.updateUser(currentUser, context);
-        await Future.delayed(const Duration(seconds: 2));
-        _repo.showSuccessLoginWidget(context, currentUser.username);
-        await _repo.saveLoginSession();
-        await _repo.saveOneSignalPlayerId(
-            currentUser.userId, currentUser.email);
+        await _processLoginSuccess(request.email, context);
+        await loadUserDataCubits();
+        bool islogin = await _repo.checkLoginSession();
+        print('isLoggedIn: $islogin');
         emit(LoginSuccess(currentUser));
+        success();
       }
     } catch (e) {
       _isLoading = false;
@@ -73,38 +70,63 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  Future<void> loadUserDataCubits() async {
+    try {
+      await Future.wait([
+        chatsCubit.fetchFriends(currentUser.userId),
+        chatsCubit.fetchAllMessages(currentUser),
+        // chatsCubit.fetchAllMessagesInGroupForAllUsers(),
+        postsCubit.getAllPosts(),
+        storyCubit.fetchAllStories(),
+      ]);
+    } catch (e) {
+      // Handle errors appropriately
+    }
+  }
+
+  Future<void> _processLoginSuccess(String email, BuildContext context) async {
+    currentUser = UserData(userId: 0, username: '', email: '', friendId: 0);
+    await _repo.fillCurrentUserDataByEmail(email, context);
+    _repo.updateUser(currentUser, context);
+    _repo.showSuccessLoginWidget(context, currentUser.username);
+    await _repo.saveLoginSession();
+    await _repo.checkLoginSession();
+  }
+
   Future<void> logout(BuildContext context) async {
     _isLogin = false;
     _authResponse = null;
     _errorMessage = null;
     currentUser = UserData(userId: 0, username: '', email: '', friendId: 0);
+
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('isLoggedIn');
-      await prefs.remove('currentuser'); // Clear saved user data
+      await prefs.remove('currentuser');
 
-      // Optionally, you can also clear any other session-related data
       await _repo.clearLoginSession();
       await _repo.clearUserData();
+      await _repo.checkLoginSession();
 
       emit(LoginInitial());
-
       GoRouter.of(context).push(AppRouter.kLoginView);
     } catch (e) {
-      const SnackBar(
-        content: Text('Failed to log out'),
-      );
+      // Handle logout error
     }
   }
 
   Future<void> loadUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? currentUserJson = prefs.getString('currentuser');
+
+    String? email = prefs.getString('email');
+    String? username = prefs.getString('username');
+    int? userId = prefs.getInt('userId');
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    if (currentUserJson != null && isLoggedIn) {
-      currentUser = UserData.fromJson(jsonDecode(currentUserJson));
-      emit(
-          LoginSuccess(currentUser));
+
+    if (email != null && username != null && userId != null && isLoggedIn) {
+      currentUser = UserData(
+          userId: userId, username: username, email: email, friendId: 0);
+      emit(LoginSuccess(currentUser));
     } else {
       emit(LoginInitial());
     }
@@ -119,10 +141,9 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       final response = await supabase.client
           .from('user_profiles')
-          .select(
-              'user_id, username, email') // Corrected the field name to 'friend_id'
+          .select('user_id, username, email')
           .eq('username', username)
-          .single(); // Return a single record
+          .single();
 
       return UserData(
           userId: response['user_id'] as int,
@@ -141,9 +162,6 @@ class LoginCubit extends Cubit<LoginState> {
         .eq('email', email)
         .single();
 
-    if (response['isOnline'] != null) {
-      return response['isOnline'] as bool;
-    }
-    return false;
+    return response['isOnline'] ?? false;
   }
 }

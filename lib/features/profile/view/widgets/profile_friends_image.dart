@@ -30,7 +30,7 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
   @override
   void initState() {
     super.initState();
-    context.read<LoginCubit>().loadUserData(); // Load saved user data
+    context.read<LoginCubit>().loadUserData();
   }
 
   final supabase = Supabase.instance;
@@ -118,7 +118,7 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
 
               return ClipOval(
                 child: Image.asset(
-                  profileImage,
+                  'assets/profile.gif',
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,

@@ -15,40 +15,36 @@ class HomePageChats extends StatefulWidget {
 }
 
 class HomePageChatsState extends State<HomePageChats> {
-  int _currentIndexHomePage = 0;
-  void _onTapBarItemTapped(int index) {
-    setState(() {
-      _currentIndexHomePage = index;
-    });
-  }
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = BlocProvider.of<ThemeCubit>(context, listen: true);
+    final themeCubit = context.watch<ThemeCubit>();
 
     return Scaffold(
       body: Column(
         children: [
           TapBar(
-            currentIndex: _currentIndexHomePage,
-            onItemTapped: _onTapBarItemTapped,
+            currentIndex: _currentIndex,
+            onItemTapped: (index) => setState(() => _currentIndex = index),
           ),
           Expanded(
-            child: _currentIndexHomePage == 0
-                ? const MessagesSection()
-                : _currentIndexHomePage == 1
-                    ?const GroupSection()
-                    : _buildThemeSection(context, themeProvider),
+            child: IndexedStack(
+              index: _currentIndex,
+              children: [
+                const MessagesSection(),
+                const GroupSection(),
+                _buildThemeSection(context, themeCubit),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  
-
-  Widget _buildThemeSection(BuildContext context, ThemeCubit themeProvider) {
-    List<Color> colors = [
+  Widget _buildThemeSection(BuildContext context, ThemeCubit themeCubit) {
+    final colors = [
       const Color.fromARGB(0, 96, 76, 212),
       ChatAppColors.primaryColor,
       ChatAppColors.primaryColor2,
@@ -60,20 +56,18 @@ class HomePageChatsState extends State<HomePageChats> {
       child: CarouselSlider(
         items: colors.map((color) {
           return Container(
-            width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const SizedBox(height: 20),
           );
         }).toList(),
         options: CarouselOptions(
           height: 300,
           onPageChanged: (index, reason) {
-            themeProvider.toggleBackground(index);
-            themeProvider.saveColorOfApp(colors[index]);
+            themeCubit.toggleBackground(index);
+            themeCubit.saveColorOfApp(colors[index]);
           },
           enableInfiniteScroll: false,
           initialPage: 0,
