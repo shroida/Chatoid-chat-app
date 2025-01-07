@@ -108,19 +108,14 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
             ),
             child:
                 BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
-              String profileImage = 'assets/profile.gif'; // Default image
-
-              if (state is LoginSuccess || loginCubit.isLogin) {
-                profileImage = widget.isCurrentUserProfile
-                    ? loginCubit.currentUser.profileImage
-                    : !widget.isCurrentUserProfile
-                        ? widget.userProfile.profileImage
-                        : 'assets/profile.gif';
-              }
+              String imgprofile = chatsCubit.allUsersApp
+                  .firstWhere(
+                      (user) => user.userId == widget.userProfile.userId)
+                  .profileImage;
 
               return ClipOval(
                 child: Image.asset(
-                  'assets/loading_earth.gif',
+                  imgprofile,
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,

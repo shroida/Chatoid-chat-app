@@ -48,11 +48,9 @@ class _HomePageState extends State<HomePage> {
     await loginCubit.loadUserData();
 
     final currentUser = loginCubit.currentUser;
-    print('looooooooooooooooooading data ${currentUser.username}');
     await chatsCubit.fetchFriends(currentUser.userId);
     await chatsCubit.fetchAllMessages(currentUser);
-    await chatsCubit.fetchAllUsersGroup();
-    await chatsCubit.fetchAllMessagesInGroupForAllUsers();
+  
     await postsCubit.getAllPosts();
 
     isSubscribed = true;
@@ -71,14 +69,6 @@ class _HomePageState extends State<HomePage> {
       () async {
         if (mounted) {
           await chatsCubit.fetchFriends(currentUser.userId);
-        }
-      },
-    );
-    await chatsCubit.subscribe(
-      'posts',
-      () async {
-        if (mounted) {
-          await postsCubit.getAllPosts();
         }
       },
     );

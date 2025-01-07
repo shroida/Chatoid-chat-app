@@ -23,41 +23,41 @@ class _GroupSectionState extends State<GroupSection> {
 
   void _loadUserData() async {
     chatsCubit = BlocProvider.of<ChatsCubit>(context);
-
+    await chatsCubit.fetchAllUsersGroup();
+    await chatsCubit.fetchAllMessagesInGroupForAllUsers();
     await chatsCubit.fetchAllMessagesInGroupForAllUsers();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final chatsCubit = BlocProvider.of<ChatsCubit>(context);
-    // String messageDate = '';
-    // if (chatsCubit.allUsersMessagesGroup.isNotEmpty) {
-    //   messageDate = chatsCubit.formatMessageDate(chatsCubit
-    //       .allUsersMessagesGroup[chatsCubit.allUsersMessagesGroup.length - 1]
-    //       .createdAt);
-    // } else {
-    //   messageDate = 'No messages yet'; // Handle the empty case
-    // }
+    final chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    String messageDate = '';
+    if (chatsCubit.allUsersMessagesGroup.isNotEmpty) {
+      messageDate = chatsCubit.formatMessageDate(chatsCubit
+          .allUsersMessagesGroup[chatsCubit.allUsersMessagesGroup.length - 1]
+          .createdAt);
+    } else {
+      messageDate = 'No messages yet'; 
+    }
 
     return Column(
       children: [
-        Text('Coco'),
-        // GroupChatCard(
-        //   allMessages: chatsCubit.allUsersMessagesGroup,
-        //   isLastMessageFromOther: true,
-        //   messageCount: chatsCubit.allUsersMessagesGroup.length,
-        //   messageDate: messageDate,
-        //   messageText: chatsCubit.allUsersMessagesGroup.isNotEmpty
-        //       ? chatsCubit.allUsersMessagesGroup.last.messageText
-        //       : 'No messages yet',
-        //   onTap: () {
-        //     final allMessages = chatsCubit.allUsersMessagesGroup;
-        //     GoRouter.of(context).push(
-        //       AppRouter.kChatGroupScreen,
-        //       extra: allMessages,
-        //     );
-        //   },
-        // ),
+        GroupChatCard(
+          allMessages: chatsCubit.allUsersMessagesGroup,
+          isLastMessageFromOther: true,
+          messageCount: chatsCubit.allUsersMessagesGroup.length,
+          messageDate: messageDate,
+          messageText: chatsCubit.allUsersMessagesGroup.isNotEmpty
+              ? chatsCubit.allUsersMessagesGroup.last.messageText
+              : 'No messages yet',
+          onTap: () {
+            final allMessages = chatsCubit.allUsersMessagesGroup;
+            GoRouter.of(context).push(
+              AppRouter.kChatGroupScreen,
+              extra: allMessages,
+            );
+          },
+        ),
       ],
     );
   }
