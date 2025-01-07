@@ -113,12 +113,14 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
               if (state is LoginSuccess || loginCubit.isLogin) {
                 profileImage = widget.isCurrentUserProfile
                     ? loginCubit.currentUser.profileImage
-                    : widget.userProfile.profileImage;
+                    : !widget.isCurrentUserProfile
+                        ? widget.userProfile.profileImage
+                        : 'assets/profile.gif';
               }
 
               return ClipOval(
                 child: Image.asset(
-                  'assets/profile.gif',
+                  'assets/loading_earth.gif',
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,

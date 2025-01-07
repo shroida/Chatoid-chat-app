@@ -35,7 +35,7 @@ class MenuScreen extends StatelessWidget {
 
                 ElevatedButton(
                     onPressed: () {
-                      print(chatCubit.friendsList [0].username);
+                      print(chatCubit.friendsList[0].username);
                       print("last user ${chatCubit.allUsersApp.last.username}");
                       print(postsCubit.allPosts[2].postsText);
                       print(authProvider.currentUser.username);

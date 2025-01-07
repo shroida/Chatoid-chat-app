@@ -75,7 +75,7 @@ class LoginCubit extends Cubit<LoginState> {
       await Future.wait([
         chatsCubit.fetchFriends(currentUser.userId),
         chatsCubit.fetchAllMessages(currentUser),
-        // chatsCubit.fetchAllMessagesInGroupForAllUsers(),
+        chatsCubit.fetchAllMessagesInGroupForAllUsers(),
         postsCubit.getAllPosts(),
         storyCubit.fetchAllStories(),
       ]);

@@ -20,6 +20,12 @@ class ChatMessagesFetched extends ChatsState {
   ChatMessagesFetched({required this.friendMessages});
 }
 
+class AllUsersLoaded extends ChatsState {
+  final List<UserData> allUsersFetched;
+
+  AllUsersLoaded({required this.allUsersFetched});
+}
+
 class ChatError extends ChatsState {
   final String message;
 

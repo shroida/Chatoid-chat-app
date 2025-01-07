@@ -1,7 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/app_router.dart';
+import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Color containerColor = Colors.white;
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -31,18 +33,35 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    // Navigate to the appropriate screen based on login status
-    if (mounted) {
-      Future.delayed(const Duration(seconds: 3), () {
+    // Show a loading indicator
+    setState(() => isLoading = true);
+
+    Future.delayed(const Duration(seconds: 3), () async {
+      if (mounted) {
         if (isLoggedIn) {
-          // If logged in, navigate to HomePage
-          GoRouter.of(context).push(AppRouter.kHomePage);
+          final loginCubit = context.read<LoginCubit>();
+
+          try {
+            await loginCubit.loadUserDataCubits();
+
+            // Check if the widget is still mounted
+            if (!mounted) return;
+
+            GoRouter.of(context).push(AppRouter.kHomePage);
+          } catch (e) {
+            debugPrint("Error during navigation: $e");
+          } finally {
+            // Check if the widget is still mounted before updating the state
+            if (mounted) {
+              setState(() => isLoading = false);
+            }
+          }
         } else {
-          // If not logged in, navigate to Login view
           GoRouter.of(context).push(AppRouter.kLoginView);
+          setState(() => isLoading = false);
         }
-      });
-    }
+      }
+    });
   }
 
   @override

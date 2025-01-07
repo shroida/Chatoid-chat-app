@@ -27,10 +27,6 @@ class PostsWidgetState extends State<Posts> {
       return const Center(child: Text("No posts available"));
     }
 
-    if (chatsCubit.allUsersApp.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     return ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) {

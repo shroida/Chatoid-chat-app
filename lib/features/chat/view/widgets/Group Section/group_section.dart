@@ -13,17 +13,35 @@ class GroupSection extends StatefulWidget {
 }
 
 class _GroupSectionState extends State<GroupSection> {
+  late ChatsCubit chatsCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  void _loadUserData() async {
+    chatsCubit = BlocProvider.of<ChatsCubit>(context);
+
+    await chatsCubit.fetchAllMessagesInGroupForAllUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final chatsCubit = BlocProvider.of<ChatsCubit>(context);
-
-    // String messageDate = chatsCubit.formatMessageDate(chatsCubit
-    //     .allUsersMessagesGroup[chatsCubit.allUsersMessagesGroup.length - 1]
-    //     .createdAt);
+    // String messageDate = '';
+    // if (chatsCubit.allUsersMessagesGroup.isNotEmpty) {
+    //   messageDate = chatsCubit.formatMessageDate(chatsCubit
+    //       .allUsersMessagesGroup[chatsCubit.allUsersMessagesGroup.length - 1]
+    //       .createdAt);
+    // } else {
+    //   messageDate = 'No messages yet'; // Handle the empty case
+    // }
 
     return Column(
       children: [
-        Text('group')
+        Text('Coco'),
         // GroupChatCard(
         //   allMessages: chatsCubit.allUsersMessagesGroup,
         //   isLastMessageFromOther: true,

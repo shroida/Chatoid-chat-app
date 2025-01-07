@@ -47,16 +47,13 @@ class _HomePageState extends State<HomePage> {
     final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
     await loginCubit.loadUserData();
 
-    if (!mounted) return;
-
     final currentUser = loginCubit.currentUser;
-
+    print('looooooooooooooooooading data ${currentUser.username}');
     await chatsCubit.fetchFriends(currentUser.userId);
     await chatsCubit.fetchAllMessages(currentUser);
     await chatsCubit.fetchAllUsersGroup();
+    await chatsCubit.fetchAllMessagesInGroupForAllUsers();
     await postsCubit.getAllPosts();
-
-    if (!mounted) return;
 
     isSubscribed = true;
 

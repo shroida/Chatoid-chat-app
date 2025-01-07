@@ -89,6 +89,7 @@ class ChatsCubit extends Cubit<ChatsState> {
         }
 
         await _chatRepoImpl.saveFriendList(allUsersApp);
+        emit(AllUsersLoaded(allUsersFetched: allUsersApp));
       }
     } catch (e) {
       emit(ChatError("Error fetching friends: $e"));

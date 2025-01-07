@@ -71,9 +71,8 @@ class _PostWidgetState extends State<PostWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
-                  onPressed: () async{
+                  onPressed: () async {
                     if (context.mounted) {
-                      print(widget.post.postsText);
                       setState(() {
                         widget.post.reacts += 1; // Increase the react count
                       });
