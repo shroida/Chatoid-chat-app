@@ -27,7 +27,7 @@ class PostsCubit extends Cubit<PostsState> {
           reacts: post['reacts'] ?? 0,
         );
       }).toList();
-      
+
       allPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       emit(PostsLoaded(posts: allPosts));
     } catch (e) {
@@ -46,7 +46,7 @@ class PostsCubit extends Cubit<PostsState> {
 
       // Increase the react count locally
       final updatedPost =
-          allPosts[index].copyWith(reacts: allPosts[index].reacts + 1);
+          allPosts[index].copyWith(reacts:  allPosts[index].reacts + 1);
 
       // Send push notification (optional)
       notiRepoImpl.sendPushNotification(
@@ -94,6 +94,16 @@ class PostsCubit extends Cubit<PostsState> {
       emit(PostsLoaded(posts: List.from(allPosts)));
     } catch (e) {
       // Handle error appropriately
+      emit(PostsError(errorMsg: "Error inserting post: $e"));
+    }
+  }
+
+  Future<void> deletePost(int postID) async {
+    try {
+      await supabase.client.from('posts').delete().eq('id', postID);
+
+      emit(PostsLoaded(posts: List.from(allPosts)));
+    } catch (e) {
       emit(PostsError(errorMsg: "Error inserting post: $e"));
     }
   }
