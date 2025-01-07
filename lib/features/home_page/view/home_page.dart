@@ -46,11 +46,10 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadUserData() async {
     final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
     await loginCubit.loadUserData();
-
     final currentUser = loginCubit.currentUser;
     await chatsCubit.fetchFriends(currentUser.userId);
     await chatsCubit.fetchAllMessages(currentUser);
-  
+
     await postsCubit.getAllPosts();
 
     isSubscribed = true;

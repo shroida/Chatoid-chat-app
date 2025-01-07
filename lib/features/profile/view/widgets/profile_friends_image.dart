@@ -108,18 +108,39 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
             ),
             child:
                 BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
-              String imgprofile = chatsCubit.allUsersApp
-                  .firstWhere(
-                      (user) => user.userId == widget.userProfile.userId)
-                  .profileImage;
-
-              return ClipOval(
-                child: Image.asset(
-                  imgprofile,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
+              return BlocBuilder<LoginCubit, LoginState>(
+                builder: (context, state) {
+                  if (state is LoginLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (state is LoginSuccess) {
+                    if (chatsCubit.allUsersApp.isNotEmpty) {
+                      String imgprofile = chatsCubit.allUsersApp
+                          .firstWhere(
+                            (user) => user.userId == widget.userProfile.userId,
+                          )
+                          .profileImage;
+                      return ClipOval(
+                        child: Image.asset(
+                          imgprofile,
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    } else {
+                      return ClipOval(
+                        child: Image.asset(
+                          'assets/loading_earth.gif',
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    }
+                  } else {
+                    return const Text('No data available');
+                  }
+                },
               );
             }),
           ),
