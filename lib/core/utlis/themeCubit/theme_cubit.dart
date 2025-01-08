@@ -19,14 +19,13 @@ class ThemeCubit extends Cubit<ThemeData> {
   // Switch to light mode
   void toggleLightMode() async {
     _themeMode = ThemeMode.light;
-    emit(lightMode);
+    emit(_buildThemeData()); // Emit updated theme data
     await _saveThemeMode(lightMode);
   }
 
-  // Switch to dark mode
   void toggleDarkMode() async {
     _themeMode = ThemeMode.dark;
-    emit(darkMode);
+    emit(_buildThemeData()); // Emit updated theme data
     await _saveThemeMode(darkMode);
   }
 

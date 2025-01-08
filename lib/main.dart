@@ -85,9 +85,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return BlocBuilder<ThemeCubit, ThemeData>(
+      builder: (context, theme) {
+        return MaterialApp.router(
           routerConfig: AppRouter.router,
           debugShowCheckedModeBanner: false,
+          theme: theme, // Use the theme from the ThemeCubit
+        );
+      },
     );
   }
 }
