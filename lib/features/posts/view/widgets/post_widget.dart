@@ -106,7 +106,6 @@ class _PostWidgetState extends State<PostWidget> {
                     label: Text(
                       '${widget.post.reacts}',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                   const Icon(

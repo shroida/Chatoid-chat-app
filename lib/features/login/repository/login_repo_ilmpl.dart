@@ -56,6 +56,7 @@ class LoginRepoImpl with LoginRepo {
     await prefs.setString('email', loginCubit.currentUser.email);
     await prefs.setString('username', loginCubit.currentUser.username);
     await prefs.setInt('userId', loginCubit.currentUser.userId);
+    await prefs.setString('profileImage', loginCubit.currentUser.profileImage);
     await prefs.setBool('isLoggedIn', true);
   }
 

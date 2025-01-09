@@ -26,22 +26,10 @@ class ProfileFriendsImage extends StatefulWidget {
 }
 
 class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
-  late String _profileImage;
-
   @override
   void initState() {
     super.initState();
     context.read<LoginCubit>().loadUserData();
-    _loadProfileImage();
-  }
-
-  void _loadProfileImage() {
-    final chatsCubit = context.read<ChatsCubit>();
-    _profileImage = chatsCubit.allUsersApp
-        .firstWhere((user) => user.userId == widget.userProfile.userId,
-            orElse: () =>
-                UserData(userId: 0, username: '', email: '', friendId: 0))
-        .profileImage;
   }
 
   final supabase = Supabase.instance;
@@ -70,35 +58,33 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 8,
-                              spreadRadius: 4,
-                            ),
-                          ],
-                        ),
-                        child: GestureDetector(
-                          onTap: () async {
-                            Navigator.pop(context);
-                            await chatsCubit.upLoadImageProfile(
-                                imagePath, loginCubit.currentUser.userId);
-                            // Reload to get updated profile image
-                            _loadProfileImage();
-                            setState(() {}); // Refresh the widget
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              imagePath,
-                              fit: BoxFit.cover,
-                              width: 200,
-                            ),
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            spreadRadius: 4,
                           ),
-                        ));
+                        ],
+                      ),
+                      child: GestureDetector(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await chatsCubit.upLoadImageProfile(
+                              imagePath, loginCubit.currentUser.userId);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            width: 200,
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 );
               }).toList(),
@@ -112,22 +98,22 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
       children: [
         GestureDetector(
           onTap: () {
+            print(loginCubit.currentUser.profileImage);
             showSliderBottomSheet();
           },
           child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                _profileImage, // Use the loaded profile image
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-            ),
-          ),
+              child: ClipOval(
+                child: Image.asset(
+                  widget.userProfile.profileImage,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+              )),
         ),
         const SizedBox(width: 20),
         Row(
