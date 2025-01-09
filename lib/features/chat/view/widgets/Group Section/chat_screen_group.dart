@@ -60,7 +60,6 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
     final loginCubit = BlocProvider.of<LoginCubit>(context, listen: true);
     final themeCubit = BlocProvider.of<ThemeCubit>(context, listen: true);
     String senderUsername(int senderMessageID) {
-      // Find the user with the matching ID from allUsersApp list
       final user = chatsCubit.allUsersApp.firstWhere(
         (user) => user.userId == senderMessageID,
         orElse: () => UserData(
@@ -109,7 +108,9 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                         confirmBtnText: 'Delete!',
                         onConfirmBtnTap: () {
                           Navigator.of(context).pop();
-                          // messagesCubit.deleteMessage(message);dltgrp
+                          messagesCubit.deleteMessageGrp(message);
+                          setState(() {});
+                          
                         },
                       );
                     },

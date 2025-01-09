@@ -191,7 +191,7 @@ class MessagesCubit extends Cubit<MessagesState> {
       );
     }
   }
-  
+
   Future<void> deleteMessage(ClsMessage message) async {
     await supabase.client
         .from('messages')
@@ -199,5 +199,13 @@ class MessagesCubit extends Cubit<MessagesState> {
         .eq('message_text', message.messageText)
         .or('receiver_id.eq.${message.senderId},receiver_id.eq.${message.friendId}') // Correct usage of OR for receiver_id
         .or('sender_id.eq.${message.senderId},sender_id.eq.${message.friendId}'); // Correct usage of OR for sender_id
+  }
+
+  Future<void> deleteMessageGrp(ClsMessage message) async {
+    await supabase.client
+        .from('all_messages_group')
+        .delete()
+        .eq('msg_text', message.messageText);
+        
   }
 }

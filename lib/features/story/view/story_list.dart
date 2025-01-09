@@ -84,10 +84,10 @@ class StoryListState extends State<StoryList> {
                     ),
                   );
                 },
-                child: 
-                
-                StoryWidget(
-                  imageUrl: 'assets/profile.gif',
+                child: StoryWidget(
+                  imageUrl: user.profileImage.isNotEmpty
+                      ? user.profileImage
+                      : 'assets/profile.gif',
                   username: user.username,
                   storyCount: stories!.length, // Pass the number of stories
                 ),

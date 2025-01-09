@@ -273,9 +273,9 @@ class ChatsCubit extends Cubit<ChatsState> {
   }
 
   Future<void> deleteFriend(UserData friend, UserData currentUser) async {
-    final supabase = Supabase.instance;
-    int currentID = currentUser.userId;
-    int friendID = friend.userId;
+    // final supabase = Supabase.instance;
+    // int currentID = currentUser.userId;
+    // int friendID = friend.userId;
 
     try {} catch (e) {
       rethrow;

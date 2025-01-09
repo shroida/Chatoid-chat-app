@@ -43,7 +43,7 @@ class ProfileState extends State<Profile> {
 
   Future<void> initializeData() async {
     await initializeFriendData();
-    getStoriesProfile();
+    await getStoriesProfile();
   }
 
   Future<void> initializeFriendData() async {
@@ -62,10 +62,10 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  void getStoriesProfile() {
+  Future<void> getStoriesProfile() async {
     final storyCubit = context.read<StoryCubit>();
     storyProfile = storyCubit.allStories
-        .where((story) => story.userId == widget.userProfile.friendId)
+        .where((story) => story.userId == widget.userProfile.userId)
         .toList();
 
     if (mounted) {
@@ -76,6 +76,7 @@ class ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final loginCubit = context.read<LoginCubit>();
+    final storyCubit = context.read<StoryCubit>();
     final postsCubit = context.read<PostsCubit>();
     final themeCubit = context.read<ThemeCubit>();
     final chatsCubit = context.read<ChatsCubit>();
@@ -88,6 +89,11 @@ class ProfileState extends State<Profile> {
       return isCurrentUserProfile
           ? post.userID == currentUser.userId
           : post.userID == widget.userProfile.friendId;
+    }).toList();
+    final stories = storyCubit.allStories.where((story) {
+      return isCurrentUserProfile
+          ? story.userId == currentUser.userId
+          : story.userId == widget.userProfile.friendId;
     }).toList();
 
     final totalLikes = posts.fold(0, (sum, post) => sum + post.reacts);
@@ -129,8 +135,8 @@ class ProfileState extends State<Profile> {
                 controller: _controller,
                 itemCount: 3,
                 itemBuilder: (context, index) {
-                  return _buildPageContent(index, isCurrentUserProfile, posts,
-                      chatsCubit, themeCubit);
+                  return _buildPageContent(index, isCurrentUserProfile, stories,
+                      posts, chatsCubit, themeCubit);
                 },
               ),
             ),
@@ -140,8 +146,13 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget _buildPageContent(int index, bool isCurrentUserProfile,
-      List<ClsPost> posts, ChatsCubit chatsCubit, ThemeCubit themeCubit) {
+  Widget _buildPageContent(
+      int index,
+      bool isCurrentUserProfile,
+      List<Story> stories,
+      List<ClsPost> posts,
+      ChatsCubit chatsCubit,
+      ThemeCubit themeCubit) {
     switch (index) {
       case 0:
         return ListView.builder(
@@ -169,9 +180,9 @@ class ProfileState extends State<Profile> {
         );
       case 2:
         return ListView.builder(
-          itemCount: storyProfile.length,
+          itemCount: stories.length,
           itemBuilder: (context, index) {
-            final story = storyProfile[index];
+            final story = stories[index];
             return CardStory(
               storyText: story.storyText,
               username: widget.userProfile.username,
