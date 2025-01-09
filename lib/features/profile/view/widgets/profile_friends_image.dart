@@ -58,33 +58,33 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 8,
-                            spreadRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: GestureDetector(
-                        onTap: () async {
-                          Navigator.pop(context);
-                          await chatsCubit.upLoadImageProfile(
-                              imagePath, loginCubit.currentUser.userId);
-                        },
-                        child: ClipRRect(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            width: 200,
-                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 8,
+                              spreadRadius: 4,
+                            ),
+                          ],
                         ),
-                      ),
-                    );
+                        child: GestureDetector(
+                          onTap: () async {
+                            Navigator.pop(context);
+                            await chatsCubit.upLoadImageProfile(
+                                imagePath, loginCubit.currentUser.userId);
+                            setState(() {});
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              width: 200,
+                            ),
+                          ),
+                        ));
                   },
                 );
               }).toList(),
@@ -102,18 +102,21 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
             showSliderBottomSheet();
           },
           child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                widget.userProfile.profileImage.isNotEmpty
+                    ? widget.userProfile.profileImage
+                    : 'assets/profile.gif',
+                width: 150,
+                height: 150,
+                fit: BoxFit.cover,
               ),
-              child: ClipOval(
-                child: Image.asset(
-                  widget.userProfile.profileImage,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              )),
+            ),
+          ),
         ),
         const SizedBox(width: 20),
         Row(
