@@ -32,16 +32,17 @@ class _MenuUserInfoState extends State<MenuUserInfo> {
             children: [
               Text(
                 user.username,
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: widget.themeCubit.textColor),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 user.email,
-                style:
-                    TextStyle(fontSize: 14, color: widget.themeCubit.textColor),
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ],
           );

@@ -39,7 +39,7 @@ class MenuScreen extends StatelessWidget {
                       print("last user ${chatCubit.allUsersApp.last.username}");
                       print(postsCubit.allPosts[2].postsText);
                       print(authProvider.currentUser.username);
-                      print(authProvider.currentUser.email);
+                      print(authProvider.currentUser.profileImage);
                       print(authProvider.currentUser.userId);
                     },
                     child: Text(authProvider.currentUser.username)),

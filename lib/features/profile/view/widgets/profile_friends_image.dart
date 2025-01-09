@@ -3,7 +3,6 @@ import 'package:chatoid/constants.dart';
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_cubit.dart';
 import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
-import 'package:chatoid/features/login/view_model/login_cubit/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -59,33 +58,33 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 8,
-                            spreadRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: GestureDetector(
-                        onTap: () async {
-                          Navigator.pop(context);
-                          await chatsCubit.upLoadImageProfile(
-                              imagePath, loginCubit.currentUser.userId);
-                        },
-                        child: ClipRRect(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            width: 200,
-                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 8,
+                              spreadRadius: 4,
+                            ),
+                          ],
                         ),
-                      ),
-                    );
+                        child: GestureDetector(
+                          onTap: () async {
+                            Navigator.pop(context);
+                            await chatsCubit.upLoadImageProfile(
+                                imagePath, loginCubit.currentUser.userId);
+                            setState(() {});
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              width: 200,
+                            ),
+                          ),
+                        ));
                   },
                 );
               }).toList(),
@@ -99,6 +98,7 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
       children: [
         GestureDetector(
           onTap: () {
+            print(loginCubit.currentUser.profileImage);
             showSliderBottomSheet();
           },
           child: Card(
@@ -106,22 +106,16 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            child:
-                BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
-              String imgprofile = chatsCubit.allUsersApp
-                  .firstWhere(
-                      (user) => user.userId == widget.userProfile.userId)
-                  .profileImage;
-
-              return ClipOval(
-                child: Image.asset(
-                  imgprofile,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              );
-            }),
+            child: ClipOval(
+              child: Image.asset(
+                widget.userProfile.profileImage.isNotEmpty
+                    ? widget.userProfile.profileImage
+                    : 'assets/profile.gif', 
+                width: 150,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
         const SizedBox(width: 20),

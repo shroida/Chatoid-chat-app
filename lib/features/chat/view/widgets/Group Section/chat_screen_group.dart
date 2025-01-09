@@ -109,7 +109,7 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                         confirmBtnText: 'Delete!',
                         onConfirmBtnTap: () {
                           Navigator.of(context).pop();
-                          // messagesCubit.deleteMessage(message);
+                          // messagesCubit.deleteMessage(message);dltgrp
                         },
                       );
                     },
@@ -124,7 +124,6 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                                 : Alignment.centerLeft,
                             child: Column(
                               children: [
-                                
                                 Column(
                                   crossAxisAlignment: message.senderId !=
                                           loginCubit.currentUser.userId
@@ -142,7 +141,8 @@ class _ChatScreenGroupState extends State<ChatScreenGroup> {
                                           topLeft: Radius.circular(60),
                                         ),
                                         color: isSentByUser
-                                            ? const Color.fromARGB(255, 233, 233, 233)
+                                            ? const Color.fromARGB(
+                                                255, 103, 103, 103)
                                             : const Color.fromARGB(
                                                 115, 180, 180, 180),
                                       ),

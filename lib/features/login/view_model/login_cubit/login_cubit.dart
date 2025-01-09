@@ -57,8 +57,6 @@ class LoginCubit extends Cubit<LoginState> {
         _isLogin = true;
         await _processLoginSuccess(request.email, context);
         await loadUserDataCubits();
-        bool islogin = await _repo.checkLoginSession();
-        print('isLoggedIn: $islogin');
         emit(LoginSuccess(currentUser));
         success();
       }
@@ -120,12 +118,18 @@ class LoginCubit extends Cubit<LoginState> {
 
     String? email = prefs.getString('email');
     String? username = prefs.getString('username');
+    String? profileImage =
+        prefs.getString('profileImage') ?? 'assets/profile.gif';
     int? userId = prefs.getInt('userId');
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
     if (email != null && username != null && userId != null && isLoggedIn) {
       currentUser = UserData(
-          userId: userId, username: username, email: email, friendId: 0);
+          userId: userId,
+          username: username,
+          email: email,
+          friendId: 0,
+          profileImage: profileImage);
       emit(LoginSuccess(currentUser));
     } else {
       emit(LoginInitial());

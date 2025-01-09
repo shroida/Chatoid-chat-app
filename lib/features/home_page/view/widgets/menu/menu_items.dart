@@ -16,7 +16,7 @@ class MenuItems extends StatelessWidget {
             Icons.person,
             size: 30,
             color: themeData
-                .iconTheme.color, // Adjust icon color for current theme
+                .iconTheme.color, 
           ),
           title: Text(
             'Profile',
