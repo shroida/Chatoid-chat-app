@@ -75,11 +75,10 @@ class _PostWidgetState extends State<PostWidget> {
                 TextButton.icon(
                   onPressed: () async {
                     if (context.mounted) {
-                      setState(() {
-                        widget.post.reacts += 1; // Increase the react count
-                      });
+                      setState(() {});
                       await postsCubit.increaseReacts(
                           widget.post.postID, loginCubit.currentUser.username);
+                      await postsCubit.getAllPosts();
                     }
                   },
                   icon: const Icon(

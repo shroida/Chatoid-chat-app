@@ -89,7 +89,6 @@ class PostsCubit extends Cubit<PostsState> {
         'created_at': DateTime.now().toIso8601String(),
       });
 
-      // Assuming the database returns the new post ID
       newPost = newPost.copyWith(postID: response.data[0]['id']);
       allPosts.add(newPost);
 

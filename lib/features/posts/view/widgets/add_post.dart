@@ -68,15 +68,14 @@ class AddPostScreen extends StatelessWidget {
                       onPressed: () async {
                         final storyText = _controller.text;
 
-                          Navigator.pop(context);
-                        // Call the addToStory method from StoryCubit
+                        Navigator.pop(context);
                         if (storyText.isNotEmpty) {
                           await postsCubit.insertPost(
                             loginCubit.currentUser.userId,
                             storyText,
                           );
+                          await postsCubit.getAllPosts();
                         } else {
-                          // Handle empty story text case, e.g., show a SnackBar
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Please enter a story.'),

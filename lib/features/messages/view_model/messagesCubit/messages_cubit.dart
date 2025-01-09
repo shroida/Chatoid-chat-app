@@ -191,7 +191,7 @@ class MessagesCubit extends Cubit<MessagesState> {
       );
     }
   }
-
+  
   Future<void> deleteMessage(ClsMessage message) async {
     await supabase.client
         .from('messages')

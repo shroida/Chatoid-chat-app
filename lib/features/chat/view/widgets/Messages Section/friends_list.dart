@@ -6,6 +6,8 @@ import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/features/messages/view/chat_screen.dart';
 import 'package:chatoid/features/messages/view_model/messagesCubit/messages_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class FriendsList extends StatelessWidget {
   const FriendsList({
@@ -73,25 +75,39 @@ class FriendsList extends StatelessWidget {
                   friend.friendId, authCubit.currentUser.userId);
               final messagesCount = unreadMessages.length;
 
-              return ChatCard(
-                messageDate: lastMessage != null
-                    ? chatsCubit.formatMessageDate(lastMessage.createdAt)
-                    : "No messages",
-                friendData: friend,
-                messageCount: messagesCount,
-                messageText: lastMessage?.messageText ?? "No messages yet",
-                isLastMessageFromFriend:
-                    lastMessage?.senderId == friend.friendId,
-                isLastMessageSeenByUser: lastMessage?.isRead ?? false,
-                onTap: () {
-                  messagesCubit.onEnterChat(friend.friendId);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatScreen(friendUser: friend),
-                    ),
+              return GestureDetector(
+                onLongPress: () {
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.error,
+                    title: 'Delete freind\n"${friend.username}"',
+                    confirmBtnText: 'Delete!',
+                    onConfirmBtnTap: () {
+                      Navigator.of(context).pop();
+                      chatsCubit.deleteFriend(friend,authCubit.currentUser);
+                    },
                   );
                 },
+                child: ChatCard(
+                  messageDate: lastMessage != null
+                      ? chatsCubit.formatMessageDate(lastMessage.createdAt)
+                      : "No messages",
+                  friendData: friend,
+                  messageCount: messagesCount,
+                  messageText: lastMessage?.messageText ?? "No messages yet",
+                  isLastMessageFromFriend:
+                      lastMessage?.senderId == friend.friendId,
+                  isLastMessageSeenByUser: lastMessage?.isRead ?? false,
+                  onTap: () {
+                    messagesCubit.onEnterChat(friend.friendId);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(friendUser: friend),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );

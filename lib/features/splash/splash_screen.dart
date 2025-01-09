@@ -77,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
             TypewriterAnimatedText(
               'CHATOID',
               textStyle: const TextStyle(
-                color: Colors.black,
+                color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 80,
                 fontWeight: FontWeight.w900,
               ),
