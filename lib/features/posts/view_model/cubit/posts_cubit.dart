@@ -46,7 +46,7 @@ class PostsCubit extends Cubit<PostsState> {
 
       // Increase the react count locally
       final updatedPost =
-          allPosts[index].copyWith(reacts:  allPosts[index].reacts + 1);
+          allPosts[index].copyWith(reacts: allPosts[index].reacts + 1);
 
       // Send push notification (optional)
       notiRepoImpl.sendPushNotification(
@@ -82,29 +82,34 @@ class PostsCubit extends Cubit<PostsState> {
       reacts: 0,
     );
 
-    allPosts.add(newPost);
     try {
-      await supabase.client.from('posts').insert({
+      final response = await supabase.client.from('posts').insert({
         'user_id': userID,
         'posts_text': postsText,
         'created_at': DateTime.now().toIso8601String(),
       });
 
-      allPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      // Assuming the database returns the new post ID
+      newPost = newPost.copyWith(postID: response.data[0]['id']);
+      allPosts.add(newPost);
+
       emit(PostsLoaded(posts: List.from(allPosts)));
     } catch (e) {
-      // Handle error appropriately
       emit(PostsError(errorMsg: "Error inserting post: $e"));
     }
   }
 
   Future<void> deletePost(int postID) async {
     try {
+      // Delete from Supabase
       await supabase.client.from('posts').delete().eq('id', postID);
+
+      // Remove from local list
+      allPosts.removeWhere((post) => post.postID == postID);
 
       emit(PostsLoaded(posts: List.from(allPosts)));
     } catch (e) {
-      emit(PostsError(errorMsg: "Error inserting post: $e"));
+      emit(PostsError(errorMsg: "Error deleting post: $e"));
     }
   }
 

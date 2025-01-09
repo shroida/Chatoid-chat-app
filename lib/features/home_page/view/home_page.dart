@@ -28,21 +28,6 @@ class _HomePageState extends State<HomePage> {
     _loadUserData();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    chatsCubit = BlocProvider.of<ChatsCubit>(context);
-    postsCubit = BlocProvider.of<PostsCubit>(context);
-  }
-
-  @override
-  void dispose() {
-    if (isSubscribed) {
-      chatsCubit.unsubscribe();
-    }
-    super.dispose();
-  }
-
   Future<void> _loadUserData() async {
     final loginCubit = BlocProvider.of<LoginCubit>(context, listen: false);
     await loginCubit.loadUserData();
@@ -71,6 +56,21 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    chatsCubit = BlocProvider.of<ChatsCubit>(context);
+    postsCubit = BlocProvider.of<PostsCubit>(context);
+  }
+
+  @override
+  void dispose() {
+    if (isSubscribed) {
+      chatsCubit.unsubscribe();
+    }
+    super.dispose();
   }
 
   @override
