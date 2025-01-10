@@ -34,6 +34,11 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
 
   final supabase = Supabase.instance;
 
+  Future<void> refreshUserProfile() async {
+    await context.read<LoginCubit>().loadUserData();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final chatsCubit = BlocProvider.of<ChatsCubit>(context);
@@ -72,9 +77,9 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
                         child: GestureDetector(
                           onTap: () async {
                             Navigator.pop(context);
-                            await chatsCubit.upLoadImageProfile(
-                                imagePath, loginCubit.currentUser.userId);
-                            setState(() {});
+                            await chatsCubit.upLoadImageProfile(imagePath,
+                                loginCubit.currentUser.userId, loginCubit);
+                            await refreshUserProfile(); // Refresh the profile after upload
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),

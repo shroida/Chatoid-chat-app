@@ -1,10 +1,12 @@
 import 'package:chatoid/core/utlis/user_data.dart';
 import 'package:chatoid/features/chat/repository/chat_repo_impl.dart';
 import 'package:chatoid/features/chat/view_model/chat_cubit/chats_state.dart';
+import 'package:chatoid/features/login/view_model/login_cubit/login_cubit.dart';
 import 'package:chatoid/features/messages/model/cls_message.dart';
 import 'package:chatoid/features/notification/repository/noti_repo_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -262,11 +264,15 @@ class ChatsCubit extends Cubit<ChatsState> {
     }
   }
 
-  Future<void> upLoadImageProfile(String imagePath, int userID) async {
+  Future<void> upLoadImageProfile(
+      String imagePath, int userID, LoginCubit loginCubit) async {
     try {
       await supabase.client.from('user_profiles').update({
         'profile_image': imagePath,
       }).eq('user_id', userID);
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('profileImage', imagePath);
     } catch (e) {
       rethrow;
     }

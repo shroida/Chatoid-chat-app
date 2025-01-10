@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeCubit extends Cubit<ThemeData> {
   ThemeMode _themeMode = ThemeMode.light;
-  Color _colorOfApp = ChatAppColors.primaryColor; // App background color
+  Color _colorOfApp = ChatAppColors.primaryColor;
 
   ThemeMode get themeMode => _themeMode;
   Color get colorOfApp => _colorOfApp;
@@ -16,16 +16,15 @@ class ThemeCubit extends Cubit<ThemeData> {
   }
   bool get isDark => _themeMode == ThemeMode.dark;
   Color get textColor => isDark ? Colors.white : Colors.black;
-  // Switch to light mode
   void toggleLightMode() async {
     _themeMode = ThemeMode.light;
-    emit(_buildThemeData()); // Emit updated theme data
+    emit(_buildThemeData());
     await _saveThemeMode(lightMode);
   }
 
   void toggleDarkMode() async {
     _themeMode = ThemeMode.dark;
-    emit(_buildThemeData()); // Emit updated theme data
+    emit(_buildThemeData()); 
     await _saveThemeMode(darkMode);
   }
 
@@ -74,22 +73,19 @@ class ThemeCubit extends Cubit<ThemeData> {
         _colorOfApp = ChatAppColors.primaryColor;
         break;
     }
-    emit(_buildThemeData()); // Emit updated theme data
+    emit(_buildThemeData()); 
   }
 
   ThemeData _buildThemeData() {
-    // Define your theme based on the current theme mode and color
     if (_themeMode == ThemeMode.dark) {
       return ThemeData(
         brightness: Brightness.dark,
         primaryColor: _colorOfApp,
-        // Customize other properties for dark mode
       );
     } else {
       return ThemeData(
         brightness: Brightness.light,
         primaryColor: _colorOfApp,
-        // Customize other properties for light mode
       );
     }
   }
@@ -101,14 +97,14 @@ class ThemeCubit extends Cubit<ThemeData> {
   Future<void> saveColorOfApp(Color color) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(
-        'color_of_app', color.value); // Save the color as an integer
+        'color_of_app', color.value);
   }
 
   Future<void> loadColorOfApp() async {
     final prefs = await SharedPreferences.getInstance();
     int? colorValue = prefs.getInt('color_of_app');
     if (colorValue != null) {
-      _colorOfApp = Color(colorValue); // Load the saved color
+      _colorOfApp = Color(colorValue); 
     }
   }
 }

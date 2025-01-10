@@ -83,7 +83,8 @@ class ProfileState extends State<Profile> {
 
     final currentUser = loginCubit.currentUser;
     final isCurrentUserProfile =
-        widget.userProfile.userId == currentUser.userId;
+        widget.userProfile.userId == currentUser.userId &&
+            widget.userProfile.friendId == 0;
 
     final posts = postsCubit.allPosts.where((post) {
       return isCurrentUserProfile
