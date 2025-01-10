@@ -143,65 +143,69 @@ class StoryViewState extends State<StoryView> {
               onTap: () async {
                 // Fetch viewers for the current story based on _currentIndex
                 await _getViewers(widget.stories[_currentIndex].id);
-
-                showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      padding: const EdgeInsets.all(16),
-                      height: 300,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              // Call the deleteStory method when the button is pressed
-                              final storyCubit = Provider.of<StoryCubit>(
-                                  context,
-                                  listen:
-                                      false); // Get an instance of your storyCubit
-                              await storyCubit.deleteStory(
-                                  widget.stories[_currentIndex].id);
-
-                              GoRouter.of(context).push(AppRouter.kHomePage);
-                              setState(() {});
-                            },
-                            child: const Icon(Icons.delete,
-                                color: ChatAppColors.primaryColor4),
-                          ),
-                          const SizedBox(height: 10),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: _viewers.length,
-                              itemBuilder: (context, index) {
-                                // Extract the UserData key from the map
-                                UserData userData = _viewers[index].keys.first;
-
-                                return ListTile(
-                                  leading: const CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                        'assets/profile.gif'), // Placeholder image
-                                  ),
-                                  title: Text(userData
-                                      .username), // Display viewer's username
-                                );
+                if (context.mounted) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        padding: const EdgeInsets.all(16),
+                        height: 300,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                // Call the deleteStory method when the button is pressed
+                                final storyCubit = Provider.of<StoryCubit>(
+                                    context,
+                                    listen:
+                                        false); // Get an instance of your storyCubit
+                                await storyCubit.deleteStory(
+                                    widget.stories[_currentIndex].id);
+                                if (context.mounted) {
+                                  GoRouter.of(context)
+                                      .push(AppRouter.kHomePage);
+                                }
+                                setState(() {});
                               },
+                              child: const Icon(Icons.delete,
+                                  color: ChatAppColors.primaryColor4),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          if (_viewers.isNotEmpty)
-                            Text(
-                              'Viewed by: ${_viewers.length}', // Show the count of viewers
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: _viewers.length,
+                                itemBuilder: (context, index) {
+                                  // Extract the UserData key from the map
+                                  UserData userData =
+                                      _viewers[index].keys.first;
+
+                                  return ListTile(
+                                    leading: const CircleAvatar(
+                                      backgroundImage: AssetImage(
+                                          'assets/profile.gif'), // Placeholder image
+                                    ),
+                                    title: Text(userData
+                                        .username), // Display viewer's username
+                                  );
+                                },
                               ),
                             ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+                            const SizedBox(height: 10),
+                            if (_viewers.isNotEmpty)
+                              Text(
+                                'Viewed by: ${_viewers.length}', // Show the count of viewers
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }
               },
               child: EyeViews(countViews: _viewers.length),
             ),

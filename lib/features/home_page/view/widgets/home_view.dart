@@ -63,7 +63,6 @@ class _HomeViewState extends State<HomeView> {
       final postsCubit = context.read<PostsCubit>();
       await storyProvider.fetchAllStories();
       postsCubit.getAllPosts();
-      print('refreshed');
     } else if (_currentIndex == 2) {
       final chatsCubit = BlocProvider.of<ChatsCubit>(context);
       final loginCubit = BlocProvider.of<LoginCubit>(context);

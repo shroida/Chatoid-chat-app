@@ -111,7 +111,9 @@ class MessagesCubit extends Cubit<MessagesState> {
           .or('user_id.eq.$currentUserId,user_id.eq.$friendId');
 
       if (response.isNotEmpty && response.length == 2) {
+        // ignore: prefer_typing_uninitialized_variables
         var currentUserChat;
+        // ignore: prefer_typing_uninitialized_variables
         var friendChat;
 
         for (var user in response) {
@@ -206,6 +208,5 @@ class MessagesCubit extends Cubit<MessagesState> {
         .from('all_messages_group')
         .delete()
         .eq('msg_text', message.messageText);
-        
   }
 }

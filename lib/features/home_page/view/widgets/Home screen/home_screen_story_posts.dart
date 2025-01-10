@@ -25,21 +25,4 @@ class HomeScreenStoryPostsState extends State<HomeScreenStoryPosts> {
       ],
     );
   }
-
-  Widget _errorWidget(String errorMsg) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error, color: Colors.red, size: 40),
-          const SizedBox(height: 10),
-          Text(
-            errorMsg.isNotEmpty ? errorMsg : 'Failed to load stories.',
-            style: const TextStyle(
-                color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
 }

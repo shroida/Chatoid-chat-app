@@ -55,7 +55,8 @@ class LoginCubit extends Cubit<LoginState> {
         failure();
       } else {
         _isLogin = true;
-        await _processLoginSuccess(request.email, context);
+        if (context.mounted) await _processLoginSuccess(request.email, context);
+
         await loadUserDataCubits();
         emit(LoginSuccess(currentUser));
         success();
@@ -85,8 +86,10 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> _processLoginSuccess(String email, BuildContext context) async {
     currentUser = UserData(userId: 0, username: '', email: '', friendId: 0);
     await _repo.fillCurrentUserDataByEmail(email, context);
-    _repo.updateUser(currentUser, context);
-    _repo.showSuccessLoginWidget(context, currentUser.username);
+    if (context.mounted) {
+      _repo.showSuccessLoginWidget(context, currentUser.username);
+      _repo.updateUser(currentUser, context);
+    }
     await _repo.saveLoginSession();
     await _repo.checkLoginSession();
   }
@@ -107,7 +110,9 @@ class LoginCubit extends Cubit<LoginState> {
       await _repo.checkLoginSession();
 
       emit(LoginInitial());
-      GoRouter.of(context).push(AppRouter.kLoginView);
+      if (context.mounted) {
+        GoRouter.of(context).push(AppRouter.kLoginView);
+      }
     } catch (e) {
       // Handle logout error
     }

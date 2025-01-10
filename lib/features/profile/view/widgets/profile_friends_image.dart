@@ -103,7 +103,6 @@ class _ProfileFriendsImageState extends State<ProfileFriendsImage> {
       children: [
         GestureDetector(
           onTap: () {
-            print(loginCubit.currentUser.profileImage);
             showSliderBottomSheet();
           },
           child: Card(

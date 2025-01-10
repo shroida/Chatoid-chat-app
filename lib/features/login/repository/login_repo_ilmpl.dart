@@ -121,7 +121,7 @@ class LoginRepoImpl with LoginRepo {
       if (response.session != null) {
         loginCubit.userLoggedIn = response.user;
         final email = loginCubit.userLoggedIn?.email;
-        if (email != null) {
+        if (email != null&&context.mounted) {
           await fillCurrentUserDataByEmail(email, context);
         }
       }

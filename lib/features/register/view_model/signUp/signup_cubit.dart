@@ -16,7 +16,7 @@ class SignupCubit extends Cubit<SignUpLoading> {
     required Function() success,
   }) async {
     bool usernameExists = await _repo.isUsernameExist(userData.username);
-    if (usernameExists) {
+    if (usernameExists&&context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Username already exists. Please choose another one.'),
@@ -25,17 +25,18 @@ class SignupCubit extends Cubit<SignUpLoading> {
       );
       return;
     }
+    if (context.mounted) {
+      bool isSignUpSuccess = await _repo.createUser(
+        userData: userData,
+        context: context,
+        success: success,
+        failure: failure,
+      );
 
-    bool isSignUpSuccess = await _repo.createUser(
-      userData: userData,
-      context: context,
-      success: success,
-      failure: failure,
-    );
-
-    if (isSignUpSuccess) {
-      _repo.insertUserProfile(
-          userData.email, userData.password, userData.username);
+      if (isSignUpSuccess) {
+        _repo.insertUserProfile(
+            userData.email, userData.password, userData.username);
+      }
     }
   }
 

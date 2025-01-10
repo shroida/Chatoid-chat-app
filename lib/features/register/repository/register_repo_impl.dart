@@ -45,17 +45,19 @@ class RegisterRepoImpl with RegisterRepo {
           username: userData.username);
       final response = await onSingUpWithEmailPassword(request);
 
-      if (response.session != null) {
+      if (response.session != null && context.mounted) {
         showSuccessRegisterWidget(context, userData.email);
         success();
         return true;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sign-up failed'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sign-up failed'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
         failure();
         return false;
       }

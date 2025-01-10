@@ -53,7 +53,6 @@ class ChatScreenState extends State<ChatScreen> {
       final currentUserId = loginCubit.currentUser.userId;
       final messagesCubit = Provider.of<MessagesCubit>(context, listen: false);
 
-      // Call the function and update the state accordingly
       bool isInChat = await messagesCubit.ifTwoUsersInChat(
           currentUserId, widget.friendUser.friendId);
 
@@ -143,6 +142,9 @@ class ChatScreenState extends State<ChatScreen> {
     Future<bool> onWillPop() async {
       final messagesCubit = Provider.of<MessagesCubit>(context, listen: false);
       messagesCubit.onLeaveChat();
+      setState(() {
+        _isInChat = false;
+      });
       return true;
     }
 
@@ -173,7 +175,7 @@ class ChatScreenState extends State<ChatScreen> {
                     if (_isInChat) const TextInChat(),
                     MessageListView(
                       messsagReply: messageTextToReply,
-                      messages: messages, // Provide the actual list of messages
+                      messages: messages,
                       currentUserId:
                           currentUserId, // Replace with the actual user ID
                       scrollController: _scrollController,

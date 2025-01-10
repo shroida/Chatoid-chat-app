@@ -101,12 +101,14 @@ class CustomSearchDelegate extends SearchDelegate {
                   context,
                   listen: false,
                 ).getUserByUsername(result) as UserData;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Profile(userProfile: selectedUser),
-                  ),
-                );
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(userProfile: selectedUser),
+                    ),
+                  );
+                }
               },
             );
           },
@@ -158,7 +160,7 @@ class CustomSearchDelegate extends SearchDelegate {
               listen: false,
             ).getUserByUsername(suggestion.username);
 
-            if (selectedUser != null) {
+            if (selectedUser != null && context.mounted) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
